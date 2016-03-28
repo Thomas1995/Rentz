@@ -4,7 +4,6 @@
 
 int main(int argc, char *argv[])
 {
-    require(argc >= 3, "Not enough players");
 
     return 0;
 }
