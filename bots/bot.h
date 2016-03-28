@@ -16,9 +16,9 @@ protected:
     std::string name;
 
 public:
-    virtual void SetHand(const std::vector<Card>& cards, const int gameType) = 0;
     virtual Card PlayCard() = 0;
 
+    void SetHand(const std::vector<Card>& cards);
     void RemoveCard(Card c);
 
     virtual ~Bot() = 0;
