@@ -4,6 +4,9 @@
 #include "game.h"
 
 Game::Game() {
+}
+
+void Game::PlayKingOfHearts() {
 
 }
 
