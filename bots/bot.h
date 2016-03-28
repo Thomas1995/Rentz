@@ -23,7 +23,7 @@ protected:
 
 public:
     virtual void SetHand(const std::vector<Card>& cards, const int gameType) = 0;
-    virtual Card PlayedCard() = 0;
+    virtual Card PlayCard() = 0;
 
     virtual ~Bot() = 0;
 };
