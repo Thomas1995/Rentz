@@ -2,8 +2,14 @@
 #define CARD_IMPL
 
 #include "card.h"
+#include "require.h"
 
-Card::Card(int value, char suite) : value(value), suite(suite) {}
+#include <cstring>
+
+Card::Card(int value, char suite) : value(value), suite(suite) {
+    require(value >= 2 && value <= 14, "Wrong format!");
+    require(strchr("dhcsDHCS", suite), "Wrong format!");
+}
 
 Card::Card(const Card& c) : value(c.getValue()), suite(c.getSuite()) {}
 
