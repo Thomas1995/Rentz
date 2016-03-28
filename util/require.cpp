@@ -10,4 +10,4 @@ void require(bool condition, std::string err) {
     }
 }
 
-#endif REQUIRE_IMPL
+#endif // REQUIRE_IMPL
