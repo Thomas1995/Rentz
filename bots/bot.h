@@ -1,5 +1,5 @@
-#ifndef BOTS
-#define BOTS
+#ifndef BOT_H
+#define BOT_H
 
 #include <vector>
 #include <algorithm>
@@ -19,13 +19,9 @@ public:
     virtual void SetHand(const std::vector<Card>& cards, const int gameType) = 0;
     virtual Card PlayCard() = 0;
 
-    void RemoveCard(Card c) {
-        auto it = std::find(ALL(hand), c);
-        require(it != hand.end(), "Card played by " + name + " not in hand.");
-        hand.erase(it);
-    }
+    void RemoveCard(Card c);
 
     virtual ~Bot() = 0;
 };
 
-#endif // BOTS
+#endif // BOT_H

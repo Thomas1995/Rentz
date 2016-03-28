@@ -3,6 +3,10 @@
 
 #include "card.h"
 
+Card::Card(int value, char suite) : value(value), suite(suite) {}
+
+Card::Card(const Card& c) : value(c.getValue()), suite(c.getSuite()) {}
+
 std::string Card::to_string() const {
     std::string s;
 

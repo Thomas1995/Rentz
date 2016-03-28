@@ -1,15 +1,10 @@
-#ifndef REQUIRE
-#define REQUIRE
+#ifndef REQUIRE_H
+#define REQUIRE_H
 
 #include <iostream>
 #include <string>
 #include <cstdlib>
 
-void require(bool condition, std::string err = "Generic Error") {
-    if(!condition) {
-        std::cerr << "Error: " << err;
-        exit(0);
-    }
-}
+void require(bool condition, std::string err = "Generic Error");
 
-#endif // REQUIRE
+#endif // REQUIRE_H

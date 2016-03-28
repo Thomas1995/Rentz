@@ -1,10 +1,8 @@
-#include <iostream>
-#include "util/require.h"
-#include "bots/bot.h"
+#include "game.h"
 
-int main(int argc, char *argv[])
-{
-    
+int main(int argc, char *argv[]) {
+
+    Game G();
 
     return 0;
 }

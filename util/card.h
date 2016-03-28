@@ -25,9 +25,8 @@ char suite;
 std::string to_string() const;
 
 public:
-    Card(int value, char suite) : value(value), suite(suite) {}
-
-    Card(const Card& c) : value(c.getValue()), suite(c.getSuite()) {}
+    Card(int value, char suite);
+    Card(const Card& c);
 
     bool operator == (const Card& c) const;
 
