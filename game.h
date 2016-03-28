@@ -7,7 +7,6 @@
 #include <vector>
 
 class Game {
-
     std::vector<Bot*> players;
 
 public:

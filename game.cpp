@@ -7,7 +7,9 @@ Game::Game() {
 }
 
 void Game::PlayKingOfHearts() {
-
+    for(auto player : players) {
+        //player->SetHand();
+    }
 }
 
 #endif // GAME_IMPL

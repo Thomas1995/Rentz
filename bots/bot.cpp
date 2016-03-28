@@ -9,4 +9,4 @@ void Bot::RemoveCard(Card c) {
     hand.erase(it);
 }
 
-#endif BOT_IMPL
+#endif // BOT_IMPL
