@@ -6,9 +6,9 @@
 
 #include <cstring>
 
-Card::Card(int value, char suite) : value(value), suite(suite) {
+Card::Card(int value, char suite) : value(value), suite(toupper(suite)) {
     require(value >= 2 && value <= 14, "Wrong format!");
-    require(strchr("dhcsDHCS", suite), "Wrong format!");
+    require(strchr("DHCS", suite), "Wrong format!");
 }
 
 Card::Card(const Card& c) : value(c.getValue()), suite(c.getSuite()) {}
