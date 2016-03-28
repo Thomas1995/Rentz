@@ -16,10 +16,10 @@ int value;
 
 char suite;
 /*
-    Hearts: 'h'
-    Clubs: 'c'
-    Diamonds: 'd'
-    Spades: 's'
+    Hearts: 'H'
+    Clubs: 'C'
+    Diamonds: 'D'
+    Spades: 'S'
 */
 
 std::string to_string() const;

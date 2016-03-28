@@ -25,7 +25,7 @@ std::string Card::to_string() const {
         default: s += (char)(value + '0'); break;
     }
 
-    s += toupper(suite);
+    s += suite;
 
     return s;
 }
