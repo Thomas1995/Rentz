@@ -20,8 +20,6 @@ public:
 
     void SetHand(const std::vector<Card>& cards);
     void RemoveCard(Card c);
-
-    virtual ~Bot() = 0;
 };
 
 #endif // BOT_H

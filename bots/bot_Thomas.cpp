@@ -6,7 +6,7 @@ public:
         name = "Thomas";
     }
 
-    void PlayCard() {
-        
+    Card PlayCard() {
+
     }
 };

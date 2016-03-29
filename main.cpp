@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]) {
 
-    Game G();
+    Game::Start();
 
     return 0;
 }

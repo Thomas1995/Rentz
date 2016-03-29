@@ -4,13 +4,17 @@
 #include "util/require.h"
 #include "bots/bot.h"
 
+#include "bots/bot_Thomas.cpp"
+
 #include <vector>
 
 class Game {
     std::vector<Bot*> players;
 
-public:
     Game();
+
+public:
+    static void Start();
 
     void PlayKingOfHearts();
 };
