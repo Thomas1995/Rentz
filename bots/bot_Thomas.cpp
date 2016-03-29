@@ -6,7 +6,7 @@ public:
         name = "Thomas";
     }
 
-    Card PlayCard() {
+    Card PlayCard(const std::stack<Card>& cardsOnTable) {
 
     }
 };

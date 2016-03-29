@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <stack>
 
 #include "../util/card.h"
 #include "../util/require.h"
@@ -16,7 +17,7 @@ protected:
     std::string name;
 
 public:
-    virtual Card PlayCard() = 0;
+    virtual Card PlayCard(const std::stack<Card>& cardsOnTable) = 0;
 
     void SetHand(const std::vector<Card>& cards);
     void RemoveCard(Card c);

@@ -17,6 +17,8 @@ public:
     static void Start();
 
     void PlayKingOfHearts();
+
+    ~Game();
 };
 
 #endif // GAME_H
