@@ -8,12 +8,11 @@
 #include "bots/bot_Thomas.cpp"
 
 #include <vector>
-#include <stack>
 
 class Game {
     std::vector<Bot*> players;
     std::vector<Bot*>::iterator firstPlayer;
-    std::stack<Card> cardStack;
+    std::vector<Card> cardStack;
 
     Game();
 

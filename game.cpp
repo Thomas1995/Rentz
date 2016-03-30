@@ -19,14 +19,11 @@ void Game::Start() {
 
 void Game::PlayerAction(Bot* const player) {
     Card playedCard = player->PlayCard(cardStack);
-    cardStack.push(playedCard);
+    cardStack.push_back(playedCard);
     player->RemoveCard(playedCard);
 }
 
 void Game::IterateThroughPlayers(std::vector<Bot*>::iterator iterator) {
-    while(!cardStack.empty())
-      cardStack.pop();
-
     for(auto it = iterator; it != players.end(); ++it)
         PlayerAction(*it);
     for(auto it = players.begin(); it != iterator; ++it)
@@ -34,6 +31,8 @@ void Game::IterateThroughPlayers(std::vector<Bot*>::iterator iterator) {
 }
 
 void Game::PlayRound() {
+    cardStack.clear();
+
     IterateThroughPlayers(firstPlayer);
 }
 
