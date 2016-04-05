@@ -9,4 +9,8 @@ public:
     Card PlayCard(const std::vector<Card>& cardsOnTable) {
 
     }
+
+    void GetPlayedCardStack(const std::vector<Card>& cardsOnTable) {
+        
+    }
 };
