@@ -35,12 +35,12 @@ bool Card::operator == (const Card& c) const {
 }
 
 bool Card::isBeatenBy(const Card& c) const {
-    if(isSameType(c))
+    if(isSameSuite(c))
         return value < c.getValue();
     return false;
 }
 
-bool Card::isSameType(const Card& c) const {
+bool Card::isSameSuite(const Card& c) const {
     if(suite == c.getSuite())
         return true;
     return false;

@@ -34,7 +34,7 @@ public:
     bool operator == (const Card& c) const;
 
     bool isBeatenBy(const Card& c) const;
-    bool isSameType(const Card& c) const;
+    bool isSameSuite(const Card& c) const;
 
     int getValue() const;
     char getSuite() const;

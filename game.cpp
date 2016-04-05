@@ -29,10 +29,10 @@ void Game::PlayerAction(Bot* const player) {
 
     // check if the played card can be played
     if(cardStack.size() > 1) {
-        if(!playedCard.isSameType(cardStack.front())) {
+        if(!playedCard.isSameSuite(cardStack.front())) {
             auto cards = player->GetHand();
             for(auto c : cards)
-                require(!cardStack.front().isSameType(c), player->GetName() + " had chosen a card of a different suite.");
+                require(!cardStack.front().isSameSuite(c), player->GetName() + " had chosen a card of a different suite.");
         }
     }
 
