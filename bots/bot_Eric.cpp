@@ -1,9 +1,9 @@
 #include "bot.h"
 
-class Bot_Thomas : public Bot {
+class Bot_Eric : public Bot {
 public:
-    Bot_Thomas() {
-        name = "Thomas";
+    Bot_Eric() {
+        name = "Eric";
     }
 
     Card PlayCard(const std::vector<Card>& cardsOnTable) {

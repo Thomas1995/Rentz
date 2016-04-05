@@ -11,8 +11,9 @@ void Game::Start() {
 
     // choose players in play
     G.players.push_back(new Bot_Thomas());
-    G.players.push_back(new Bot_Thomas());
-    G.players.push_back(new Bot_Thomas());
+    G.players.push_back(new Bot_Lucian());
+    G.players.push_back(new Bot_Eugen());
+    G.players.push_back(new Bot_Eric());
 
     // assign the first player
     G.firstPlayer = G.players.begin();
