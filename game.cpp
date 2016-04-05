@@ -25,9 +25,11 @@ void Game::PlayerAction(Bot* const player) {
     // send player the cards that were played and get his played card
     Card playedCard = player->PlayCard(cardStack);
 
+    std::cout << player->GetName() << " played " << playedCard << "\n";
+
     // check if the played card can be played
     if(cardStack.size() > 1) {
-        if(!cardStack.back().isSameType(cardStack.front())) {
+        if(!playedCard.isSameType(cardStack.front())) {
             auto cards = player->GetHand();
             for(auto c : cards)
                 require(!cardStack.front().isSameType(c), player->GetName() + " had chosen a card of a different suite.");
@@ -93,10 +95,12 @@ void Game::PlayRound() {
             if(firstPlayer == players.end())
                 firstPlayer = players.begin();
         }
-    }
 
-    // give scores to players
-    /// TO DO
+        // change score
+        /// TO DO
+
+        std::cout << std::endl;
+    }
 }
 
 Game::~Game() {

@@ -14,10 +14,10 @@ class Game {
     std::vector<Bot*>::iterator firstPlayer;
     std::vector<Card> cardStack;
 
-    Game();
-
     void IterateThroughPlayers(std::vector<Bot*>::iterator iterator);
     void PlayerAction(Bot* const player);
+
+    Game();
 
 public:
     static void Start();
