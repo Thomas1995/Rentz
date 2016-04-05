@@ -122,6 +122,43 @@ void Game::PlayRound() {
     std::cout << std::endl;
 }
 
+void Game::ChangeScore() {
+
+    int crtPlayer = firstPlayer - players.begin();
+
+    int scoreToAdd = 0;
+
+    // king of hearts
+    if(crtGameType == 1)
+        ScoreKingOfHearts(scoreToAdd);
+
+    // queens
+    if(crtGameType == 2)
+        ScoreQueens(scoreToAdd);
+
+    // diamonds
+    if(crtGameType == 3)
+        ScoreDiamonds(scoreToAdd);
+
+    // acool
+    if(crtGameType == 4)
+        ScoreAcool(scoreToAdd);
+
+    // whist
+    if(crtGameType == 5)
+        ScoreWhist(scoreToAdd);
+
+    // 10 club
+    if(crtGameType == 6)
+        ScoreTenClub(scoreToAdd);
+
+    // totals
+    if(crtGameType == 7)
+        ScoreTotals(scoreToAdd);
+
+    score[crtPlayer] += scoreToAdd * (1 + modeNV);
+}
+
 void Game::ScoreKingOfHearts(int& scoreToAdd) {
     for(auto c : cardStack)
         if(c.getValue() == 13 && c.getSuite() == 'H')
@@ -159,43 +196,6 @@ void Game::ScoreTotals(int& scoreToAdd) {
     ScoreQueens(scoreToAdd);
     ScoreDiamonds(scoreToAdd);
     ScoreAcool(scoreToAdd);
-}
-
-void Game::ChangeScore() {
-
-    int crtPlayer = firstPlayer - players.begin();
-
-    int scoreToAdd = 0;
-
-    // king of hearts
-    if(crtGameType == 1)
-        ScoreKingOfHearts(scoreToAdd);
-
-    // queens
-    if(crtGameType == 2)
-        ScoreQueens(scoreToAdd);
-
-    // diamonds
-    if(crtGameType == 3)
-        ScoreDiamonds(scoreToAdd);
-
-    // acool
-    if(crtGameType == 4)
-        ScoreAcool(scoreToAdd);
-
-    // whist
-    if(crtGameType == 5)
-        ScoreWhist(scoreToAdd);
-
-    // 10 club
-    if(crtGameType == 6)
-        ScoreTenClub(scoreToAdd);
-
-    // totals
-    if(crtGameType == 7)
-        ScoreTotals(scoreToAdd);
-
-    score[crtPlayer] += scoreToAdd * (1 + modeNV);
 }
 
 Game::~Game() {
