@@ -16,16 +16,28 @@ class Game {
     std::vector<Bot*> players;
     std::vector<Bot*>::iterator firstPlayer;
     std::vector<Card> cardStack;
+    std::vector<int> score;
+
+    int crtGameType;
+    bool modeNV;
 
     void IterateThroughPlayers(std::vector<Bot*>::iterator iterator);
     void PlayerAction(Bot* const player);
+    void PlayRound();
+    void ChangeScore();
+
+    void ScoreKingOfHearts(int& scoreToAdd);
+    void ScoreQueens(int& scoreToAdd);
+    void ScoreDiamonds(int& scoreToAdd);
+    void ScoreAcool(int& scoreToAdd);
+    void ScoreWhist(int& scoreToAdd);
+    void ScoreTenClub(int& scoreToAdd);
+    void ScoreTotals(int& scoreToAdd);
 
     Game();
 
 public:
     static void Start();
-
-    void PlayRound();
 
     ~Game();
 };

@@ -3,6 +3,8 @@
 
 #include "game.h"
 #include <algorithm>
+#include <random>
+#include <chrono>
 
 Game::Game() {}
 
@@ -15,11 +17,19 @@ void Game::Start() {
     G.players.push_back(new Bot_Eugen());
     G.players.push_back(new Bot_Eric());
 
+    G.score.resize(4, 0);
+
     // assign the first player
     G.firstPlayer = G.players.begin();
 
     // start the round
-    G.PlayRound();
+    //G.PlayRound();
+
+    for(int j=1;j<=4;++j)
+        for(int i=1;i<=7;++i) {
+            G.crtGameType = i;
+            G.PlayRound();
+        }
 }
 
 void Game::PlayerAction(Bot* const player) {
@@ -55,7 +65,8 @@ void Game::PlayRound() {
     // get all cards in play
     std::vector<Card> allCards = Card::getAllCards(players.size());
 
-    std::random_shuffle(allCards.begin(), allCards.end());
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(allCards.begin(), allCards.end(), std::default_random_engine(seed));
 
     auto card = allCards.begin();
 
@@ -98,10 +109,93 @@ void Game::PlayRound() {
         }
 
         // change score
-        /// TO DO
+        ChangeScore();
 
         std::cout << std::endl;
     }
+
+    std::cout << "Scores:\n";
+    for(int i=0;i<players.size();++i)
+        std::cout << players[i]->GetName() + ": " << score[i] << "\n";
+    std::cout << "\n----------\n";
+
+    std::cout << std::endl;
+}
+
+void Game::ScoreKingOfHearts(int& scoreToAdd) {
+    for(auto c : cardStack)
+        if(c.getValue() == 13 && c.getSuite() == 'H')
+            scoreToAdd -= 100;
+}
+
+void Game::ScoreQueens(int& scoreToAdd) {
+    for(auto c : cardStack)
+        if(c.getValue() == 12)
+            scoreToAdd -= 30;
+}
+
+void Game::ScoreDiamonds(int& scoreToAdd) {
+    for(auto c : cardStack)
+        if(c.getSuite() == 'D')
+            scoreToAdd -= 20;
+}
+
+void Game::ScoreAcool(int& scoreToAdd) {
+    scoreToAdd -= 10;
+}
+
+void Game::ScoreWhist(int& scoreToAdd) {
+    scoreToAdd += 10;
+}
+
+void Game::ScoreTenClub(int& scoreToAdd) {
+    for(auto c : cardStack)
+        if(c.getValue() == 10 && c.getSuite() == 'C')
+            scoreToAdd += 100;
+}
+
+void Game::ScoreTotals(int& scoreToAdd) {
+    ScoreKingOfHearts(scoreToAdd);
+    ScoreQueens(scoreToAdd);
+    ScoreDiamonds(scoreToAdd);
+    ScoreAcool(scoreToAdd);
+}
+
+void Game::ChangeScore() {
+
+    int crtPlayer = firstPlayer - players.begin();
+
+    int scoreToAdd = 0;
+
+    // king of hearts
+    if(crtGameType == 1)
+        ScoreKingOfHearts(scoreToAdd);
+
+    // queens
+    if(crtGameType == 2)
+        ScoreQueens(scoreToAdd);
+
+    // diamonds
+    if(crtGameType == 3)
+        ScoreDiamonds(scoreToAdd);
+
+    // acool
+    if(crtGameType == 4)
+        ScoreAcool(scoreToAdd);
+
+    // whist
+    if(crtGameType == 5)
+        ScoreWhist(scoreToAdd);
+
+    // 10 club
+    if(crtGameType == 6)
+        ScoreTenClub(scoreToAdd);
+
+    // totals
+    if(crtGameType == 7)
+        ScoreTotals(scoreToAdd);
+
+    score[crtPlayer] += scoreToAdd * (1 + modeNV);
 }
 
 Game::~Game() {
