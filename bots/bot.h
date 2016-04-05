@@ -17,7 +17,11 @@ protected:
 
 public:
     virtual Card PlayCard(const std::vector<Card>& cardsOnTable) = 0;
+    virtual void GetPlayedCardStack(const std::vector<Card>& cardsOnTable) = 0;
 
+    std::string GetName();
+
+    std::vector<Card> GetHand();
     void SetHand(const std::vector<Card>& cards);
     void RemoveCard(Card c);
 };

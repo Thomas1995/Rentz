@@ -8,7 +8,7 @@
 
 Card::Card(int value, char suite) : value(value), suite(toupper(suite)) {
     require(value >= 2 && value <= 14, "Wrong format!");
-    require(strchr("DHCS", suite), "Wrong format!");
+    require(strchr(Card::suites, suite), "Wrong format!");
 }
 
 Card::Card(const Card& c) : value(c.getValue()), suite(c.getSuite()) {}
@@ -35,9 +35,14 @@ bool Card::operator == (const Card& c) const {
 }
 
 bool Card::isBeatenBy(const Card& c) const {
-    if(suite == c.getSuite())
+    if(isSameType(c))
         return value < c.getValue();
+    return false;
+}
 
+bool Card::isSameType(const Card& c) const {
+    if(suite == c.getSuite())
+        return true;
     return false;
 }
 
@@ -52,5 +57,17 @@ int Card::getValue() const {
 char Card::getSuite() const {
     return suite;
 }
+
+std::vector<Card> Card::getAllCards(const int playerNumber) {
+      std::vector<Card> allCards;
+
+      for(int i=15-playerNumber*2;i<=14;++i)
+          for(char j=0;j<4;++j)
+            allCards.push_back(Card(i, Card::suites[j]));
+
+      return allCards;
+}
+
+char Card::suites[] = "DHCS";
 
 #endif // CARD_IMPL

@@ -2,24 +2,42 @@
 #define GAME_IMPL
 
 #include "game.h"
+#include <algorithm>
 
 Game::Game() {}
 
 void Game::Start() {
     Game G;
 
+    // choose players in play
     G.players.push_back(new Bot_Thomas());
     G.players.push_back(new Bot_Thomas());
     G.players.push_back(new Bot_Thomas());
 
+    // assign the first player
     G.firstPlayer = G.players.begin();
 
+    // start the round
     G.PlayRound();
 }
 
 void Game::PlayerAction(Bot* const player) {
+    // send player the cards that were played and get his played card
     Card playedCard = player->PlayCard(cardStack);
+
+    // check if the played card can be played
+    if(cardStack.size() > 1) {
+        if(!cardStack.back().isSameType(cardStack.front())) {
+            auto cards = player->GetHand();
+            for(auto c : cards)
+                require(!cardStack.front().isSameType(c), player->GetName() + " had chosen a card of a different suite.");
+        }
+    }
+
+    // push the card in play
     cardStack.push_back(playedCard);
+
+    // remove the card from player's hand
     player->RemoveCard(playedCard);
 }
 
@@ -31,9 +49,54 @@ void Game::IterateThroughPlayers(std::vector<Bot*>::iterator iterator) {
 }
 
 void Game::PlayRound() {
-    cardStack.clear();
+    // get all cards in play
+    std::vector<Card> allCards = Card::getAllCards(players.size());
 
-    IterateThroughPlayers(firstPlayer);
+    std::random_shuffle(allCards.begin(), allCards.end());
+
+    auto card = allCards.begin();
+
+    // give cards to players
+    for(int i=0;i<players.size();++i) {
+        std::vector<Card> hand;
+        for(int j=1;j<=8;++j) {
+            hand.push_back(*card);
+            ++card;
+        }
+        players[i]->SetHand(hand);
+    }
+
+    for(int roundstep = 1; roundstep <= 8; ++roundstep) {
+        cardStack.clear();
+
+        // get players to play cards
+        IterateThroughPlayers(firstPlayer);
+
+        // announce all players about the cards that were played
+        for(int i=0;i<players.size();++i)
+            players[i]->GetPlayedCardStack(cardStack);
+
+        // check for winner
+        int winnerIndex = 0;
+        Card winnerCard = cardStack[winnerIndex];
+
+        for(int i=1;i<cardStack.size();++i) {
+            if(winnerCard.isBeatenBy(cardStack[i])) {
+                winnerCard = cardStack[i];
+                winnerIndex = i;
+            }
+        }
+
+        // change the first player to go
+        while(winnerIndex--) {
+            ++firstPlayer;
+            if(firstPlayer == players.end())
+                firstPlayer = players.begin();
+        }
+    }
+
+    // give scores to players
+    /// TO DO
 }
 
 Game::~Game() {

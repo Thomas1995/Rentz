@@ -2,6 +2,7 @@
 #define CARD_H
 
 #include <string>
+#include <vector>
 
 class Card {
 
@@ -22,6 +23,8 @@ char suite;
     Spades: 'S'
 */
 
+static char suites[];
+
 std::string to_string() const;
 
 public:
@@ -31,9 +34,12 @@ public:
     bool operator == (const Card& c) const;
 
     bool isBeatenBy(const Card& c) const;
+    bool isSameType(const Card& c) const;
 
     int getValue() const;
     char getSuite() const;
+
+    static std::vector<Card> getAllCards(const int playerNumber);
 
     friend std::ostream& operator << (std::ostream& os, const Card& c);
 };
