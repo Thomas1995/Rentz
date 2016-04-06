@@ -19,15 +19,35 @@ void Game::Start() {
 
     G.score.resize(4, 0);
 
+    bool gamesPlayed[G.players.size()][G.gamesNumber+1];
+
     // assign the first player
     G.firstPlayer = G.players.begin();
 
-    // start the round
-    //G.PlayRound();
+    for(int gameChoice = 1; gameChoice <= G.gamesNumber; ++gameChoice)
+        for(int i=0;i<G.players.size();++i) {
+            // get the game type
+            G.crtGameType = G.players[i]->GetGameType();
 
-    for(int j=1;j<=4;++j)
-        for(int i=1;i<=7;++i) {
-            G.crtGameType = i;
+            // check if player can play that game
+            require(G.crtGameType >= 1 && G.crtGameType <= G.gamesNumber,
+              G.players[i]->GetName() + " has chosen a game index out of bounds");
+            require(gamesPlayed[i][G.crtGameType] == false,
+              G.players[i]->GetName() + " had already chosen that game");
+
+            gamesPlayed[i][G.crtGameType] = true;
+
+            // check if player wants to play NV mode and enforce it for the last choice
+            if(gameChoice < G.gamesNumber)
+                G.modeNV = G.players[i]->PlayNVMode();
+            else
+                G.modeNV = true;
+
+            // let the other players know the game type
+            for(auto player : G.players)
+                player->SetGameType(G.crtGameType);
+
+            // start the round
             G.PlayRound();
         }
 }
@@ -43,7 +63,8 @@ void Game::PlayerAction(Bot* const player) {
         if(!playedCard.isSameSuite(cardStack.front())) {
             auto cards = player->GetHand();
             for(auto c : cards)
-                require(!cardStack.front().isSameSuite(c), player->GetName() + " had chosen a card of a different suite.");
+                require(!cardStack.front().isSameSuite(c),
+                  player->GetName() + " had chosen a card of a different suite.");
         }
     }
 
@@ -114,9 +135,12 @@ void Game::PlayRound() {
         std::cout << std::endl;
     }
 
+    // let players know the scores
     std::cout << "Scores:\n";
-    for(int i=0;i<players.size();++i)
+    for(int i=0;i<players.size();++i) {
+        players[i]->SetScores(score[i], score);
         std::cout << players[i]->GetName() + ": " << score[i] << "\n";
+    }
     std::cout << "\n----------\n";
 
     std::cout << std::endl;

@@ -18,6 +18,7 @@ class Game {
     std::vector<Card> cardStack;
     std::vector<int> score;
 
+    const int gamesNumber = 7;
     int crtGameType;
     bool modeNV;
 
