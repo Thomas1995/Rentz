@@ -12,7 +12,7 @@ void Bot::SetHand(const std::vector<Card>& cards) {
 }
 
 void Bot::RemoveCard(Card c) {
-    auto it = std::find(ALL(hand), c);
+    auto it = std::find(hand.begin(), hand.end(), c);
     require(it != hand.end(), "Card played by " + name + " not in hand.");
     hand.erase(it);
 }

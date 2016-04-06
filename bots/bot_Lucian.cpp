@@ -20,4 +20,20 @@ public:
     void GetPlayedCardStack(const std::vector<Card>& cardsOnTable) {
 
     }
+
+    int GetGameType() {
+
+    }
+
+    void SetGameType(const int gameType) {
+
+    }
+
+    bool PlayNVMode() {
+
+    }
+
+    void SetScores(const int yourScore, const std::vector<int>& allScores) {
+
+    }
 };

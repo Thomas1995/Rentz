@@ -6,7 +6,6 @@
 
 #include "../util/card.h"
 #include "../util/require.h"
-#include "../util/macros.h"
 
 class Bot {
 private:
@@ -18,6 +17,10 @@ protected:
 public:
     virtual Card PlayCard(const std::vector<Card>& cardsOnTable) = 0;
     virtual void GetPlayedCardStack(const std::vector<Card>& cardsOnTable) = 0;
+    virtual int GetGameType() = 0;
+    virtual void SetGameType(const int gameType) = 0;
+    virtual bool PlayNVMode() = 0;
+    virtual void SetScores(const int yourScore, const std::vector<int>& allScores) = 0;
 
     std::string GetName();
 
