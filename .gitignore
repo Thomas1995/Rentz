@@ -1,1 +1,3 @@
-game.log
+*.log
+*.o
+*.exe
