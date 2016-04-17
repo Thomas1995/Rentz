@@ -39,7 +39,7 @@ public:
     int getValue() const;
     char getSuite() const;
 
-    static std::vector<Card> getAllCards(const int playerNumber);
+    static std::vector<Card> getAllCards();
 
     friend std::ostream& operator << (std::ostream& os, const Card& c);
 };

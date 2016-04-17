@@ -3,6 +3,7 @@
 
 #include "card.h"
 #include "require.h"
+#include "../game.h"
 
 #include <cstring>
 
@@ -58,10 +59,10 @@ char Card::getSuite() const {
     return suite;
 }
 
-std::vector<Card> Card::getAllCards(const int playerNumber) {
+std::vector<Card> Card::getAllCards() {
       std::vector<Card> allCards;
 
-      for(int i=15-playerNumber*2;i<=14;++i)
+      for(int i=Game::lowestCard;i<=14;++i)
           for(char j=0;j<4;++j)
             allCards.push_back(Card(i, Card::suites[j]));
 

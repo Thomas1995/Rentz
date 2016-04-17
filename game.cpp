@@ -22,6 +22,8 @@ void Game::Start() {
     G.players.push_back(new Bot_Eugen());
     G.players.push_back(new Bot_Eric());
 
+    lowestCard = 15 - G.players.size() * 2;
+
     G.score.resize(4, 0);
 
     // true if a game was already played but a certain player, false otherwise
@@ -103,7 +105,7 @@ void Game::IterateThroughPlayers(std::vector<Bot*>::iterator iterator) {
 
 void Game::GiveCards() {
   // get all cards in play
-  std::vector<Card> allCards = Card::getAllCards(players.size());
+  std::vector<Card> allCards = Card::getAllCards();
 
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::shuffle(allCards.begin(), allCards.end(), std::default_random_engine(seed));
@@ -248,5 +250,7 @@ Game::~Game() {
         delete it;
     players.clear();
 }
+
+int Game::lowestCard = 2;
 
 #endif // GAME_IMPL
