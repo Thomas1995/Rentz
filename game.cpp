@@ -19,7 +19,12 @@ void Game::Start() {
 
     G.score.resize(4, 0);
 
+    // true if a game was already played but a certain player, false otherwise
     bool gamesPlayed[G.players.size()][G.gamesNumber+1];
+
+    for(int i=0;i<G.players.size();++i)
+        for(int j=0;j<G.gamesNumber+1;++j)
+            gamesPlayed[i][j] = false;
 
     // assign the first player
     G.firstPlayer = G.players.begin();
