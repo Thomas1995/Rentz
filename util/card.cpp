@@ -1,6 +1,3 @@
-#ifndef CARD_IMPL
-#define CARD_IMPL
-
 #include "card.h"
 #include "require.h"
 #include "../game.h"
@@ -71,5 +68,3 @@ std::vector<Card> Card::getAllCards() {
 
 char Card::suites[] = "DHCS";
 int Card::lowestCard = 1;
-
-#endif // CARD_IMPL

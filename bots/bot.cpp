@@ -1,6 +1,3 @@
-#ifndef BOT_IMPL
-#define BOT_IMPL
-
 #include "bot.h"
 
 std::string Bot::GetName() {
@@ -20,5 +17,3 @@ void Bot::RemoveCard(Card c) {
 std::vector<Card> Bot::GetHand() {
     return hand;
 }
-
-#endif // BOT_IMPL
