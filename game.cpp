@@ -26,8 +26,23 @@ void Game::Start() {
 
     for(int gameChoice = 1; gameChoice <= G.gamesNumber; ++gameChoice)
         for(int i=0;i<G.players.size();++i) {
+
+            // check if player wants to play NV mode and enforce it for the last choice
+            if(gameChoice < G.gamesNumber)
+                G.modeNV = G.players[i]->PlayNVMode();
+            else
+                G.modeNV = true;
+
+            // if NV mode not chosen, give cards before game choice
+            if(G.modeNV == false)
+                G.GiveCards();
+
             // get the game type
             G.crtGameType = G.players[i]->GetGameType();
+
+            // if NV mode chosen, give cards after game choice
+            if(G.modeNV == true)
+                G.GiveCards();
 
             // check if player can play that game
             require(G.crtGameType >= 1 && G.crtGameType <= G.gamesNumber,
@@ -36,12 +51,6 @@ void Game::Start() {
               G.players[i]->GetName() + " had already chosen that game");
 
             gamesPlayed[i][G.crtGameType] = true;
-
-            // check if player wants to play NV mode and enforce it for the last choice
-            if(gameChoice < G.gamesNumber)
-                G.modeNV = G.players[i]->PlayNVMode();
-            else
-                G.modeNV = true;
 
             // let the other players know the game type
             for(auto player : G.players)
@@ -82,25 +91,27 @@ void Game::IterateThroughPlayers(std::vector<Bot*>::iterator iterator) {
         PlayerAction(*it);
 }
 
+void Game::GiveCards() {
+  // get all cards in play
+  std::vector<Card> allCards = Card::getAllCards(players.size());
+
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::shuffle(allCards.begin(), allCards.end(), std::default_random_engine(seed));
+
+  auto card = allCards.begin();
+
+  // give cards to players
+  for(int i=0;i<players.size();++i) {
+      std::vector<Card> hand;
+      for(int j=1;j<=8;++j) {
+          hand.push_back(*card);
+          ++card;
+      }
+      players[i]->SetHand(hand);
+  }
+}
+
 void Game::PlayRound() {
-    // get all cards in play
-    std::vector<Card> allCards = Card::getAllCards(players.size());
-
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(allCards.begin(), allCards.end(), std::default_random_engine(seed));
-
-    auto card = allCards.begin();
-
-    // give cards to players
-    for(int i=0;i<players.size();++i) {
-        std::vector<Card> hand;
-        for(int j=1;j<=8;++j) {
-            hand.push_back(*card);
-            ++card;
-        }
-        players[i]->SetHand(hand);
-    }
-
     for(int roundstep = 1; roundstep <= 8; ++roundstep) {
         cardStack.clear();
 

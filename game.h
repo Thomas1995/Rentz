@@ -24,6 +24,7 @@ class Game {
 
     void IterateThroughPlayers(std::vector<Bot*>::iterator iterator);
     void PlayerAction(Bot* const player);
+    void GiveCards();
     void PlayRound();
     void ChangeScore();
 
