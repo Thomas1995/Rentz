@@ -6,6 +6,11 @@
 #include <random>
 #include <chrono>
 
+#include "bots/bot_Thomas.cpp"
+#include "bots/bot_Lucian.cpp"
+#include "bots/bot_Eugen.cpp"
+#include "bots/bot_Eric.cpp"
+
 Game::Game() {}
 
 void Game::Start() {
