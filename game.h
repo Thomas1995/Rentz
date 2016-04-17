@@ -38,8 +38,6 @@ public:
     static void Start();
 
     ~Game();
-
-    static int lowestCard;
 };
 
 #endif // GAME_H

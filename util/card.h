@@ -42,6 +42,8 @@ public:
     static std::vector<Card> getAllCards();
 
     friend std::ostream& operator << (std::ostream& os, const Card& c);
+
+    static int lowestCard;
 };
 
 #endif // CARD_H

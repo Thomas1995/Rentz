@@ -62,7 +62,7 @@ char Card::getSuite() const {
 std::vector<Card> Card::getAllCards() {
       std::vector<Card> allCards;
 
-      for(int i=Game::lowestCard;i<=14;++i)
+      for(int i=lowestCard;i<=14;++i)
           for(char j=0;j<4;++j)
             allCards.push_back(Card(i, Card::suites[j]));
 
@@ -70,5 +70,6 @@ std::vector<Card> Card::getAllCards() {
 }
 
 char Card::suites[] = "DHCS";
+int Card::lowestCard = 1;
 
 #endif // CARD_IMPL

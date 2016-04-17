@@ -22,7 +22,7 @@ void Game::Start() {
     G.players.push_back(new Bot_Eugen());
     G.players.push_back(new Bot_Eric());
 
-    lowestCard = 15 - G.players.size() * 2;
+    Card::lowestCard = 15 - G.players.size() * 2;
 
     G.score.resize(4, 0);
 
@@ -250,7 +250,5 @@ Game::~Game() {
         delete it;
     players.clear();
 }
-
-int Game::lowestCard = 2;
 
 #endif // GAME_IMPL
