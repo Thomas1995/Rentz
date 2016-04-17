@@ -1,3 +1,5 @@
+#include "game.h"
+
 void Game::ChangeScore() {
 
     int crtPlayer = firstPlayer - players.begin();
