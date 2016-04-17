@@ -169,31 +169,31 @@ void Game::ChangeScore() {
     int scoreToAdd = 0;
 
     // king of hearts
-    if(crtGameType == 1)
+    if(crtGameType == KingOfHearts)
         ScoreKingOfHearts(scoreToAdd);
 
     // queens
-    if(crtGameType == 2)
+    if(crtGameType == Queens)
         ScoreQueens(scoreToAdd);
 
     // diamonds
-    if(crtGameType == 3)
+    if(crtGameType == Diamonds)
         ScoreDiamonds(scoreToAdd);
 
     // acool
-    if(crtGameType == 4)
+    if(crtGameType == Acool)
         ScoreAcool(scoreToAdd);
 
     // whist
-    if(crtGameType == 5)
+    if(crtGameType == Whist)
         ScoreWhist(scoreToAdd);
 
     // 10 club
-    if(crtGameType == 6)
+    if(crtGameType == TenClub)
         ScoreTenClub(scoreToAdd);
 
     // totals
-    if(crtGameType == 7)
+    if(crtGameType == Totals)
         ScoreTotals(scoreToAdd);
 
     score[crtPlayer] += scoreToAdd * (1 + modeNV);

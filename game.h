@@ -3,6 +3,7 @@
 
 #include "util/require.h"
 #include "util/card.h"
+#include "util/gamelist.h"
 #include "bots/bot.h"
 
 #include "bots/bot_Thomas.cpp"

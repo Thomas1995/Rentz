@@ -6,6 +6,7 @@
 
 #include "../util/card.h"
 #include "../util/require.h"
+#include "../util/gamelist.h"
 
 class Bot {
 private:
