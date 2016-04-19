@@ -6,31 +6,24 @@ void Game::ChangeScore() {
 
     int scoreToAdd = 0;
 
-    // king of hearts
     if(crtGameType == KingOfHearts)
         ScoreKingOfHearts(scoreToAdd);
 
-    // queens
     if(crtGameType == Queens)
         ScoreQueens(scoreToAdd);
 
-    // diamonds
     if(crtGameType == Diamonds)
         ScoreDiamonds(scoreToAdd);
 
-    // acool
     if(crtGameType == Acool)
         ScoreAcool(scoreToAdd);
 
-    // whist
     if(crtGameType == Whist)
         ScoreWhist(scoreToAdd);
 
-    // 10 club
     if(crtGameType == TenClub)
         ScoreTenClub(scoreToAdd);
 
-    // totals
     if(crtGameType == Totals)
         ScoreTotals(scoreToAdd);
 
