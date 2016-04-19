@@ -48,7 +48,7 @@ public:
     }
 
     void SetGameType(const int gameType) {
-        /// TO DO
+        crtGameType = gameType;
     }
 
     bool PlayNVMode() {
@@ -78,4 +78,5 @@ private:
     bool NVModeChosen;
     int myLadderPosition = 1;
     int gamesOrderNV[7];
+    int crtGameType;
 };
