@@ -1,6 +1,6 @@
 #include "card.h"
 #include "require.h"
-#include "../game.h"
+#include "../table.h"
 
 #include <cstring>
 
@@ -8,6 +8,12 @@ Card::Card(int value, char suite) : value(value), suite(toupper(suite)) {
     require(value >= 2 && value <= 14, "Wrong format!");
     require(strchr(Card::suites, suite), "Wrong format!");
 }
+
+Card::Card(uint8_t code):
+  value(code & 0b1111),
+  suite(suites[code >> 4]) {
+
+  }
 
 Card::Card(const Card& c) : value(c.getValue()), suite(c.getSuite()) {}
 
@@ -61,7 +67,7 @@ std::vector<Card> Card::getAllCards() {
 
       for(int i=lowestCard;i<=14;++i)
           for(char j=0;j<4;++j)
-            allCards.push_back(Card(i, Card::suites[j]));
+            allCards.push_back(Card(i, Card::suites[(int)j]));
 
       return allCards;
 }
