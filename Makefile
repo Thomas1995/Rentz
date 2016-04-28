@@ -1,10 +1,11 @@
 CC=g++
 CFLAGS=-std=c++11 -g
+OBJS=score.o server.o player.o util/card.o table.o util/require.o
 
 all: server
 
-server: server.o table.o player.o score.o util
-	$(CC) $(CFLAGS) score.o server.o player.o util/card.o table.o util/require.o -o server
+server: $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o server
 
 server.o: server.cpp
 	$(CC) $(CFLAGS) -c server.cpp
@@ -18,10 +19,17 @@ player.o: player.cpp
 score.o: score.cpp
 	$(CC) $(CFLAGS) -c score.cpp
 
-util: util/card.o util/require.o
+util/card.o:
 	make -C util
 
+util/require.o:
+	make -C util
+
+
+
+.PHONY: clean
 clean:
 	rm *\.o
 	rm server
+	make -C util clean
 
