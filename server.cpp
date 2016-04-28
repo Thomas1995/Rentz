@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "table.h"
 
 const char PORT[] = "31337";
 const int BACKLOG = 16;
@@ -93,6 +94,7 @@ int acceptConnection(int server) {
 }
 
 int main() {
+  Table table;
   const int server = setupServer();
 
   if(server == -1) {
@@ -116,6 +118,7 @@ int main() {
       const epoll_event &now = events[i];
       if(now.data.fd == server) {
         int client = acceptConnection(server);
+        table.addPlayer(client);
       }
     }
   }

@@ -4,22 +4,24 @@
 #include "util/require.h"
 #include "util/card.h"
 #include "util/gamelist.h"
-#include "bots/bot.h"
+#include "player.h"
 
 #include <vector>
 
-class Table {
-    std::vector<Bot*> players;
-    std::vector<Bot*>::iterator firstPlayer;
+struct Table {
+    static const int TABLE_SIZE = 4;
+
+    std::vector<Player> players;
+    std::vector<Player>::iterator firstPlayer;
     std::vector<Card> cardStack;
     std::vector<int> score;
 
-    const int gamesNumber = 7;
-    int crtTableType;
+    static const int gamesNumber = 7;
+    int gameType;
     bool modeNV;
 
-    void IterateThroughPlayers(std::vector<Bot*>::iterator iterator);
-    void PlayerAction(Bot* const player);
+    void IterateThroughPlayers(std::vector<Player>::iterator iterator);
+    void PlayerAction(Player const player);
     void GiveCards();
     void PlayRound();
     void ChangeScore();
@@ -32,9 +34,10 @@ class Table {
     void ScoreTenClub(int& scoreToAdd);
     void ScoreTotals(int& scoreToAdd);
 
+    void addPlayer(int fd);
+
     Table();
 
-public:
     static void Start();
 
     ~Table();

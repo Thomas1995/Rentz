@@ -1,4 +1,4 @@
-#include "game.h"
+#include "table.h"
 #include <algorithm>
 #include <random>
 #include <chrono>
@@ -29,7 +29,7 @@ void Table::Start() {
 
             // check if player wants to play NV mode and enforce it for the last choice
             if(gameChoice < G.gamesNumber)
-                G.modeNV = G.players[i]->PlayNVMode();
+                G.modeNV = G.players[i].getNVChoice();
             else
                 G.modeNV = true;
 
@@ -38,42 +38,44 @@ void Table::Start() {
                 G.GiveCards();
 
             // get the game type
-            G.crtTableType = G.players[i]->GetTableType();
+            G.gameType = G.players[i].getGameChoice();
 
             // if NV mode chosen, give cards after game choice
             if(G.modeNV == true)
                 G.GiveCards();
 
             // check if player can play that game
-            require(G.crtTableType >= 1 && G.crtTableType <= G.gamesNumber,
-              G.players[i]->GetName() + " has chosen a game index out of bounds");
-            require(gamesPlayed[i][G.crtTableType] == false,
-              G.players[i]->GetName() + " had already chosen that game");
+            require(G.gameType >= 1 && G.gameType <= G.gamesNumber,
+              G.players[i].GetName() + " has chosen a game index out of bounds");
+            require(gamesPlayed[i][G.gameType] == false,
+              G.players[i].GetName() + " had already chosen that game");
 
-            gamesPlayed[i][G.crtTableType] = true;
+            gamesPlayed[i][G.gameType] = true;
 
             // let the other players know the game type
             for(auto player : G.players)
-                player->SetTableType(G.crtTableType);
+              player.sendGameChoice(G.gameType);
 
             // start the round
             G.PlayRound();
         }
 }
 
-void Table::PlayerAction(Bot* const player) {
+void Table::PlayerAction(Player player) {
     // send player the cards that were played and get his played card
-    Card playedCard = player->PlayCard(cardStack);
+    player.sendCards(cardStack);
 
-    std::cout << player->GetName() << " played " << playedCard << "\n";
+    Card playedCard = player.getCardChoice();
+
+    std::cout << player.GetName() << " played " << playedCard << "\n";
 
     // check if the played card can be played
     if(cardStack.size() > 1) {
         if(!playedCard.isSameSuite(cardStack.front())) {
-            auto cards = player->GetHand();
+            auto cards = player.GetHand();
             for(auto c : cards)
                 require(!cardStack.front().isSameSuite(c),
-                  player->GetName() + " had chosen a card of a different suite.");
+                  player.GetName() + " had chosen a card of a different suite.");
         }
     }
 
@@ -81,10 +83,9 @@ void Table::PlayerAction(Bot* const player) {
     cardStack.push_back(playedCard);
 
     // remove the card from player's hand
-    player->RemoveCard(playedCard);
 }
 
-void Table::IterateThroughPlayers(std::vector<Bot*>::iterator iterator) {
+void Table::IterateThroughPlayers(std::vector<Player>::iterator iterator) {
     for(auto it = iterator; it != players.end(); ++it)
         PlayerAction(*it);
     for(auto it = players.begin(); it != iterator; ++it)
@@ -107,7 +108,7 @@ void Table::GiveCards() {
           hand.push_back(*card);
           ++card;
       }
-      players[i]->SetHand(hand);
+      players[i].sendHand(hand);
   }
 }
 
@@ -120,7 +121,7 @@ void Table::PlayRound() {
 
         // announce all players about the cards that were played
         for(int i=0;i<players.size();++i)
-            players[i]->GetPlayedCardStack(cardStack);
+            players[i].sendCards(cardStack);
 
         // check for winner
         int winnerIndex = 0;
@@ -149,8 +150,8 @@ void Table::PlayRound() {
     // let players know the scores
     std::cout << "Scores:\n";
     for(int i=0;i<players.size();++i) {
-        players[i]->SetScores(score[i], score);
-        std::cout << players[i]->GetName() + ": " << score[i] << "\n";
+        players[i].SetScores(score[i], score);
+        std::cout << players[i].GetName() + ": " << score[i] << "\n";
     }
     std::cout << "\n----------\n";
 
@@ -158,7 +159,11 @@ void Table::PlayRound() {
 }
 
 Table::~Table() {
-    for(auto it : players)
-        delete it;
     players.clear();
+}
+
+void Table::addPlayer(int fd) {
+  players.emplace_back(Player(fd));
+  if(players.size() == TABLE_SIZE)
+    Start();
 }
