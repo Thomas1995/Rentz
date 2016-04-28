@@ -15,20 +15,39 @@ Card Player::getCardChoice() {
 
 }
 
-void sendCards(const std::vector<Card>& cardsOnTable);
+void Player::sendCards(const std::vector<Card>& cardsOnTable) {
 
-void sendScores(const std::vector<int>& allScores);
+}
 
-std::string GetName();
-std::vector<Card> GetHand();
+void Player::sendScores(const std::vector<int>& allScores) {
 
-int getGameChoice();
+}
 
-void sendGameChoice(int type);
+std::string Player::getName() {
+  return name;
+}
 
-bool getNVChoice();
+std::vector<Card> Player::getHand() {
+  return hand;
+}
 
-void sendHand(const std::vector<Card>& cards);
+int Player::getGameChoice() {
 
-void sendIndex(size_t index);
+}
+
+void Player::sendGameChoice(int type) {
+
+}
+
+bool Player::getNVChoice() {
+
+}
+
+void Player::sendHand(const std::vector<Card>& cards) {
+
+}
+
+void Player::sendIndex(size_t index) {
+
+}
 

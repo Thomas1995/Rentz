@@ -12,13 +12,15 @@ struct Player {
     std::string name;
     int fd;
 
+    std::vector<Card> hand;
+
     Card getCardChoice();
     void sendCards(const std::vector<Card>& cardsOnTable);
 
     void sendScores(const std::vector<int>& allScores);
 
-    std::string GetName();
-    std::vector<Card> GetHand();
+    std::string getName();
+    std::vector<Card> getHand();
 
     int getGameChoice();
 
