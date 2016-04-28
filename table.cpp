@@ -49,9 +49,9 @@ void Table::Start() {
 
             // check if player can play that game
             require(G.gameType >= 1 && G.gameType <= G.gamesNumber,
-              G.players[i].GetName() + " has chosen a game index out of bounds");
+              G.players[i].getName() + " has chosen a game index out of bounds");
             require(gamesPlayed[i][G.gameType] == false,
-              G.players[i].GetName() + " had already chosen that game");
+              G.players[i].getName() + " had already chosen that game");
 
             gamesPlayed[i][G.gameType] = true;
 
@@ -70,15 +70,15 @@ void Table::PlayerAction(Player player) {
 
     Card playedCard = player.getCardChoice();
 
-    std::cout << player.GetName() << " played " << playedCard << "\n";
+    std::cout << player.getName() << " played " << playedCard << "\n";
 
     // check if the played card can be played
     if(cardStack.size() > 1) {
         if(!playedCard.isSameSuite(cardStack.front())) {
-            auto cards = player.GetHand();
+            auto cards = player.getHand();
             for(auto c : cards)
                 require(!cardStack.front().isSameSuite(c),
-                  player.GetName() + " had chosen a card of a different suite.");
+                  player.getName() + " had chosen a card of a different suite.");
         }
     }
 
@@ -154,7 +154,7 @@ void Table::PlayRound() {
     std::cout << "Scores:\n";
     for(int i=0;i<players.size();++i) {
         players[i].sendScores(score);
-        std::cout << players[i].GetName() + ": " << score[i] << "\n";
+        std::cout << players[i].getName() + ": " << score[i] << "\n";
     }
     std::cout << "\n----------\n";
 

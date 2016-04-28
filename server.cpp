@@ -59,7 +59,7 @@ int setupServer() {
   return server;
 }
 
-void addEvent(const int epfd, const int fd, const int flags) {
+void addEpollEvent(const int epfd, const int fd, const int flags) {
   epoll_event e;
   memset(&e, 0, sizeof(e));
   e.events = flags;
@@ -109,7 +109,7 @@ int main() {
     perror("Epoll_create() failed: ");
     exit(1);
   }
-  addEvent(epfd, server, EPOLLIN);
+  addEpollEvent(epfd, server, EPOLLIN);
 
   std::vector<epoll_event> events(MAX_EVENTS);
   while(true) {
