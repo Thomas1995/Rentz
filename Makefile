@@ -1,6 +1,11 @@
-build:
-	g++ -std=c++11 main.cpp game.cpp score.cpp util/card.cpp util/require.cpp bots/bot.cpp bots/bot_Thomas.cpp bots/bot_Lucian.cpp bots/bot_Eugen.cpp bots/bot_Eric.cpp -o exe
-run:
-	./exe
+CC=g++
+CFLAGS=-std=c++11 -g
+
+all: server
+
+server: server.cpp
+	$(CC) $(CFLAGS) server.cpp -o server
+
 clean:
-	rm -f *.o exe
+	rm server
+
