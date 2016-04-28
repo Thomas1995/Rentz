@@ -14,13 +14,11 @@ struct Player {
 
     std::vector<Card> hand;
 
-    Card getCardChoice();
     void sendCards(const std::vector<Card>& cardsOnTable);
 
     void sendScores(const std::vector<int>& allScores);
 
-    std::string getName();
-    std::vector<Card> getHand();
+    Card getCardChoice();
 
     int getGameChoice();
 
@@ -34,6 +32,9 @@ struct Player {
     explicit Player(int fd);
 
     void sendIndex(size_t index);
+
+    std::string getName();
+    std::vector<Card> getHand();
 
 };
 
