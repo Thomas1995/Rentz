@@ -8,6 +8,9 @@ Table::Table() {}
 void Table::Start() {
     Table G;
 
+    for(size_t i = 0; i < G.players.size(); ++i)
+      G.players[i].sendIndex(i);
+    
     // choose players in play
     
     Card::lowestCard = 15 - G.players.size() * 2;
@@ -150,7 +153,7 @@ void Table::PlayRound() {
     // let players know the scores
     std::cout << "Scores:\n";
     for(int i=0;i<players.size();++i) {
-        players[i].SetScores(score[i], score);
+        players[i].sendScores(score);
         std::cout << players[i].GetName() + ": " << score[i] << "\n";
     }
     std::cout << "\n----------\n";

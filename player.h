@@ -31,6 +31,8 @@ struct Player {
     Player() = delete;
     explicit Player(int fd);
 
+    void sendIndex(size_t index);
+
 };
 
 #endif
