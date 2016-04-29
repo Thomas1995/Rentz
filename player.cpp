@@ -106,11 +106,18 @@ Card Player::getCardChoice() {
   return card;
 }
 
-void Player::sendCards(const std::vector<Card>& cardsOnTable) {
-  std::vector<uint8_t> cards;
+std::vector<uint8_t> encodeCards(const std::vector<Card>& cards) {
+  std::vector<uint8_t> ret;
 
-  for(const auto &c: cardsOnTable)
-    cards.push_back(c.encode());
+  for(const auto &c: cards)
+    ret.push_back(c.encode());
+
+  return ret;
+}
+
+void Player::sendCards(const std::vector<Card>& cardsOnTable) {
+
+  auto cards = encodeCards(cardsOnTable);
 
   event req;
   req.type = event::EType::sendCards;
@@ -170,8 +177,18 @@ bool Player::getNVChoice() {
 
 }
 
-void Player::sendHand(const std::vector<Card>& cards) {
+void Player::sendHand(const std::vector<Card>& hand) {
+  auto cards = encodeCards(hand);
+  event req;
+  req.type = event::EType::sendHand;
+  req.len = cards.size();
+  req.data = cards.data();
+  req.send(fd);
 
+  event resp = readEvent();
+  assert(resp.type == req.type);
+
+  resp.free();
 }
 
 void Player::sendIndex(size_t index) {
