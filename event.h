@@ -61,7 +61,14 @@ struct event {
 
     message.push_back(FLAG);
 
-    ::send(fd, message.data(), message.size(), 0);
+    int rem = message.size();
+    uint8_t *at = message.data();
+
+    while(rem > 0) {
+      const int n = ::send(fd, at, rem, 0);
+      rem -= n;
+      at += n;
+    }
   }
 
   void init(uint8_t *ptr) {
