@@ -22,7 +22,7 @@ struct event {
       }
 
   enum EType {
-    cardData,
+    sendCards,
     scoreData,
     getGameChoice,
     getCardChoice,

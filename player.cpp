@@ -25,8 +25,6 @@ int Player::inc(int &at) {
     return at;
 }
 
-
-
 std::vector<uint8_t> Player::readFrame() {
   int n;
 
@@ -103,7 +101,22 @@ Card Player::getCardChoice() {
 }
 
 void Player::sendCards(const std::vector<Card>& cardsOnTable) {
+  std::vector<uint8_t> cards;
 
+  for(const auto &c: cardsOnTable)
+    cards.push_back(c.encode());
+
+  event req;
+  req.type = event::EType::sendCards;
+  req.len = cards.size();
+  req.data = cards.data();
+  req.send(fd);
+
+  event resp;
+
+  resp.init(readFrame().data());
+
+  assert(resp.type == event::EType::sendCards);
 }
 
 void Player::sendScores(const std::vector<int>& allScores) {
