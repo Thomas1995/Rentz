@@ -7,7 +7,7 @@ all: server client
 server: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o server
 
-client: client.o
+client: client.o common.o
 	$(CC) $(CFLAGS) common.o client.o -o client
 
 client.o: client.cpp
