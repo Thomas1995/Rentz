@@ -54,6 +54,22 @@ std::ostream& operator << (std::ostream& os, const Card& c) {
     return os << c.to_string();
 }
 
+int Card::suiteIndex() const {
+  for(int i = 0; i < 4; ++i) {
+    if(suites[i] == suite)
+      return i;
+  }
+  assert(false);
+}
+
+uint8_t Card::encode() const {
+  uint8_t ret = value;
+  //the last 4 bits represent the value
+  ret |= suiteIndex() << 4;
+  //the next 2 bits represent the suite
+  return ret;
+}
+
 int Card::getValue() const {
     return value;
 }
@@ -72,5 +88,5 @@ std::vector<Card> Card::getAllCards() {
       return allCards;
 }
 
-char Card::suites[] = "DHCS";
+const char Card::suites[] = "DHCS";
 int Card::lowestCard = 1;

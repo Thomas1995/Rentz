@@ -25,25 +25,13 @@ Diamonds: 'D'
 Spades: 'S'
 */
 
-  static char suites[];
+  static const char suites[];
 
   std::string to_string() const;
 
-  int suiteIndex() const {
-    for(int i = 0; i < 4; ++i) {
-      if(suites[i] == suite)
-        return i;
-    }
-    assert(false);
-  }
+  int suiteIndex() const;
 
-  uint8_t encode() const {
-    uint8_t ret = value;
-    //the last 4 bits represent the value
-    ret |= suiteIndex() << 4;
-    //the next 2 bits represent the suite
-    return ret;
-  }
+  uint8_t encode() const;
 
   Card(uint8_t code);
   Card(int value, char suite);
