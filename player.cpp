@@ -7,6 +7,9 @@
 #include <fcntl.h>
 #include "util/require.h"
 
+#define readAndAssert(resp) event resp = readEvent();\
+                      assert(resp.type == req.type);
+
 Player::Player(int fd):
   fd(fd),
   at(0) {
@@ -83,8 +86,7 @@ Card Player::getCardChoice() {
   req.data = NULL;
   req.send(fd);
 
-  event resp = readEvent();
-  assert(resp.type == req.type);
+  readAndAssert(resp);
 
   assert(resp.len == 1);
 
@@ -125,8 +127,7 @@ void Player::sendCards(const std::vector<Card>& cardsOnTable) {
   req.data = cards.data();
   req.send(fd);
 
-  event resp = readEvent();
-  assert(resp.type == req.type);
+  readAndAssert(resp);
 
   resp.free();
 }
@@ -151,8 +152,7 @@ void Player::sendScores(const std::vector<int>& allScores) {
   req.send(fd);
 
 
-  event resp = readEvent();
-  assert(resp.type == req.type);
+  readAndAssert(resp);
 
   resp.free();
 }
@@ -185,8 +185,7 @@ void Player::sendHand(const std::vector<Card>& hand) {
   req.data = cards.data();
   req.send(fd);
 
-  event resp = readEvent();
-  assert(resp.type == req.type);
+  readAndAssert(resp);
 
   resp.free();
 }
@@ -202,8 +201,7 @@ void Player::sendIndex(size_t index) {
   req.send(fd);
 
 
-  event resp = readEvent();
-  assert(resp.type == req.type);
+  readAndAssert(resp);
 
   resp.free();
 }
