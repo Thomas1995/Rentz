@@ -6,93 +6,94 @@
 Table::Table() {}
 
 void Table::Start() {
-    Table G;
 
-    for(size_t i = 0; i < G.players.size(); ++i)
-      G.players[i].sendIndex(i);
-    
-    // choose players in play
-    
-    Card::lowestCard = 15 - G.players.size() * 2;
+  debug("The game has started!\n");
 
-    G.score.resize(4, 0);
+  for(size_t i = 0; i < players.size(); ++i)
+    players[i].sendIndex(i);
 
-    // true if a game was already played but a certain player, false otherwise
-    bool gamesPlayed[G.players.size()][G.gamesNumber+1];
+  // choose players in play
 
-    for(int i=0;i<G.players.size();++i)
-        for(int j=0;j<G.gamesNumber+1;++j)
-            gamesPlayed[i][j] = false;
+  Card::lowestCard = 15 - players.size() * 2;
 
-    // assign the first player
-    G.firstPlayer = G.players.begin();
+  score.resize(4, 0);
 
-    for(int gameChoice = 1; gameChoice <= G.gamesNumber; ++gameChoice)
-        for(size_t i=0;i<G.players.size();++i) {
+  // true if a game was already played but a certain player, false otherwise
+  bool gamesPlayed[players.size()][gamesNumber+1];
 
-            // check if player wants to play NV mode and enforce it for the last choice
-            if(gameChoice < G.gamesNumber)
-                G.modeNV = G.players[i].getNVChoice();
-            else
-                G.modeNV = true;
+  for(size_t i=0;i<players.size();++i)
+    for(int j=0;j<gamesNumber+1;++j)
+      gamesPlayed[i][j] = false;
 
-            // if NV mode not chosen, give cards before game choice
-            if(G.modeNV == false)
-                G.GiveCards();
+  // assign the first player
+  firstPlayer = players.begin();
 
-            // get the game type
-            G.gameType = G.players[i].getGameChoice();
+  for(int gameChoice = 1; gameChoice <= gamesNumber; ++gameChoice)
+    for(size_t i=0;i<players.size();++i) {
 
-            // if NV mode chosen, give cards after game choice
-            if(G.modeNV == true)
-                G.GiveCards();
+      // check if player wants to play NV mode and enforce it for the last choice
+      if(gameChoice < gamesNumber)
+        modeNV = players[i].getNVChoice();
+      else
+        modeNV = true;
 
-            // check if player can play that game
-            require(G.gameType >= 1 && G.gameType <= G.gamesNumber,
-              G.players[i].getName() + " has chosen a game index out of bounds");
-            require(gamesPlayed[i][G.gameType] == false,
-              G.players[i].getName() + " had already chosen that game");
+      // if NV mode not chosen, give cards before game choice
+      if(modeNV == false)
+        GiveCards();
 
-            gamesPlayed[i][G.gameType] = true;
+      // get the game type
+      gameType = players[i].getGameChoice();
 
-            // let the other players know the game type
-            for(auto player : G.players)
-              player.sendGameChoice(static_cast<uint8_t>(G.gameType));
+      // if NV mode chosen, give cards after game choice
+      if(modeNV == true)
+        GiveCards();
 
-            // start the round
-            G.PlayRound();
-        }
+      // check if player can play that game
+      require(gameType >= 1 && gameType <= gamesNumber,
+          players[i].getName() + " has chosen a game index out of bounds");
+      require(gamesPlayed[i][gameType] == false,
+          players[i].getName() + " had already chosen that game");
+
+      gamesPlayed[i][gameType] = true;
+
+      // let the other players know the game type
+      for(auto player : players)
+        player.sendGameChoice(static_cast<uint8_t>(gameType));
+
+      // start the round
+      PlayRound();
+    }
 }
 
 void Table::PlayerAction(Player player) {
-    // send player the cards that were played and get his played card
-    player.sendCards(cardStack);
+  // send player the cards that were played and get his played card
+  player.sendCards(cardStack);
 
-    Card playedCard = player.getCardChoice();
+  Card playedCard = player.getCardChoice();
 
-    std::cout << player.getName() << " played " << playedCard << "\n";
+  std::cout << player.getName() << " played " << playedCard << "\n";
 
-    // check if the played card can be played
-    if(cardStack.size() > 1) {
-        if(!playedCard.isSameSuite(cardStack.front())) {
-            auto cards = player.getHand();
-            for(auto c : cards)
-                require(!cardStack.front().isSameSuite(c),
-                  player.getName() + " had chosen a card of a different suite.");
-        }
+  // check if the played card can be played
+  if(cardStack.size() > 1) {
+    if(!playedCard.isSameSuite(cardStack.front())) {
+      auto cards = player.getHand();
+      for(auto c : cards)
+        require(!cardStack.front().isSameSuite(c),
+            player.getName() + " had chosen a card of a different suite.");
     }
+  }
 
-    // push the card in play
-    cardStack.push_back(playedCard);
+  // push the card in play
+  cardStack.push_back(playedCard);
 
-    // remove the card from player's hand
+  // remove the card from player's hand
 }
 
 void Table::IterateThroughPlayers(std::vector<Player>::iterator iterator) {
-    for(auto it = iterator; it != players.end(); ++it)
-        PlayerAction(*it);
-    for(auto it = players.begin(); it != iterator; ++it)
-        PlayerAction(*it);
+  for(auto it = iterator; it != players.end(); ++it)
+    PlayerAction(*it);
+  for(auto it = players.begin(); it != iterator; ++it)
+    PlayerAction(*it);
 }
 
 void Table::GiveCards() {
@@ -105,64 +106,64 @@ void Table::GiveCards() {
   auto card = allCards.begin();
 
   // give cards to players
-  for(int i=0;i<players.size();++i) {
-      std::vector<Card> hand;
-      for(int j=1;j<=8;++j) {
-          hand.push_back(*card);
-          ++card;
-      }
-      players[i].sendHand(hand);
+  for(size_t i=0;i<players.size();++i) {
+    std::vector<Card> hand;
+    for(int j=1;j<=8;++j) {
+      hand.push_back(*card);
+      ++card;
+    }
+    players[i].sendHand(hand);
   }
 }
 
 void Table::PlayRound() {
-    for(int roundstep = 1; roundstep <= 8; ++roundstep) {
-        cardStack.clear();
+  for(int roundstep = 1; roundstep <= 8; ++roundstep) {
+    cardStack.clear();
 
-        // get players to play cards
-        IterateThroughPlayers(firstPlayer);
+    // get players to play cards
+    IterateThroughPlayers(firstPlayer);
 
-        // announce all players about the cards that were played
-        for(int i=0;i<players.size();++i)
-            players[i].sendCards(cardStack);
+    // announce all players about the cards that were played
+    for(size_t i=0;i<players.size();++i)
+      players[i].sendCards(cardStack);
 
-        // check for winner
-        int winnerIndex = 0;
-        Card winnerCard = cardStack[winnerIndex];
+    // check for winner
+    int winnerIndex = 0;
+    Card winnerCard = cardStack[winnerIndex];
 
-        for(int i=1;i<cardStack.size();++i) {
-            if(winnerCard.isBeatenBy(cardStack[i])) {
-                winnerCard = cardStack[i];
-                winnerIndex = i;
-            }
-        }
-
-        // change the first player to go
-        while(winnerIndex--) {
-            ++firstPlayer;
-            if(firstPlayer == players.end())
-                firstPlayer = players.begin();
-        }
-
-        // change score
-        ChangeScore();
-
-        std::cout << std::endl;
+    for(size_t i=1;i<cardStack.size();++i) {
+      if(winnerCard.isBeatenBy(cardStack[i])) {
+        winnerCard = cardStack[i];
+        winnerIndex = i;
+      }
     }
 
-    // let players know the scores
-    std::cout << "Scores:\n";
-    for(int i=0;i<players.size();++i) {
-        players[i].sendScores(score);
-        std::cout << players[i].getName() + ": " << score[i] << "\n";
+    // change the first player to go
+    while(winnerIndex--) {
+      ++firstPlayer;
+      if(firstPlayer == players.end())
+        firstPlayer = players.begin();
     }
-    std::cout << "\n----------\n";
+
+    // change score
+    ChangeScore();
 
     std::cout << std::endl;
+  }
+
+  // let players know the scores
+  std::cout << "Scores:\n";
+  for(size_t i=0;i<players.size();++i) {
+    players[i].sendScores(score);
+    std::cout << players[i].getName() + ": " << score[i] << "\n";
+  }
+  std::cout << "\n----------\n";
+
+  std::cout << std::endl;
 }
 
 Table::~Table() {
-    players.clear();
+  players.clear();
 }
 
 void Table::addPlayer(int fd) {

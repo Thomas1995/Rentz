@@ -9,7 +9,7 @@
 #include <vector>
 
 struct Table {
-    static const int TABLE_SIZE = 4;
+    static const int TABLE_SIZE = 1;
 
     std::vector<Player> players;
     std::vector<Player>::iterator firstPlayer;
@@ -38,7 +38,7 @@ struct Table {
 
     Table();
 
-    static void Start();
+    void Start();
 
     ~Table();
 };
