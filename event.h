@@ -96,6 +96,10 @@ struct event {
     assert(*at == FLAG);
     //last FLAG should mark the frame's end
   }
+
+  void free() {
+      delete[] data;
+  }
 };
 
 #endif

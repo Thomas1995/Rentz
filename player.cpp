@@ -80,7 +80,7 @@ Card Player::getCardChoice() {
   event resp;
   resp.init(readFrame().data());
 
-  assert(resp.type == event::getCardChoice);
+  assert(resp.type == req.type);
   assert(resp.len == 1);
 
   Card card(resp.data[0]);
@@ -97,6 +97,7 @@ Card Player::getCardChoice() {
       exit(1);
   }
 
+  resp.free();
   return card;
 }
 
@@ -116,7 +117,9 @@ void Player::sendCards(const std::vector<Card>& cardsOnTable) {
 
   resp.init(readFrame().data());
 
-  assert(resp.type == event::EType::sendCards);
+  assert(resp.type == req.type);
+
+  resp.free();
 }
 
 void Player::sendScores(const std::vector<int>& allScores) {
@@ -142,7 +145,9 @@ void Player::sendScores(const std::vector<int>& allScores) {
   event resp;
   resp.init(readFrame().data());
 
-  assert(resp.type == event::EType::sendScores);
+  assert(resp.type == req.type);
+
+  resp.free();
 }
 
 std::string Player::getName() {
