@@ -186,7 +186,6 @@ void Player::sendGameChoice(uint8_t type) {
   req.data = &type;
   req.send(fd);
 
-
   readAndAssert(resp);
 
   resp.free();

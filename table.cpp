@@ -57,7 +57,7 @@ void Table::Start() {
 
             // let the other players know the game type
             for(auto player : G.players)
-              player.sendGameChoice(G.gameType);
+              player.sendGameChoice(static_cast<uint8_t>(G.gameType));
 
             // start the round
             G.PlayRound();
