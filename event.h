@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <assert.h>
 
 struct event {
 #define append(b) \
@@ -16,9 +17,9 @@ struct event {
         message.push_back(b);\
       }
 
-  static const int FLAG = 0x7E;
-  static const int ESC = 0x7D;
-  static const int MAGIC = 0x20;
+  static const uint8_t FLAG = 0x7E;
+  static const uint8_t ESC = 0x7D;
+  static const uint8_t MAGIC = 0x20;
   enum EType {
     cardData,
     scoreData,
@@ -28,13 +29,17 @@ struct event {
     getNVChoice,
     sendHand,
     index,
-    null = LONG_MAX
-    //this is in order to force EType to be of type int
+    null
   };
 
-  EType type;
+  uint32_t type;
   size_t len;
-  void *data;
+  uint8_t *data;
+
+  uint32_t getInt(uint8_t * ptr) {
+    uint32_t ret = *((uint32_t *)ptr);
+    return ntohl(ret);
+  }
 
   void send(int fd) {
     std::vector<uint8_t> header(8, 0);
@@ -50,13 +55,38 @@ struct event {
     }
 
     for(size_t i = 0; i < len; ++i) {
-      uint8_t b = ((uint8_t *)data) [i];
+      uint8_t b = data[i];
       append(b);
     }
 
     message.push_back(FLAG);
 
     ::send(fd, message.data(), message.size(), 0);
+  }
+
+  void init(uint8_t *ptr) {
+    assert(ptr[0] == FLAG);
+    //first FLAG should mark the frame's beginning
+
+    type = getInt(ptr);
+    ptr += 4;
+    len = getInt(ptr);
+    ptr += 4;
+
+    data = new uint8_t[len];
+    uint8_t * at = (uint8_t *)ptr;
+
+    for(size_t i = 0; i < len; ++i) {
+      if(*at == ESC) {
+        ++at;
+        *at ^= MAGIC;
+      } 
+      data[i] = *at;
+      ++at;
+    }
+
+    assert(*at == FLAG);
+    //last FLAG should mark the frame's end
   }
 };
 
