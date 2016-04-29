@@ -21,12 +21,7 @@ struct Player {
 
     std::vector<Card> hand;
 
-    int inc(int &at) {
-        at++;
-        if(at == MAX_BUFF)
-            at = 0;
-        return at;
-    }
+    int inc(int &at);
 
     void sendCards(const std::vector<Card>& cardsOnTable);
 

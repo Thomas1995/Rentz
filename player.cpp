@@ -18,6 +18,14 @@ Player::Player(int fd):
     memset(buff, 0, sizeof(buff));
   }
 
+int Player::inc(int &at) {
+    at++;
+    if(at == MAX_BUFF)
+        at = 0;
+    return at;
+}
+
+
 
 std::vector<uint8_t> Player::readFrame() {
   int n;
