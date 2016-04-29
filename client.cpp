@@ -1,4 +1,5 @@
 #include <netdb.h>
+#include "util/card.h"
 #include <string>
 #include <fcntl.h>
 #include <assert.h>
@@ -13,6 +14,8 @@
 #include <unistd.h>
 #include <vector>
 #include "event.h"
+#include "bots/bot.h"
+#include "bots/bot_Thomas.h"
 #include "common.h"
 
 const char PORT[] = "31337";
@@ -21,9 +24,13 @@ struct Client : public Common {
 
   int index;
 
+  Bot* bot;
+
   Client() = delete;
 
   Client(char **argv) {
+
+    bot = new Bot_Thomas;
 
     addrinfo hints, *rez;
 
@@ -54,7 +61,56 @@ struct Client : public Common {
     handshake(argv[2]);
 
     while(1) {
+      event e = readEvent();
+      event resp;
+      resp.type = e.type;
 
+      switch(e.type) {
+        case event::EType::sendCards:
+          {
+            break;
+          }
+
+        case event::EType::sendHand:
+          {
+            break;
+          }
+
+        case event::EType::sendScores:
+          {
+            break;
+          }
+
+        case event::EType::getGameChoice:
+          {
+            break;
+          }
+
+        case event::EType::sendGameChoice: 
+          {
+            break;
+          }
+
+        case event::EType::getCardChoice:
+          {
+            Card c = bot->PlayCard();
+            resp.len = 1;
+            uint8_t code = c.encode();
+            resp.data = &code;
+            resp.send(sfd);
+            break;
+          }
+
+        case event::EType::getNVChoice: 
+          {
+            bool ans = bot->PlayNVMode();
+            resp.len = 1;
+            resp.data = reinterpret_cast<uint8_t *>(&ans);
+            resp.send(sfd);
+            break;
+          }
+      }
+      e.free();
     }
   }
 

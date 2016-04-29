@@ -7,7 +7,7 @@ public:
         name = "Thomas";
     }
 
-    Card PlayCard(const std::vector<Card>& cardsOnTable) {
+    Card PlayCard() {
         /// TO DO BETTER
 
         auto hand = GetHand();
@@ -20,7 +20,7 @@ public:
         return hand[0];
     }
 
-    void GetPlayedCardStack(const std::vector<Card>& cardsOnTable) {
+    void GetPlayedCardStack() {
         /// TO DO
     }
 
