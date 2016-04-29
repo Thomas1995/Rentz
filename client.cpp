@@ -1,5 +1,6 @@
 #include <netdb.h>
 #include <string>
+#include <fcntl.h>
 #include <assert.h>
 #include <sstream>
 #include <iostream>
@@ -18,11 +19,7 @@ const char PORT[] = "31337";
 
 struct Client : public Common {
 
-  static const int MAX_BUFF = 1024 * 8;
-  std::vector<int> flags;
-  char buff[MAX_BUFF];
-  int at;
-  int sfd;
+  int index;
 
   Client() = delete;
 
@@ -50,13 +47,27 @@ struct Client : public Common {
       close(sfd);
     }
 
+    fcntl(sfd, F_SETFL, O_NONBLOCK);
+
     freeaddrinfo(rez);
 
-    send(sfd, argv[2], strlen(argv[2]), 0);
+    handshake(argv[2]);
 
     while(1) {
 
     }
+  }
+
+  void handshake(char* name) {
+
+    event e = readEvent();
+    assert(e.type = event::EType::requestName);
+    e.free();
+
+    e.len = strlen(name);
+    e.data = reinterpret_cast<uint8_t *>(name);
+
+    e.send(sfd);
   }
 };
 

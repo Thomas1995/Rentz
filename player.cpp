@@ -12,11 +12,8 @@
 
 Player::Player(int sfd):
   Common(sfd) {
-    name.resize(100, 0);
-    read(sfd, (char *)name.data(), name.length());
-    name.shrink_to_fit();
+    name = requestName();
     debug("Player on sfd = %d is named %s\n", sfd, name.c_str());
-    memset(buff, 0, sizeof(buff));
   }
 
 Card Player::getCardChoice() {
@@ -55,6 +52,25 @@ std::vector<uint8_t> encodeCards(const std::vector<Card>& cards) {
     ret.push_back(c.encode());
 
   return ret;
+}
+
+std::string Player::requestName() {
+  event req;
+  req.type = event::EType::requestName;
+  req.len = 0;
+  req.data = NULL;
+  req.send(sfd);
+
+  readAndAssert(resp);
+
+  std::string name;
+
+  for(size_t i = 0; i < resp.len; ++i) {
+    name += resp.data[i];
+  }
+
+  resp.free();
+  return name;
 }
 
 void Player::sendCards(const std::vector<Card>& cardsOnTable) {

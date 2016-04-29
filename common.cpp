@@ -1,4 +1,6 @@
 #include "common.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 int Common::inc(int &x) {
 	x++;
@@ -16,25 +18,28 @@ Common::Common():
 Common::Common(int sfd):
   at(0),
   sfd(sfd) {
-
+    fcntl(sfd, F_SETFL, O_NONBLOCK);
+    //set the fd to be non blocking
   }
 
 std::vector<uint8_t> Common::readFrame() {
 
 	int n;
 
-	const int prev = at;
+	while((n = read(sfd, buff + at, MAX_BUFF - at)) != 0 && flags.size() < 2) {
+    if(n == -1)
+      continue;
+    debug("Read %d bytes\n", n);
 
-	while((n = read(sfd, buff + at, MAX_BUFF - at)) > 0) {
+    int cr = at;
+    for(int i = 0; i < n; ++i, inc(cr)) {
+      if(buff[cr] == FLAG)
+        flags.push_back(cr);
+    }
+
 		at += n;
 		if(at >= MAX_BUFF)
 			at -= MAX_BUFF;
-	}
-
-	for(int i = prev; i != at; inc(i)) {
-		if(buff[i] == FLAG) {
-			flags.push_back(i);
-		}
 	}
 
 	if(flags.size() < 2) {
@@ -57,6 +62,10 @@ std::vector<uint8_t> Common::readFrame() {
 	frame.reserve(cnt);
 
 	for(int i = flags[0]; i != flags[1]; inc(i)) {
+    if(buff[i] == ESC) {
+      inc(i);
+      buff[i] ^= MAGIC;
+    }
 		frame.push_back(buff[i]);
 		buff[i] = 0;
 	}

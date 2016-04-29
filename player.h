@@ -14,7 +14,6 @@ struct Player : public Common {
 
     std::vector<Card> hand;
 
-
     void sendCards(const std::vector<Card>& cardsOnTable);
 
     void sendScores(const std::vector<int>& allScores);
@@ -28,6 +27,8 @@ struct Player : public Common {
     bool getNVChoice();
 
     void sendHand(const std::vector<Card>& cards);
+
+    std::string requestName();
 
     Player() = delete;
     explicit Player(int sfd);

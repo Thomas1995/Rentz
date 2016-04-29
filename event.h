@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <assert.h>
+#include "util/debug.h"
 
 const uint8_t FLAG = 0x7E;
 const uint8_t ESC = 0x7D;
@@ -42,6 +43,9 @@ struct event {
 
     sendIndex,
     //the index is a 4 byte unsigned integer
+    
+    requestName,
+
     null
   };
 
@@ -79,6 +83,7 @@ struct event {
 
     while(rem > 0) {
       const int n = ::send(fd, at, rem, 0);
+      debug("Sent %d bytes\n", n);
       rem -= n;
       at += n;
     }
@@ -87,6 +92,8 @@ struct event {
   void init(uint8_t *ptr) {
     assert(ptr[0] == FLAG);
     //first FLAG should mark the frame's beginning
+    
+    ++ptr;
 
     type = getInt(ptr);
     ptr += 4;
@@ -97,10 +104,6 @@ struct event {
     uint8_t * at = (uint8_t *)ptr;
 
     for(size_t i = 0; i < len; ++i) {
-      if(*at == ESC) {
-        ++at;
-        *at ^= MAGIC;
-      } 
       data[i] = *at;
       ++at;
     }
