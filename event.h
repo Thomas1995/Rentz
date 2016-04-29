@@ -23,13 +23,25 @@ struct event {
 
   enum EType {
     sendCards,
-    sendScores,
-    getGameChoice,
-    getCardChoice,
-    sendGameChoice,
-    getNVChoice,
     sendHand,
+    //both of these events include an array of unsigned bytes
+    //of codified cards
+
+    sendScores,
+    //the scores are encoded as 4 byte integers
+
+    getGameChoice,
+    sendGameChoice,
+    //game choice is represented as an unsigned byte
+
+    getCardChoice,
+    //card choice is 1 unsigned byte codified card
+
+    getNVChoice,
+    //NV choice is a 1 byte boolean
+
     sendIndex,
+    //the index is a 4 byte unsigned integer
     null
   };
 

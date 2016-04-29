@@ -28,7 +28,7 @@ void Table::Start() {
     G.firstPlayer = G.players.begin();
 
     for(int gameChoice = 1; gameChoice <= G.gamesNumber; ++gameChoice)
-        for(int i=0;i<G.players.size();++i) {
+        for(size_t i=0;i<G.players.size();++i) {
 
             // check if player wants to play NV mode and enforce it for the last choice
             if(gameChoice < G.gamesNumber)
