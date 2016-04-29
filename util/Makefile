@@ -10,4 +10,4 @@ require.o: require.cpp
 		$(CC) $(CFLAGS) -c require.cpp
 
 clean:
-		rm *\.o
+		rm -f *\.o

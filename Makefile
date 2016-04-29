@@ -29,7 +29,7 @@ util/require.o:
 
 .PHONY: clean
 clean:
-	rm *\.o
-	rm server
+	rm -f *\.o
+	rm -f server
 	make -C util clean
 
