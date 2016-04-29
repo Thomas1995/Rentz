@@ -5,16 +5,32 @@
 #include "util/gamelist.h"
 #include <vector>
 #include <algorithm>
-
+#include "event.h"
 
 struct Player {
+
+    static const size_t MAX_BUFF = 1024 * 8;
 
     std::string name;
     int fd;
 
+    uint8_t buff[MAX_BUFF];
+    int at;
+
+    std::vector<int> flags;
+
     std::vector<Card> hand;
 
+    int inc(int &at) {
+        at++;
+        if(at == MAX_BUFF)
+            at = 0;
+        return at;
+    }
+
     void sendCards(const std::vector<Card>& cardsOnTable);
+
+    std::vector<uint8_t> readFrame();
 
     void sendScores(const std::vector<int>& allScores);
 

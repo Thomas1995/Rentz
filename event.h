@@ -8,6 +8,10 @@
 #include <sys/socket.h>
 #include <assert.h>
 
+const uint8_t FLAG = 0x7E;
+const uint8_t ESC = 0x7D;
+const uint8_t MAGIC = 0x20;
+
 struct event {
 #define append(b) \
       if(b == FLAG || b == ESC) {\
@@ -17,9 +21,6 @@ struct event {
         message.push_back(b);\
       }
 
-  static const uint8_t FLAG = 0x7E;
-  static const uint8_t ESC = 0x7D;
-  static const uint8_t MAGIC = 0x20;
   enum EType {
     cardData,
     scoreData,
