@@ -121,6 +121,28 @@ void Player::sendCards(const std::vector<Card>& cardsOnTable) {
 
 void Player::sendScores(const std::vector<int>& allScores) {
 
+  std::vector<uint8_t> data;
+
+  data.reserve(allScores.size() * 4);
+
+  for(const auto &i: allScores) {
+    const int x = htonl(i);
+    const uint8_t*const ptr = reinterpret_cast<const uint8_t *const>(&x);
+    for(int i = 0; i < 4; ++i)
+      data.push_back(ptr[i]);
+  }
+
+  event req;
+  req.type = event::EType::sendScores;
+  req.len = data.size();
+  req.data = data.data();
+  req.send(fd);
+
+
+  event resp;
+  resp.init(readFrame().data());
+
+  assert(resp.type == event::EType::sendScores);
 }
 
 std::string Player::getName() {
