@@ -18,7 +18,7 @@ protected:
 
 public:
     virtual Card PlayCard() = 0;
-    virtual void GetPlayedCardStack(const std::vector<Card>& cardsOnTable) = 0;
+    virtual void GetPlayedCardStack() = 0;
     virtual int GetGameType() = 0;
     virtual void SetGameType(const int gameType) = 0;
     virtual bool PlayNVMode() = 0;

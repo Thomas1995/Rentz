@@ -2,76 +2,19 @@
 
 class Bot_Thomas : public Bot {
 public:
-    Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
-                    Whist, Acool, KingOfHearts, TenClub} {
-        name = "Thomas";
-    }
+    Bot_Thomas();
 
-    Card PlayCard() {
-        /// TO DO BETTER
+    Card PlayCard();
 
-        auto hand = GetHand();
-        if(cardsOnTable.empty()) return hand[0];
+    void GetPlayedCardStack();
 
-        for(auto c : hand)
-            if(cardsOnTable[0].isSameSuite(c))
-                return c;
+    int GetGameType();
 
-        return hand[0];
-    }
+    void SetGameType(const int gameType);
 
-    void GetPlayedCardStack() {
-        /// TO DO
-    }
+    bool PlayNVMode();
 
-    int GetGameType() {
-        if(NVModeChosen) {
-            // chose a game based on gamesOrderNV
-            for(int i=0;i<7;++i)
-              if(!gamesPlayed[gamesOrderNV[i]]) {
-                gamesPlayed[gamesOrderNV[i]] = true;
-                return gamesOrderNV[i];
-              }
-        }
-        else {
-            auto hand = GetHand();
-
-            /// TO DO BETTER
-
-            /// DETELE THIS
-            for(int i=0;i<7;++i)
-              if(!gamesPlayed[gamesOrderNV[i]]) {
-                gamesPlayed[gamesOrderNV[i]] = true;
-                return gamesOrderNV[i];
-              }
-        }
-    }
-
-    void SetGameType(const int gameType) {
-        crtGameType = gameType;
-    }
-
-    bool PlayNVMode() {
-        // play NV mode if not first or second player
-        if(myLadderPosition > 2) {
-            NVModeChosen = true;
-            return true;
-        }
-
-        NVModeChosen = false;
-        return false;
-    }
-
-    void SetScores(const int yourScore, const std::vector<int>& allScores) {
-        // count scores bigger than mine
-        int biggerScores = 0;
-        for(auto it : allScores) {
-            if(it > yourScore)
-                ++biggerScores;
-        }
-        // update my ladder position
-        myLadderPosition = biggerScores + 1;
-    }
+    void SetScores(const int yourScore, const std::vector<int>& allScores);
 
 private:
     bool gamesPlayed[8];
