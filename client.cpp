@@ -68,6 +68,20 @@ struct Client : public Common {
     e.data = reinterpret_cast<uint8_t *>(name);
 
     e.send(sfd);
+
+
+    e = readEvent();
+    assert(e.type == event::EType::sendIndex);
+    assert(e.len == 4);
+
+    index = *(reinterpret_cast<uint32_t *>(e.data));
+
+    e.free();
+    e.len = 0;
+    e.data = NULL;
+    e.send(sfd);
+
+    printf("our index is %d\n", index);
   }
 };
 
