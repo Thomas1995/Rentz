@@ -176,5 +176,19 @@ void Player::sendHand(const std::vector<Card>& cards) {
 
 void Player::sendIndex(size_t index) {
 
+  index = htonl(index);
+
+  event req;
+  req.type = event::EType::sendIndex;
+  req.len = 4;
+  req.data = reinterpret_cast<uint8_t *>(&index);
+  req.send(fd);
+
+
+  event resp;
+  resp.init(readFrame().data());
+  assert(resp.type == req.type);
+
+  resp.free();
 }
 

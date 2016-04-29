@@ -29,7 +29,7 @@ struct event {
     sendGameChoice,
     getNVChoice,
     sendHand,
-    index,
+    sendIndex,
     null
   };
 
