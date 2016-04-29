@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include "event.h"
 
 Player::Player(int fd):
   fd(fd) {
@@ -12,7 +13,11 @@ Player::Player(int fd):
 
 
 Card Player::getCardChoice() {
-
+  event e;
+  e.type = event::getCardChoice;
+  e.len = 0;
+  e.data = NULL;
+  e.send(fd);
 }
 
 void Player::sendCards(const std::vector<Card>& cardsOnTable) {
