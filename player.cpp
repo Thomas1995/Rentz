@@ -151,7 +151,6 @@ void Player::sendScores(const std::vector<int>& allScores) {
   req.data = data.data();
   req.send(fd);
 
-
   readAndAssert(resp);
 
   resp.free();
@@ -165,16 +164,35 @@ std::vector<Card> Player::getHand() {
   return hand;
 }
 
-int Player::getGameChoice() {
+uint8_t Player::getGameChoice() {
+  event req;
+  req.type = event::EType::getGameChoice;
+  req.len = 0;
+  req.data = NULL;
+  req.send(fd);
 
+  readAndAssert(resp);
+  assert(resp.len == 1);
+
+  uint8_t choice = resp.data[0];
+  resp.free();
+  return choice;
 }
 
-void Player::sendGameChoice(int type) {
+void Player::sendGameChoice(uint8_t type) {
+  event req;
+  req.type = event::EType::sendGameChoice;
+  req.len = 1;
+  req.data = &type;
+  req.send(fd);
 
+
+  readAndAssert(resp);
+
+  resp.free();
 }
 
 bool Player::getNVChoice() {
-
   event req;
   req.type = event::EType::getNVChoice;
   req.len = 0;
@@ -184,6 +202,8 @@ bool Player::getNVChoice() {
   readAndAssert(resp);
   assert(resp.len == 1);
   bool NV = resp.data[0];
+
+  resp.free();
   return NV;
 }
 

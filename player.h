@@ -33,9 +33,9 @@ struct Player {
 
     Card getCardChoice();
 
-    int getGameChoice();
+    uint8_t getGameChoice();
 
-    void sendGameChoice(int type);
+    void sendGameChoice(uint8_t type);
 
     bool getNVChoice();
 
