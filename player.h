@@ -27,6 +27,8 @@ struct Player {
 
     std::vector<uint8_t> readFrame();
 
+    event readEvent();
+
     void sendScores(const std::vector<int>& allScores);
 
     Card getCardChoice();

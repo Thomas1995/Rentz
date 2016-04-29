@@ -70,6 +70,12 @@ std::vector<uint8_t> Player::readFrame() {
   return frame;
 }
 
+event Player::readEvent() {
+  event ret;
+  ret.init(readFrame().data());
+  return ret;
+}
+
 Card Player::getCardChoice() {
   event req;
   req.type = event::getCardChoice;
@@ -77,10 +83,9 @@ Card Player::getCardChoice() {
   req.data = NULL;
   req.send(fd);
 
-  event resp;
-  resp.init(readFrame().data());
-
+  event resp = readEvent();
   assert(resp.type == req.type);
+
   assert(resp.len == 1);
 
   Card card(resp.data[0]);
@@ -113,10 +118,7 @@ void Player::sendCards(const std::vector<Card>& cardsOnTable) {
   req.data = cards.data();
   req.send(fd);
 
-  event resp;
-
-  resp.init(readFrame().data());
-
+  event resp = readEvent();
   assert(resp.type == req.type);
 
   resp.free();
@@ -142,9 +144,7 @@ void Player::sendScores(const std::vector<int>& allScores) {
   req.send(fd);
 
 
-  event resp;
-  resp.init(readFrame().data());
-
+  event resp = readEvent();
   assert(resp.type == req.type);
 
   resp.free();
@@ -185,8 +185,7 @@ void Player::sendIndex(size_t index) {
   req.send(fd);
 
 
-  event resp;
-  resp.init(readFrame().data());
+  event resp = readEvent();
   assert(resp.type == req.type);
 
   resp.free();
