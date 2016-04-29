@@ -65,11 +65,33 @@ std::vector<uint8_t> Player::readFrame() {
 }
 
 Card Player::getCardChoice() {
-  event e;
-  e.type = event::getCardChoice;
-  e.len = 0;
-  e.data = NULL;
-  e.send(fd);
+  event req;
+  req.type = event::getCardChoice;
+  req.len = 0;
+  req.data = NULL;
+  req.send(fd);
+
+  event resp;
+  resp.init(readFrame().data());
+
+  assert(resp.type == event::getCardChoice);
+  assert(resp.len == 1);
+
+  Card card(resp.data[0]);
+
+  bool in = 0;
+
+  for(const auto &i: hand) {
+      if(i == card)
+          in = 1;
+  }
+
+  if(!in) {
+      debug("The client has sent an incorrect card");
+      exit(1);
+  }
+
+  return card;
 }
 
 void Player::sendCards(const std::vector<Card>& cardsOnTable) {
