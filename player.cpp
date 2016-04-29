@@ -175,6 +175,16 @@ void Player::sendGameChoice(int type) {
 
 bool Player::getNVChoice() {
 
+  event req;
+  req.type = event::EType::getNVChoice;
+  req.len = 0;
+  req.data = NULL;
+  req.send(fd);
+
+  readAndAssert(resp);
+  assert(resp.len == 1);
+  bool NV = resp.data[0];
+  return NV;
 }
 
 void Player::sendHand(const std::vector<Card>& hand) {
