@@ -1,4 +1,4 @@
 *.log
 *.o
 server
-exe
+client
