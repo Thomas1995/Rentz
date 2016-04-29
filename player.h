@@ -6,28 +6,16 @@
 #include <vector>
 #include <algorithm>
 #include "event.h"
+#include "common.h"
 
-struct Player {
-
-    static const size_t MAX_BUFF = 1024 * 8;
+struct Player : public Common {
 
     std::string name;
-    int fd;
-
-    uint8_t buff[MAX_BUFF];
-    int at;
-
-    std::vector<int> flags;
 
     std::vector<Card> hand;
 
-    int inc(int &at);
 
     void sendCards(const std::vector<Card>& cardsOnTable);
-
-    std::vector<uint8_t> readFrame();
-
-    event readEvent();
 
     void sendScores(const std::vector<int>& allScores);
 
@@ -42,7 +30,7 @@ struct Player {
     void sendHand(const std::vector<Card>& cards);
 
     Player() = delete;
-    explicit Player(int fd);
+    explicit Player(int sfd);
 
     void sendIndex(size_t index);
 

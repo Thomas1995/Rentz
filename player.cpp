@@ -5,86 +5,26 @@
 #include <string.h>
 #include "event.h"
 #include <fcntl.h>
-#include "util/require.h"
+#include "util/debug.h"
 
 #define readAndAssert(resp) event resp = readEvent();\
                       assert(resp.type == req.type);
 
-Player::Player(int fd):
-  fd(fd),
-  at(0) {
-    fcntl(fd, F_SETFL, O_NONBLOCK);
-    //make the fd non blocking
+Player::Player(int sfd):
+  Common(sfd) {
     name.resize(100, 0);
-    read(fd, (char *)name.data(), name.length());
+    read(sfd, (char *)name.data(), name.length());
     name.shrink_to_fit();
+    debug("Player on sfd = %d is named %s\n", sfd, name.c_str());
     memset(buff, 0, sizeof(buff));
   }
-
-int Player::inc(int &at) {
-    at++;
-    if(at == MAX_BUFF)
-        at = 0;
-    return at;
-}
-
-std::vector<uint8_t> Player::readFrame() {
-  int n;
-
-  const int prev = at;
-
-  while((n = read(fd, buff + at, MAX_BUFF - at)) > 0) {
-      at += n;
-      if(at >= MAX_BUFF)
-          at -= MAX_BUFF;
-  }
-
-  for(int i = prev; i != at; inc(i)) {
-      if(buff[i] == FLAG) {
-          flags.push_back(i);
-      }
-  }
-
-  if(flags.size() < 2) {
-      debug("The client has closed the connection\n");
-      exit(1);
-      //TODO
-      //add disconnect handling
-  }
-
-  assert(flags.size() == 2);
-
-  inc(flags[1]);
-  //flags[1] refers to the
-  //past the flag byte
-
-  std::vector<uint8_t> frame;
-  const int cnt = flags[1] > flags[0] ? flags[1] - flags[0] : MAX_BUFF - flags[0] + flags[1];
-  frame.reserve(cnt);
-
-  for(int i = flags[0]; i != flags[1]; inc(i)) {
-      frame.push_back(buff[i]);
-      buff[i] = 0;
-  }
-
-  flags.clear();
-
-  frame.shrink_to_fit();
-  return frame;
-}
-
-event Player::readEvent() {
-  event ret;
-  ret.init(readFrame().data());
-  return ret;
-}
 
 Card Player::getCardChoice() {
   event req;
   req.type = event::getCardChoice;
   req.len = 0;
   req.data = NULL;
-  req.send(fd);
+  req.send(sfd);
 
   readAndAssert(resp);
 
@@ -125,7 +65,7 @@ void Player::sendCards(const std::vector<Card>& cardsOnTable) {
   req.type = event::EType::sendCards;
   req.len = cards.size();
   req.data = cards.data();
-  req.send(fd);
+  req.send(sfd);
 
   readAndAssert(resp);
 
@@ -149,7 +89,7 @@ void Player::sendScores(const std::vector<int>& allScores) {
   req.type = event::EType::sendScores;
   req.len = data.size();
   req.data = data.data();
-  req.send(fd);
+  req.send(sfd);
 
   readAndAssert(resp);
 
@@ -169,7 +109,7 @@ uint8_t Player::getGameChoice() {
   req.type = event::EType::getGameChoice;
   req.len = 0;
   req.data = NULL;
-  req.send(fd);
+  req.send(sfd);
 
   readAndAssert(resp);
   assert(resp.len == 1);
@@ -184,7 +124,7 @@ void Player::sendGameChoice(uint8_t type) {
   req.type = event::EType::sendGameChoice;
   req.len = 1;
   req.data = &type;
-  req.send(fd);
+  req.send(sfd);
 
   readAndAssert(resp);
 
@@ -196,7 +136,7 @@ bool Player::getNVChoice() {
   req.type = event::EType::getNVChoice;
   req.len = 0;
   req.data = NULL;
-  req.send(fd);
+  req.send(sfd);
 
   readAndAssert(resp);
   assert(resp.len == 1);
@@ -212,7 +152,7 @@ void Player::sendHand(const std::vector<Card>& hand) {
   req.type = event::EType::sendHand;
   req.len = cards.size();
   req.data = cards.data();
-  req.send(fd);
+  req.send(sfd);
 
   readAndAssert(resp);
 
@@ -227,7 +167,7 @@ void Player::sendIndex(size_t index) {
   req.type = event::EType::sendIndex;
   req.len = 4;
   req.data = reinterpret_cast<uint8_t *>(&index);
-  req.send(fd);
+  req.send(sfd);
 
 
   readAndAssert(resp);

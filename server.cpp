@@ -78,12 +78,13 @@ int acceptConnection(int server) {
   //the client is using IPv4
     sockaddr_in *sin = (sockaddr_in *)&addr;
     inet_ntop(sin->sin_family, (void *)&sin->sin_addr, buff, sizeof(buff));
-    printf("Accepted connection from %s: %d", buff, sin->sin_port);
+
+    debug("Accepted connection from %s: %d\n", buff, sin->sin_port);
   } else {
   //the client is using IPv6
     sockaddr_in6 *sin = (sockaddr_in6 *)&addr;
     inet_ntop(sin->sin6_family, (void *)&sin->sin6_addr, buff, sizeof(buff));
-    printf("Accepted connection from %s: %d", buff, sin->sin6_port);
+    debug("Accepted connection from %s: %d\n", buff, sin->sin6_port);
   }
 
   if(client == -1) {
@@ -114,6 +115,7 @@ int main() {
   std::vector<epoll_event> events(MAX_EVENTS);
   while(true) {
     const int n = epoll_wait(epfd, events.data(), MAX_EVENTS, -1);
+    debug("Received %d events\n", n);
     for(int i = 0; i < n; ++i) {
       const epoll_event &now = events[i];
       if(now.data.fd == server) {
