@@ -1,5 +1,5 @@
-CC=g++
-CFLAGS=-std=c++11 -g
+CXX?=g++
+CFLAGS?=-std=c++11 -g -Wall
 OBJS=score.o server.o player.o util/card.o table.o util/require.o common.o
 BOTS=bots/bot_Thomas.o bots/bot.o
 UTIL=util/card.o util/require.o
@@ -8,13 +8,13 @@ HEADERS=common.h event.h player.h table.h
 all: server client
 
 server: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o server
+	$(CXX) $(CFLAGS) $(OBJS) -o server
 
 client: client.o common.o $(BOTS)
-	$(CC) $(CFLAGS) $(BOTS) $(UTIL) common.o client.o -o client
+	$(CXX) $(CFLAGS) $(BOTS) $(UTIL) common.o client.o -o client
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $<
+	$(CXX) $(CFLAGS) -c $<
 
 %.cpp: %.h
 

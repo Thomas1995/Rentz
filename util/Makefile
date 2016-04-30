@@ -1,11 +1,11 @@
-CC=g++
-CFLAGS=-std=c++11 -g
+CXX?=g++
+CFLAGS?=-std=c++11 -g
 OBJS=card.o require.o
 
 all: $(OBJS)
 
 %.o: %.cpp %.h
-	$(CC) $(CFLAGS) -c $<
+	$(CXX) $(CFLAGS) -c $<
 
 .PHONY: clean
 clean:
