@@ -86,7 +86,7 @@ struct Client : public Common {
             break;
           }
 
-        case event::EType::sendGameChoice: 
+        case event::EType::sendGameChoice:
           {
             break;
           }
@@ -101,7 +101,7 @@ struct Client : public Common {
             break;
           }
 
-        case event::EType::getNVChoice: 
+        case event::EType::getNVChoice:
           {
             bool ans = bot->PlayNVMode();
             resp.len = 1;
@@ -139,6 +139,10 @@ struct Client : public Common {
 
     printf("our index is %d\n", index);
   }
+
+  ~Client() {
+    delete bot;
+  }
 };
 
 int main(int argc, char ** argv) {
@@ -153,4 +157,3 @@ int main(int argc, char ** argv) {
 
   return 0;
 }
-
