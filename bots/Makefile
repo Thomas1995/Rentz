@@ -1,5 +1,5 @@
 CXX?=g++
-CFLAGS?=-std=c++11 -g
+CFLAGS?=-std=c++11 -g -Wall
 OBJS=bot_Thomas.o bot.o
 COMMON=../util/card.cpp ../util/require.h ../util/gamelist.h
 
