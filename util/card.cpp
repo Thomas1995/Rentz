@@ -1,6 +1,6 @@
 #include "card.h"
 #include "require.h"
-#include "../game.h"
+#include "../table.h"
 
 #include <cstring>
 
@@ -8,6 +8,12 @@ Card::Card(int value, char suite) : value(value), suite(toupper(suite)) {
     require(value >= 2 && value <= 14, "Wrong format!");
     require(strchr(Card::suites, suite), "Wrong format!");
 }
+
+Card::Card(uint8_t code):
+  value(code & 0b1111),
+  suite(suites[code >> 4]) {
+
+  }
 
 Card::Card(const Card& c) : value(c.getValue()), suite(c.getSuite()) {}
 
@@ -48,6 +54,22 @@ std::ostream& operator << (std::ostream& os, const Card& c) {
     return os << c.to_string();
 }
 
+int Card::suiteIndex() const {
+  for(int i = 0; i < 4; ++i) {
+    if(suites[i] == suite)
+      return i;
+  }
+  assert(false);
+}
+
+uint8_t Card::encode() const {
+  uint8_t ret = value;
+  //the last 4 bits represent the value
+  ret |= suiteIndex() << 4;
+  //the next 2 bits represent the suite
+  return ret;
+}
+
 int Card::getValue() const {
     return value;
 }
@@ -61,10 +83,10 @@ std::vector<Card> Card::getAllCards() {
 
       for(int i=lowestCard;i<=14;++i)
           for(char j=0;j<4;++j)
-            allCards.push_back(Card(i, Card::suites[j]));
+            allCards.push_back(Card(i, Card::suites[(int)j]));
 
       return allCards;
 }
 
-char Card::suites[] = "DHCS";
+const char Card::suites[] = "DHCS";
 int Card::lowestCard = 1;

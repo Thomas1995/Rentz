@@ -1,68 +1,68 @@
-#include "game.h"
+#include "table.h"
 
-void Game::ChangeScore() {
+void Table::ChangeScore() {
 
     int crtPlayer = firstPlayer - players.begin();
 
     int scoreToAdd = 0;
 
-    if(crtGameType == KingOfHearts)
+    if(gameType == KingOfHearts)
         ScoreKingOfHearts(scoreToAdd);
 
-    if(crtGameType == Queens)
+    if(gameType == Queens)
         ScoreQueens(scoreToAdd);
 
-    if(crtGameType == Diamonds)
+    if(gameType == Diamonds)
         ScoreDiamonds(scoreToAdd);
 
-    if(crtGameType == Acool)
+    if(gameType == Acool)
         ScoreAcool(scoreToAdd);
 
-    if(crtGameType == Whist)
+    if(gameType == Whist)
         ScoreWhist(scoreToAdd);
 
-    if(crtGameType == TenClub)
+    if(gameType == TenClub)
         ScoreTenClub(scoreToAdd);
 
-    if(crtGameType == Totals)
+    if(gameType == Totals)
         ScoreTotals(scoreToAdd);
 
     score[crtPlayer] += scoreToAdd * (1 + modeNV);
 }
 
-void Game::ScoreKingOfHearts(int& scoreToAdd) {
+void Table::ScoreKingOfHearts(int& scoreToAdd) {
     for(auto c : cardStack)
         if(c.getValue() == 13 && c.getSuite() == 'H')
             scoreToAdd -= 100;
 }
 
-void Game::ScoreQueens(int& scoreToAdd) {
+void Table::ScoreQueens(int& scoreToAdd) {
     for(auto c : cardStack)
         if(c.getValue() == 12)
             scoreToAdd -= 30;
 }
 
-void Game::ScoreDiamonds(int& scoreToAdd) {
+void Table::ScoreDiamonds(int& scoreToAdd) {
     for(auto c : cardStack)
         if(c.getSuite() == 'D')
             scoreToAdd -= 20;
 }
 
-void Game::ScoreAcool(int& scoreToAdd) {
+void Table::ScoreAcool(int& scoreToAdd) {
     scoreToAdd -= 10;
 }
 
-void Game::ScoreWhist(int& scoreToAdd) {
+void Table::ScoreWhist(int& scoreToAdd) {
     scoreToAdd += 10;
 }
 
-void Game::ScoreTenClub(int& scoreToAdd) {
+void Table::ScoreTenClub(int& scoreToAdd) {
     for(auto c : cardStack)
         if(c.getValue() == 10 && c.getSuite() == 'C')
             scoreToAdd += 100;
 }
 
-void Game::ScoreTotals(int& scoreToAdd) {
+void Table::ScoreTotals(int& scoreToAdd) {
     ScoreKingOfHearts(scoreToAdd);
     ScoreQueens(scoreToAdd);
     ScoreDiamonds(scoreToAdd);
