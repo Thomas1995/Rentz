@@ -13,4 +13,4 @@
 #define debug(...) if(D)\
                     fprintf(stderr, __VA_ARGS__)
 
-#endif
+#endif // DEBUG_H
