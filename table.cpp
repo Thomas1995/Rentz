@@ -85,8 +85,6 @@ void Table::PlayerAction(Player player) {
 
   // push the card in play
   cardStack.push_back(playedCard);
-
-  // remove the card from player's hand
 }
 
 void Table::IterateThroughPlayers(std::vector<Player>::iterator iterator) {
