@@ -5,11 +5,10 @@ COMMON=../util/card.cpp ../util/require.h ../util/gamelist.h
 
 all: $(OBJS)
 
-bot_Thomas.o: bot_Thomas.cpp $(COMMON) bot.h bot_Thomas.h
-	$(CC) $(CFLAGS) -c bot_Thomas.cpp
+bot_Thomas.o: bot.h
 
-bot.o: bot.cpp $(COMMON) bot.h
-	$(CC) $(CFLAGS) -c bot.cpp
+%.o: %.cpp %.h $(COMMON)
+	$(CC) $(CFLAGS) -c $<
 
 ../util/card.o: 
 	make -C ../util/

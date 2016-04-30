@@ -1,13 +1,12 @@
 CC=g++
 CFLAGS=-std=c++11 -g
+OBJS=card.o require.o
 
-all: card.o require.o
+all: $(OBJS)
 
-card.o: card.cpp card.h
-		$(CC) $(CFLAGS) -c card.cpp
+%.o: %.cpp %.h
+	$(CC) $(CFLAGS) -c $<
 
-require.o: require.cpp require.h
-		$(CC) $(CFLAGS) -c require.cpp
-
+.PHONY: clean
 clean:
 		rm -f *\.o
