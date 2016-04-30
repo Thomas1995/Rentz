@@ -66,49 +66,46 @@ struct Client : public Common {
       resp.type = e.type;
 
       switch(e.type) {
-        case event::EType::sendCards:
-          {
+        case event::EType::sendCards: {
             break;
-          }
+        }
 
-        case event::EType::sendHand:
-          {
+        case event::EType::sendHand: {
             break;
-          }
+        }
 
-        case event::EType::sendScores:
-          {
+        case event::EType::sendScores: {
             break;
-          }
+        }
 
-        case event::EType::getGameChoice:
-          {
+        case event::EType::getGameChoice: {
+            int ans = bot->GetGameType();
+            resp.len = 1;
+            resp.data = reinterpret_cast<uint8_t *>(&ans);
+            resp.send(sfd);
             break;
-          }
+        }
 
-        case event::EType::sendGameChoice:
-          {
+        case event::EType::sendGameChoice: {
             break;
-          }
+        }
 
-        case event::EType::getCardChoice:
-          {
+        case event::EType::getCardChoice: {
             Card c = bot->PlayCard();
             resp.len = 1;
             uint8_t code = c.encode();
             resp.data = &code;
             resp.send(sfd);
             break;
-          }
+        }
 
-        case event::EType::getNVChoice:
-          {
+        case event::EType::getNVChoice: {
             bool ans = bot->PlayNVMode();
             resp.len = 1;
             resp.data = reinterpret_cast<uint8_t *>(&ans);
             resp.send(sfd);
             break;
-          }
+        }
       }
       e.free();
     }
