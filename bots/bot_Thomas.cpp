@@ -43,6 +43,8 @@ int Bot_Thomas::GetGameType() {
         return gamesOrderNV[i];
       }
   }
+
+  return -1;
 }
 
 void Bot_Thomas::SetGameType(const int gameType) {
@@ -70,4 +72,3 @@ void Bot_Thomas::SetScores(const int yourScore, const std::vector<int>& allScore
   // update my ladder position
   myLadderPosition = biggerScores + 1;
 }
-
