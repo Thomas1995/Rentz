@@ -29,6 +29,8 @@ public:
     std::vector<Card> GetHand();
     void SetHand(const std::vector<Card>& cards);
     void RemoveCard(Card c);
+
+    virtual ~Bot() = default;
 };
 
 #endif // BOT_H
