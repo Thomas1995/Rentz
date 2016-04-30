@@ -1,6 +1,6 @@
 # Rentz
 
-Communication protocol:
+### Communication protocol:
 
 Server accepts client's connection.
 
@@ -15,6 +15,6 @@ Client waits for a request event(defined in event.h).
 After the client processes an event, a response or acknowledgement is mandatory.
 Furthermore, response event should have the same type as the request.
 
-Makefile:
+### Makefile:
 
 If make does not work, type "make -v" and make sure your version is >= 4.1.
