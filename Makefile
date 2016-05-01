@@ -3,11 +3,11 @@ CFLAGS?=-std=c++11 -g -Wall
 OBJS=score.o server.o player.o util/card.o table.o util/require.o common.o
 BOTS=bots/bot_Thomas.o bots/bot.o
 UTIL=util/card.o util/require.o
-HEADERS=common.h event.h player.h table.h
+HEADERS=common.h event.h player.h table.h server.h
 
 all: server client
 
-server: $(OBJS)
+server: $(OBJS) server.h table.h
 	$(CXX) $(CFLAGS) $(OBJS) -o server
 
 client: client.o common.o $(BOTS)
