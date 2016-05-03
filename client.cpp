@@ -79,9 +79,9 @@ struct Client : public Common {
         }
 
         case event::EType::getGameChoice: {
-            int ans = bot->GetGameType();
+            uint8_t ans = bot->GetGameType();
             resp.len = 1;
-            resp.data = reinterpret_cast<uint8_t *>(&ans);
+            resp.data = &ans;
             resp.send(sfd);
             break;
         }
