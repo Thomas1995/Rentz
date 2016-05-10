@@ -8,6 +8,15 @@
 #include "event.h"
 #include "common.h"
 
+/* Connection is the server's interface
+ * to the clients connected to it
+ * the way it currently works is
+ * server calls one of the following functions
+ * the function sends an event thru the network
+ * gets the response
+ * interprets the resposne
+ * and returns the coresponding information
+ */
 struct Connection : public Common {
 
     std::string name;

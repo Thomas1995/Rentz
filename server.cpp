@@ -10,7 +10,7 @@ int main() {
     //there are n new incoming connections
     for(int i = 0; i < n; ++i) {
       const int client = server.acceptConnection();
-      table.addConnection(client);
+      table.addPlayer(client);
     }
   }
   return 0;

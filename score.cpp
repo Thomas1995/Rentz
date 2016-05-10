@@ -2,7 +2,7 @@
 
 void Table::ChangeScore() {
 
-    int crtConnection = firstConnection - connections.begin();
+    int crtConnection = firstPlayer - players.begin();
 
     int scoreToAdd = 0;
 

@@ -20,6 +20,13 @@
 
 const char PORT[] = "31337";
 
+/* Client is what connects to the server.
+ * It receives certain events from the server and interprets them.
+ * Based on the event that it receives,
+ * it calls coresponding methods of the 
+ * bot member variable
+ */
+
 struct Client : public Common {
 
   int index;
@@ -67,6 +74,11 @@ struct Client : public Common {
 
       switch(e.type) {
         case event::EType::sendCards: {
+        //the server is sending us what cards were played
+        //and are on the table
+        //TODO:
+        //implement parsing these cards
+        //and implement a coresponding method in #Bot
             break;
         }
 

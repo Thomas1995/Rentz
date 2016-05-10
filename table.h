@@ -11,8 +11,8 @@
 struct Table {
     static const int TABLE_SIZE = 1;
 
-    std::vector<Connection> connections;
-    std::vector<Connection>::iterator firstConnection;
+    std::vector<Connection> players;
+    std::vector<Connection>::iterator firstPlayer;
     std::vector<Card> cardStack;
     std::vector<int> score;
 
@@ -20,8 +20,8 @@ struct Table {
     int gameType;
     bool modeNV;
 
-    void IterateThroughConnections(std::vector<Connection>::iterator iterator);
-    void ConnectionAction(Connection const connection);
+    void IterateThroughPlayers(std::vector<Connection>::iterator iterator);
+    void PlayerAction(Connection &player);
     void GiveCards();
     void PlayRound();
     void ChangeScore();
@@ -34,7 +34,7 @@ struct Table {
     void ScoreTenClub(int& scoreToAdd);
     void ScoreTotals(int& scoreToAdd);
 
-    void addConnection(int fd);
+    void addPlayer(int fd);
 
     Table();
 
