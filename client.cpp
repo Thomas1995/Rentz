@@ -79,14 +79,35 @@ struct Client : public Common {
         //TODO:
         //implement parsing these cards
         //and implement a coresponding method in #Bot
+        
+            std::vector<Card> cards(e.getCards());
+            //bot->receiveCardsOnTable(cards);
+          
             break;
         }
 
         case event::EType::sendHand: {
+        //the server is sending us our hand
+        //TODO:
+        //implement a coresponding method in #Bot
+            
+            std::vector<Card> hand(e.getCards());
+            //bot->receiveHand(hand);
             break;
         }
 
         case event::EType::sendScores: {
+        //the server is sending us the scores so far
+        //TODO:
+        //implement a coresponding method in #Bot
+            
+            std::vector<int> scores;
+            scores.reserve(e.len / 4);
+
+            for(int i = 0; i < e.len; i += 4) 
+              scores.push_back(e.getInt(e.data + i));
+
+            //bot->sendScores(scores);
             break;
         }
 
@@ -99,6 +120,12 @@ struct Client : public Common {
         }
 
         case event::EType::sendGameChoice: {
+        //the server is sending us the chosen game type
+        //TODO:
+        //implement a coresponding method in #Bot
+            const uint8_t choice = e.data[0];
+
+            //bot->sendGameChoice(choice);
             break;
         }
 
