@@ -1,9 +1,9 @@
 CXX?=g++
 CFLAGS?=-std=c++11 -g -Wall
-OBJS=score.o server.o player.o util/card.o table.o util/require.o common.o
+OBJS=score.o server.o connection.o util/card.o table.o util/require.o common.o
 BOTS=bots/bot_Thomas.o bots/bot.o
 UTIL=util/card.o util/require.o
-HEADERS=common.h event.h player.h table.h server.h
+HEADERS=common.h event.h connection.h table.h server.h
 
 all: server client
 
@@ -18,9 +18,9 @@ client: client.o common.o $(BOTS)
 
 %.cpp: %.h
 
-event.h server common.o player.o: util/debug.h
+event.h server common.o connection.o: util/debug.h
 
-client.o player.o: common.h event.h
+client.o connection.o: common.h event.h
 
 util/card.o: util/card.cpp util/card.h
 	make -C util

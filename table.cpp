@@ -9,31 +9,31 @@ void Table::Start() {
 
   debug("The game has started!\n");
 
-  for(size_t i = 0; i < players.size(); ++i)
-    players[i].sendIndex(i);
+  for(size_t i = 0; i < connections.size(); ++i)
+    connections[i].sendIndex(i);
 
-  // choose players in play
+  // choose connections in play
 
-  Card::lowestCard = 15 - players.size() * 2;
+  Card::lowestCard = 15 - connections.size() * 2;
 
   score.resize(4, 0);
 
-  // true if a game was already played but a certain player, false otherwise
-  bool gamesPlayed[players.size()][gamesNumber+1];
+  // true if a game was already played but a certain connection, false otherwise
+  bool gamesPlayed[connections.size()][gamesNumber+1];
 
-  for(size_t i=0;i<players.size();++i)
+  for(size_t i=0;i<connections.size();++i)
     for(int j=0;j<gamesNumber+1;++j)
       gamesPlayed[i][j] = false;
 
-  // assign the first player
-  firstPlayer = players.begin();
+  // assign the first connection
+  firstConnection = connections.begin();
 
   for(int gameChoice = 1; gameChoice <= gamesNumber; ++gameChoice)
-    for(size_t i=0;i<players.size();++i) {
+    for(size_t i=0;i<connections.size();++i) {
 
-      // check if player wants to play NV mode and enforce it for the last choice
+      // check if connection wants to play NV mode and enforce it for the last choice
       if(gameChoice < gamesNumber)
-        modeNV = players[i].getNVChoice();
+        modeNV = connections[i].getNVChoice();
       else
         modeNV = true;
 
@@ -42,44 +42,44 @@ void Table::Start() {
         GiveCards();
 
       // get the game type
-      gameType = players[i].getGameChoice();
+      gameType = connections[i].getGameChoice();
 
       // if NV mode chosen, give cards after game choice
       if(modeNV == true)
         GiveCards();
 
-      // check if player can play that game
+      // check if connection can play that game
       require(gameType >= 1 && gameType <= gamesNumber,
-          players[i].getName() + " has chosen a game index out of bounds");
+          connections[i].getName() + " has chosen a game index out of bounds");
       require(gamesPlayed[i][gameType] == false,
-          players[i].getName() + " had already chosen that game");
+          connections[i].getName() + " had already chosen that game");
 
       gamesPlayed[i][gameType] = true;
 
-      // let the other players know the game type
-      for(auto player : players)
-        player.sendGameChoice(static_cast<uint8_t>(gameType));
+      // let the other connections know the game type
+      for(auto connection : connections)
+        connection.sendGameChoice(static_cast<uint8_t>(gameType));
 
       // start the round
       PlayRound();
     }
 }
 
-void Table::PlayerAction(Player player) {
-  // send player the cards that were played and get his played card
-  player.sendCards(cardStack);
+void Table::ConnectionAction(Connection connection) {
+  // send connection the cards that were played and get his played card
+  connection.sendCards(cardStack);
 
-  Card playedCard = player.getCardChoice();
+  Card playedCard = connection.getCardChoice();
 
-  std::cout << player.getName() << " played " << playedCard << "\n";
+  std::cout << connection.getName() << " played " << playedCard << "\n";
 
   // check if the played card can be played
   if(cardStack.size() > 1) {
     if(!playedCard.isSameSuite(cardStack.front())) {
-      auto cards = player.getHand();
+      auto cards = connection.getHand();
       for(auto c : cards)
         require(!cardStack.front().isSameSuite(c),
-            player.getName() + " had chosen a card of a different suite.");
+            connection.getName() + " had chosen a card of a different suite.");
     }
   }
 
@@ -87,11 +87,11 @@ void Table::PlayerAction(Player player) {
   cardStack.push_back(playedCard);
 }
 
-void Table::IterateThroughPlayers(std::vector<Player>::iterator iterator) {
-  for(auto it = iterator; it != players.end(); ++it)
-    PlayerAction(*it);
-  for(auto it = players.begin(); it != iterator; ++it)
-    PlayerAction(*it);
+void Table::IterateThroughConnections(std::vector<Connection>::iterator iterator) {
+  for(auto it = iterator; it != connections.end(); ++it)
+    ConnectionAction(*it);
+  for(auto it = connections.begin(); it != iterator; ++it)
+    ConnectionAction(*it);
 }
 
 void Table::GiveCards() {
@@ -103,14 +103,14 @@ void Table::GiveCards() {
 
   auto card = allCards.begin();
 
-  // give cards to players
-  for(size_t i=0;i<players.size();++i) {
+  // give cards to connections
+  for(size_t i=0;i<connections.size();++i) {
     std::vector<Card> hand;
     for(int j=1;j<=8;++j) {
       hand.push_back(*card);
       ++card;
     }
-    players[i].sendHand(hand);
+    connections[i].sendHand(hand);
   }
 }
 
@@ -118,12 +118,12 @@ void Table::PlayRound() {
   for(int roundstep = 1; roundstep <= 8; ++roundstep) {
     cardStack.clear();
 
-    // get players to play cards
-    IterateThroughPlayers(firstPlayer);
+    // get connections to play cards
+    IterateThroughConnections(firstConnection);
 
-    // announce all players about the cards that were played
-    for(size_t i=0;i<players.size();++i)
-      players[i].sendCards(cardStack);
+    // announce all connections about the cards that were played
+    for(size_t i=0;i<connections.size();++i)
+      connections[i].sendCards(cardStack);
 
     // check for winner
     int winnerIndex = 0;
@@ -136,11 +136,11 @@ void Table::PlayRound() {
       }
     }
 
-    // change the first player to go
+    // change the first connection to go
     while(winnerIndex--) {
-      ++firstPlayer;
-      if(firstPlayer == players.end())
-        firstPlayer = players.begin();
+      ++firstConnection;
+      if(firstConnection == connections.end())
+        firstConnection = connections.begin();
     }
 
     // change score
@@ -149,11 +149,11 @@ void Table::PlayRound() {
     std::cout << std::endl;
   }
 
-  // let players know the scores
+  // let connections know the scores
   std::cout << "Scores:\n";
-  for(size_t i=0;i<players.size();++i) {
-    players[i].sendScores(score);
-    std::cout << players[i].getName() + ": " << score[i] << "\n";
+  for(size_t i=0;i<connections.size();++i) {
+    connections[i].sendScores(score);
+    std::cout << connections[i].getName() + ": " << score[i] << "\n";
   }
   std::cout << "\n----------\n";
 
@@ -161,11 +161,11 @@ void Table::PlayRound() {
 }
 
 Table::~Table() {
-  players.clear();
+  connections.clear();
 }
 
-void Table::addPlayer(int fd) {
-  players.emplace_back(Player(fd));
-  if(players.size() == TABLE_SIZE)
+void Table::addConnection(int fd) {
+  connections.emplace_back(Connection(fd));
+  if(connections.size() == TABLE_SIZE)
     Start();
 }

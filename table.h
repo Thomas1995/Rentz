@@ -4,15 +4,15 @@
 #include "util/require.h"
 #include "util/card.h"
 #include "util/gamelist.h"
-#include "player.h"
+#include "connection.h"
 
 #include <vector>
 
 struct Table {
     static const int TABLE_SIZE = 1;
 
-    std::vector<Player> players;
-    std::vector<Player>::iterator firstPlayer;
+    std::vector<Connection> connections;
+    std::vector<Connection>::iterator firstConnection;
     std::vector<Card> cardStack;
     std::vector<int> score;
 
@@ -20,8 +20,8 @@ struct Table {
     int gameType;
     bool modeNV;
 
-    void IterateThroughPlayers(std::vector<Player>::iterator iterator);
-    void PlayerAction(Player const player);
+    void IterateThroughConnections(std::vector<Connection>::iterator iterator);
+    void ConnectionAction(Connection const connection);
     void GiveCards();
     void PlayRound();
     void ChangeScore();
@@ -34,7 +34,7 @@ struct Table {
     void ScoreTenClub(int& scoreToAdd);
     void ScoreTotals(int& scoreToAdd);
 
-    void addPlayer(int fd);
+    void addConnection(int fd);
 
     Table();
 
