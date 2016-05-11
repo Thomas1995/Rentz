@@ -2,7 +2,7 @@
 
 void Table::ChangeScore() {
 
-    int crtPlayer = firstPlayer - players.begin();
+    int crtConnection = firstPlayer - players.begin();
 
     int scoreToAdd = 0;
 
@@ -27,7 +27,7 @@ void Table::ChangeScore() {
     if(gameType == Totals)
         ScoreTotals(scoreToAdd);
 
-    score[crtPlayer] += scoreToAdd * (1 + modeNV);
+    score[crtConnection] += scoreToAdd * (1 + modeNV);
 }
 
 void Table::ScoreKingOfHearts(int& scoreToAdd) {

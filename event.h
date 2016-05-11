@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <assert.h>
 #include "util/debug.h"
+#include "util/card.h"
 
 const uint8_t FLAG = 0x7E;
 const uint8_t ESC = 0x7D;
@@ -56,6 +57,16 @@ struct event {
   uint32_t getInt(uint8_t * ptr) {
     uint32_t ret = *((uint32_t *)ptr);
     return ntohl(ret);
+  }
+
+  std::vector<Card> getCards() {
+		std::vector<Card> cards;
+		cards.resize(len);
+
+		for(int i = 0; i < len; ++i)
+			cards[i] = Card(data[i]);
+
+		return cards;
   }
 
   void send(int fd) {

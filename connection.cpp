@@ -1,4 +1,4 @@
-#include "player.h"
+#include "connection.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -10,13 +10,13 @@
 #define readAndAssert(resp) event resp = readEvent();\
                       assert(resp.type == req.type);
 
-Player::Player(int sfd):
+Connection::Connection(int sfd):
   Common(sfd) {
     name = requestName();
-    debug("Player on sfd = %d is named %s\n", sfd, name.c_str());
+    debug("Connection on sfd = %d is named %s\n", sfd, name.c_str());
   }
 
-Card Player::getCardChoice() {
+Card Connection::getCardChoice() {
   event req;
   req.type = event::getCardChoice;
   req.len = 0;
@@ -54,7 +54,7 @@ std::vector<uint8_t> encodeCards(const std::vector<Card>& cards) {
   return ret;
 }
 
-std::string Player::requestName() {
+std::string Connection::requestName() {
   event req;
   req.type = event::EType::requestName;
   req.len = 0;
@@ -73,7 +73,7 @@ std::string Player::requestName() {
   return name;
 }
 
-void Player::sendCards(const std::vector<Card>& cardsOnTable) {
+void Connection::sendCards(const std::vector<Card>& cardsOnTable) {
 
   auto cards = encodeCards(cardsOnTable);
 
@@ -88,7 +88,7 @@ void Player::sendCards(const std::vector<Card>& cardsOnTable) {
   resp.free();
 }
 
-void Player::sendScores(const std::vector<int>& allScores) {
+void Connection::sendScores(const std::vector<int>& allScores) {
 
   std::vector<uint8_t> data;
 
@@ -112,15 +112,15 @@ void Player::sendScores(const std::vector<int>& allScores) {
   resp.free();
 }
 
-std::string Player::getName() {
+std::string Connection::getName() {
   return name;
 }
 
-std::vector<Card> Player::getHand() {
+std::vector<Card> Connection::getHand() {
   return hand;
 }
 
-uint8_t Player::getGameChoice() {
+uint8_t Connection::getGameChoice() {
   event req;
   req.type = event::EType::getGameChoice;
   req.len = 0;
@@ -135,7 +135,7 @@ uint8_t Player::getGameChoice() {
   return choice;
 }
 
-void Player::sendGameChoice(uint8_t type) {
+void Connection::sendGameChoice(uint8_t type) {
   event req;
   req.type = event::EType::sendGameChoice;
   req.len = 1;
@@ -147,7 +147,7 @@ void Player::sendGameChoice(uint8_t type) {
   resp.free();
 }
 
-bool Player::getNVChoice() {
+bool Connection::getNVChoice() {
   event req;
   req.type = event::EType::getNVChoice;
   req.len = 0;
@@ -162,7 +162,7 @@ bool Player::getNVChoice() {
   return NV;
 }
 
-void Player::sendHand(const std::vector<Card>& hand) {
+void Connection::sendHand(const std::vector<Card>& hand) {
   auto cards = encodeCards(hand);
   event req;
   req.type = event::EType::sendHand;
@@ -175,7 +175,7 @@ void Player::sendHand(const std::vector<Card>& hand) {
   resp.free();
 }
 
-void Player::sendIndex(size_t index) {
+void Connection::sendIndex(size_t index) {
 
   index = htonl(index);
 

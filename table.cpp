@@ -18,20 +18,20 @@ void Table::Start() {
 
   score.resize(4, 0);
 
-  // true if a game was already played but a certain player, false otherwise
+  // true if a game was already played but a certain connection, false otherwise
   bool gamesPlayed[players.size()][gamesNumber+1];
 
   for(size_t i=0;i<players.size();++i)
     for(int j=0;j<gamesNumber+1;++j)
       gamesPlayed[i][j] = false;
 
-  // assign the first player
+  // assign the first connection
   firstPlayer = players.begin();
 
   for(int gameChoice = 1; gameChoice <= gamesNumber; ++gameChoice)
     for(size_t i=0;i<players.size();++i) {
 
-      // check if player wants to play NV mode and enforce it for the last choice
+      // check if connection wants to play NV mode and enforce it for the last choice
       if(gameChoice < gamesNumber)
         modeNV = players[i].getNVChoice();
       else
@@ -48,7 +48,7 @@ void Table::Start() {
       if(modeNV == true)
         GiveCards();
 
-      // check if player can play that game
+      // check if connection can play that game
       require(gameType >= 1 && gameType <= gamesNumber,
           players[i].getName() + " has chosen a game index out of bounds");
       require(gamesPlayed[i][gameType] == false,
@@ -57,29 +57,29 @@ void Table::Start() {
       gamesPlayed[i][gameType] = true;
 
       // let the other players know the game type
-      for(auto player : players)
-        player.sendGameChoice(static_cast<uint8_t>(gameType));
+      for(auto connection : players)
+        connection.sendGameChoice(static_cast<uint8_t>(gameType));
 
       // start the round
       PlayRound();
     }
 }
 
-void Table::PlayerAction(Player player) {
-  // send player the cards that were played and get his played card
-  player.sendCards(cardStack);
+void Table::PlayerAction(Connection &connection) {
+  // send connection the cards that were played and get his played card
+  connection.sendCards(cardStack);
 
-  Card playedCard = player.getCardChoice();
+  Card playedCard = connection.getCardChoice();
 
-  std::cout << player.getName() << " played " << playedCard << "\n";
+  std::cout << connection.getName() << " played " << playedCard << "\n";
 
   // check if the played card can be played
   if(cardStack.size() > 1) {
     if(!playedCard.isSameSuite(cardStack.front())) {
-      auto cards = player.getHand();
+      auto cards = connection.getHand();
       for(auto c : cards)
         require(!cardStack.front().isSameSuite(c),
-            player.getName() + " had chosen a card of a different suite.");
+            connection.getName() + " had chosen a card of a different suite.");
     }
   }
 
@@ -87,7 +87,7 @@ void Table::PlayerAction(Player player) {
   cardStack.push_back(playedCard);
 }
 
-void Table::IterateThroughPlayers(std::vector<Player>::iterator iterator) {
+void Table::IterateThroughPlayers(std::vector<Connection>::iterator iterator) {
   for(auto it = iterator; it != players.end(); ++it)
     PlayerAction(*it);
   for(auto it = players.begin(); it != iterator; ++it)
@@ -136,7 +136,7 @@ void Table::PlayRound() {
       }
     }
 
-    // change the first player to go
+    // change the first connection to go
     while(winnerIndex--) {
       ++firstPlayer;
       if(firstPlayer == players.end())
@@ -165,7 +165,7 @@ Table::~Table() {
 }
 
 void Table::addPlayer(int fd) {
-  players.emplace_back(Player(fd));
+  players.emplace_back(Connection(fd));
   if(players.size() == TABLE_SIZE)
     Start();
 }

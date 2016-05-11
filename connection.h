@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef connection_H
+#define connection_H
 #include "util/card.h"
 #include "util/require.h"
 #include "util/gamelist.h"
@@ -8,7 +8,16 @@
 #include "event.h"
 #include "common.h"
 
-struct Player : public Common {
+/* Connection is the server's interface
+ * to the clients connected to it
+ * the way it currently works is
+ * server calls one of the following functions
+ * the function sends an event thru the network
+ * gets the response
+ * interprets the resposne
+ * and returns the coresponding information
+ */
+struct Connection : public Common {
 
     std::string name;
 
@@ -30,8 +39,8 @@ struct Player : public Common {
 
     std::string requestName();
 
-    Player() = delete;
-    explicit Player(int sfd);
+    Connection() = delete;
+    explicit Connection(int sfd);
 
     void sendIndex(size_t index);
 

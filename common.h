@@ -10,6 +10,11 @@
 #include "util/debug.h"
 #include <unistd.h>
 
+/* Common is a common interface
+ * that both Connection (the server's view of the world)
+ * and Client (the clients which connect to the server
+ *             from the other side of the wire)
+ */
 
 struct Common {
   static const int MAX_BUFF = 1024 * 8;
