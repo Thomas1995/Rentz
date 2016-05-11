@@ -104,7 +104,7 @@ struct Client : public Common {
             std::vector<int> scores;
             scores.reserve(e.len / 4);
 
-            for(int i = 0; i < e.len; i += 4) 
+            for(uint32_t i = 0; i < e.len; i += 4) 
               scores.push_back(e.getInt(e.data + i));
 
             //bot->sendScores(scores);
