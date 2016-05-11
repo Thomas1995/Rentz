@@ -61,10 +61,9 @@ struct event {
 
   std::vector<Card> getCards() {
 		std::vector<Card> cards;
-		cards.resize(len);
 
-		for(int i = 0; i < len; ++i)
-			cards[i] = Card(data[i]);
+		for(uint32_t i = 0; i < len; ++i)
+      cards.emplace_back(data[i]);
 
 		return cards;
   }
