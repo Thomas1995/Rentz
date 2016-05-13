@@ -5,10 +5,10 @@ Bot_Thomas::Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
     name = "Thomas";
   }
 
-Card Bot_Thomas::PlayCard() {
+Card Bot_Thomas::decideCardToPlay() {
   /// TO DO BETTER
 
-  auto hand = GetHand();
+  auto hand = getHand();
   if(cardsOnTable.empty()) return hand[0];
 
   for(auto c : hand)
@@ -18,11 +18,11 @@ Card Bot_Thomas::PlayCard() {
   return hand[0];
 }
 
-void Bot_Thomas::GetPlayedCardStack() {
-  /// TO DO
+std::vector<Card> Bot_Thomas::getPlayedCardStack() {
+  return cardsOnTable;
 }
 
-int Bot_Thomas::GetGameType() {
+uint8_t Bot_Thomas::decideGameType() {
   if(NVModeChosen) {
     // chose a game based on gamesOrderNV
     for(int i=0;i<7;++i)
@@ -32,7 +32,7 @@ int Bot_Thomas::GetGameType() {
       }
   }
   else {
-    auto hand = GetHand();
+    auto hand = getHand();
 
     /// TO DO BETTER
 
@@ -47,11 +47,11 @@ int Bot_Thomas::GetGameType() {
   return -1;
 }
 
-void Bot_Thomas::SetGameType(const int gameType) {
+void Bot_Thomas::receiveDecidedGameType(const int gameType) {
   crtGameType = gameType;
 }
 
-bool Bot_Thomas::PlayNVMode() {
+bool Bot_Thomas::decidePlayNV() {
   // play NV mode if not first or second player
   if(myLadderPosition > 2) {
     NVModeChosen = true;
@@ -60,15 +60,4 @@ bool Bot_Thomas::PlayNVMode() {
 
   NVModeChosen = false;
   return false;
-}
-
-void Bot_Thomas::SetScores(const int yourScore, const std::vector<int>& allScores) {
-  // count scores bigger than mine
-  int biggerScores = 0;
-  for(auto it : allScores) {
-    if(it > yourScore)
-      ++biggerScores;
-  }
-  // update my ladder position
-  myLadderPosition = biggerScores + 1;
 }

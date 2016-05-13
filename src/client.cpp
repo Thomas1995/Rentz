@@ -81,7 +81,7 @@ struct Client : public Common {
         //and implement a coresponding method in #Bot
         
             std::vector<Card> cards(e.getCards());
-            //bot->receiveCardsOnTable(cards);
+            bot->receiveCardsOnTable(cards);
           
             break;
         }
@@ -92,7 +92,7 @@ struct Client : public Common {
         //implement a coresponding method in #Bot
             
             std::vector<Card> hand(e.getCards());
-            //bot->receiveHand(hand);
+            bot->receiveHand(hand);
             break;
         }
 
@@ -107,12 +107,12 @@ struct Client : public Common {
             for(uint32_t i = 0; i < e.len; i += 4) 
               scores.push_back(e.getInt(e.data + i));
 
-            //bot->sendScores(scores);
+            bot->sendScores(scores);
             break;
         }
 
         case event::EType::getGameChoice: {
-            uint8_t ans = bot->GetGameType();
+            uint8_t ans = bot->decideGameType();
             resp.len = 1;
             resp.data = &ans;
             resp.send(sfd);
@@ -125,12 +125,12 @@ struct Client : public Common {
         //implement a coresponding method in #Bot
             const uint8_t choice = e.data[0];
 
-            //bot->sendGameChoice(choice);
+            bot->receiveDecidedGameType(choice);
             break;
         }
 
         case event::EType::getCardChoice: {
-            Card c = bot->PlayCard();
+            Card c = bot->decideCardToPlay();
             resp.len = 1;
             uint8_t code = c.encode();
             resp.data = &code;
@@ -139,7 +139,7 @@ struct Client : public Common {
         }
 
         case event::EType::getNVChoice: {
-            bool ans = bot->PlayNVMode();
+            bool ans = bot->decidePlayNV();
             resp.len = 1;
             resp.data = reinterpret_cast<uint8_t *>(&ans);
             resp.send(sfd);

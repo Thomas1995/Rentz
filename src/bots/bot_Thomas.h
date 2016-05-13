@@ -4,22 +4,21 @@ class Bot_Thomas : public Bot {
 public:
     Bot_Thomas();
 
-    Card PlayCard();
+    std::vector<Card> getPlayedCardStack();
 
-    void GetPlayedCardStack();
-
-    int GetGameType();
-
-    void SetGameType(const int gameType);
-
-    bool PlayNVMode();
-
-    void SetScores(const int yourScore, const std::vector<int>& allScores);
-
-private:
     bool gamesPlayed[8];
     bool NVModeChosen;
     int myLadderPosition = 1;
     int gamesOrderNV[7];
     int crtGameType;
+
+    uint8_t decideGameType();
+
+    void receiveDecidedGameType(const int gameType);
+
+    Card decideCardToPlay();
+
+    bool decidePlayNV(); 
+
+    ~Bot_Thomas() = default;
 };

@@ -9,26 +9,29 @@
 #include "../util/gamelist.h"
 
 class Bot {
-private:
+  public:
     std::vector<Card> hand;
 
-protected:
     std::string name;
     std::vector<Card> cardsOnTable;
 
-public:
-    virtual Card PlayCard() = 0;
-    virtual void GetPlayedCardStack() = 0;
-    virtual int GetGameType() = 0;
-    virtual void SetGameType(const int gameType) = 0;
-    virtual bool PlayNVMode() = 0;
-    virtual void SetScores(const int yourScore, const std::vector<int>& allScores) = 0;
+    std::vector<int> scores;
 
-    std::string GetName();
+    virtual void receiveCardsOnTable(const std::vector<Card> &cards);
 
-    std::vector<Card> GetHand();
-    void SetHand(const std::vector<Card>& cards);
-    void RemoveCard(Card c);
+    virtual void receiveHand(const std::vector<Card> &cards);
+
+    virtual void sendScores(const std::vector<int> &scores);
+
+    virtual uint8_t decideGameType() = 0;
+
+    std::vector<Card> getHand();
+
+    virtual void receiveDecidedGameType(const int gameType) = 0;
+
+    virtual Card decideCardToPlay() = 0;
+
+    virtual bool decidePlayNV() = 0;
 
     virtual ~Bot() = default;
 };

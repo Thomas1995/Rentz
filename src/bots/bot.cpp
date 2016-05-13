@@ -1,19 +1,18 @@
 #include "bot.h"
 
-std::string Bot::GetName() {
-    return name;
+void Bot::receiveCardsOnTable(const std::vector<Card> &cards) {
+  cardsOnTable = cards;
 }
 
-void Bot::SetHand(const std::vector<Card>& cards) {
-    hand = cards;
+void Bot::receiveHand(const std::vector<Card> &cards) {
+  hand = cards;
 }
 
-void Bot::RemoveCard(Card c) {
-    auto it = std::find(hand.begin(), hand.end(), c);
-    require(it != hand.end(), "Card played by " + name + " not in hand.");
-    hand.erase(it);
+
+void Bot::sendScores(const std::vector<int> &scores) {
+  this->scores = scores;
 }
 
-std::vector<Card> Bot::GetHand() {
-    return hand;
+std::vector<Card> Bot::getHand() {
+  return hand;
 }
