@@ -1,42 +1,29 @@
 CXX?=g++
 CFLAGS?=-std=c++11 -g -Wall
-OBJS=score.o server.o connection.o util/card.o table.o util/require.o common.o
-BOTS=bots/bot_Thomas.o bots/bot.o
-UTIL=util/card.o util/require.o
-HEADERS=common.h event.h connection.h table.h server.h
+OBJS=src/score.o src/server.o src/connection.o src/util/card.o src/table.o src/util/require.o src/common.o
+CLIENT_OBJS=src/common.o src/client.o
+BOTS=src/bots/bot_Thomas.o src/bots/bot.o
+UTIL=src/util/card.o src/util/require.o
 
-all: server client
+all: bin
 
-server: $(OBJS) server.h table.h
+.PHONY: src
+src: FORCE
+	make -C src
+
+FORCE:
+
+bin: server client
+
+server: src
 	$(CXX) $(CFLAGS) $(OBJS) -o server
 
-client: client.o common.o $(BOTS)
-	$(CXX) $(CFLAGS) $(BOTS) $(UTIL) common.o client.o -o client
-
-%.o: %.cpp
-	$(CXX) $(CFLAGS) -c $<
-
-%.cpp: %.h
-
-event.h server common.o connection.o: util/debug.h
-
-client.o connection.o: common.h event.h
-
-util/card.o: util/card.cpp util/card.h
-	make -C util
-
-util/require.o: util/require.h util/require.cpp
-	make -C util
-
-bots/%.o: bots/%.cpp bots/%.h
-	make -C bots
-
-bots/bot_Thomas.o: bots/bot.h
+client:  src
+	$(CXX) $(CFLAGS) $(BOTS) $(UTIL) $(CLIENT_OBJS) -o client
 
 .PHONY: clean
 clean:
-	rm -f *\.o
-	rm -f server
-	make -C util clean
-	make -C bots clean
+	make -C src clean
+	$(RM) bin/server
+	$(RM) bin/client
 
