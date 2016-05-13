@@ -16,10 +16,10 @@ FORCE:
 bin: server client
 
 server: src
-	$(CXX) $(CFLAGS) $(OBJS) -o server
+	$(CXX) $(CFLAGS) $(OBJS) -o bin/server
 
 client:  src
-	$(CXX) $(CFLAGS) $(BOTS) $(UTIL) $(CLIENT_OBJS) -o client
+	$(CXX) $(CFLAGS) $(BOTS) $(UTIL) $(CLIENT_OBJS) -o bin/client
 
 .PHONY: clean
 clean:
