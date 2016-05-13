@@ -72,6 +72,8 @@ struct Client : public Common {
       event resp;
       resp.type = e.type;
 
+      debug("Received an event of type %d\n", e.type);
+
       switch(e.type) {
         case event::EType::sendCards: {
         //the server is sending us what cards were played
@@ -80,19 +82,26 @@ struct Client : public Common {
         //implement parsing these cards
         //and implement a coresponding method in #Bot
         
-            std::vector<Card> cards(e.getCards());
-            //bot->receiveCardsOnTable(cards);
-          
-            break;
-        }
+          debug("sending cards on table\n");
+          std::vector<Card> cards(e.getCards());
+          bot->receiveCardsOnTable(cards);
+          resp.send(sfd);
+          break;
+      }
 
-        case event::EType::sendHand: {
-        //the server is sending us our hand
+      case event::EType::sendHand: {
+      //the server is sending us our hand
         //TODO:
         //implement a coresponding method in #Bot
             
+            debug("sending hand: ");
             std::vector<Card> hand(e.getCards());
-            //bot->receiveHand(hand);
+            for(auto &x: hand)
+              debug("%s ", x.to_string().c_str());
+            debug("\n");
+
+            bot->receiveHand(hand);
+            resp.send(sfd);
             break;
         }
 
@@ -100,6 +109,8 @@ struct Client : public Common {
         //the server is sending us the scores so far
         //TODO:
         //implement a coresponding method in #Bot
+           
+            debug("sending scores\n");
             
             std::vector<int> scores;
             scores.reserve(e.len / 4);
@@ -107,12 +118,14 @@ struct Client : public Common {
             for(uint32_t i = 0; i < e.len; i += 4) 
               scores.push_back(e.getInt(e.data + i));
 
-            //bot->sendScores(scores);
+            bot->sendScores(scores);
+            resp.send(sfd);
             break;
         }
 
         case event::EType::getGameChoice: {
-            uint8_t ans = bot->GetGameType();
+            debug("deciding game type\n");
+            uint8_t ans = bot->decideGameType();
             resp.len = 1;
             resp.data = &ans;
             resp.send(sfd);
@@ -123,14 +136,17 @@ struct Client : public Common {
         //the server is sending us the chosen game type
         //TODO:
         //implement a coresponding method in #Bot
+            debug("sending game choice\n");
             const uint8_t choice = e.data[0];
-
-            //bot->sendGameChoice(choice);
+            bot->receiveDecidedGameType(choice);
+            resp.send(sfd);
             break;
         }
 
         case event::EType::getCardChoice: {
-            Card c = bot->PlayCard();
+            debug("getting card choice\n");
+            Card c = bot->decideCardToPlay();
+            debug("Chosen card is %s\n", c.to_string().c_str());
             resp.len = 1;
             uint8_t code = c.encode();
             resp.data = &code;
@@ -139,7 +155,8 @@ struct Client : public Common {
         }
 
         case event::EType::getNVChoice: {
-            bool ans = bot->PlayNVMode();
+            debug("getting NV choice\n");
+            bool ans = bot->decidePlayNV();
             resp.len = 1;
             resp.data = reinterpret_cast<uint8_t *>(&ans);
             resp.send(sfd);

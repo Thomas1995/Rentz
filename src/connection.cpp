@@ -29,6 +29,8 @@ Card Connection::getCardChoice() {
 
   Card card(resp.data[0]);
 
+  debug("Received card %s from client\n", card.to_string().c_str());
+
   bool in = 0;
 
   for(const auto &i: hand) {
@@ -169,6 +171,8 @@ void Connection::sendHand(const std::vector<Card>& hand) {
   req.len = cards.size();
   req.data = cards.data();
   req.send(sfd);
+
+  this->hand = hand;
 
   readAndAssert(resp);
 

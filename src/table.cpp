@@ -28,7 +28,8 @@ void Table::Start() {
   // assign the first connection
   firstPlayer = players.begin();
 
-  for(int gameChoice = 1; gameChoice <= gamesNumber; ++gameChoice)
+  for(int gameChoice = 1; gameChoice <= gamesNumber; ++gameChoice) {
+    debug("gamechoice %d\n", gameChoice);
     for(size_t i=0;i<players.size();++i) {
 
       // check if connection wants to play NV mode and enforce it for the last choice
@@ -63,6 +64,8 @@ void Table::Start() {
       // start the round
       PlayRound();
     }
+  }
+  debug("Game is over\n");
 }
 
 void Table::PlayerAction(Connection &connection) {
