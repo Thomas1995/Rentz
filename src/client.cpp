@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include "util/require.h"
 #include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -39,6 +40,8 @@ struct Client : public Common {
   Client() = delete;
 
   Client(char **argv) {
+
+    srand (time(NULL));
 
     switch (rand() % 4) {
       case 0: bot = new Bot_Thomas; break;
