@@ -13,7 +13,7 @@ bot_Eric.o: bot_Eric.h
 	$(CXX) $(CFLAGS) -c $<
 
 ../util/card.o: 
-	make -C ../util/
+	$(MAKE) -C ../util/
 
 .PHONY: clean
 clean:

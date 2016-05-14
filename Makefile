@@ -9,7 +9,7 @@ all: bin
 
 .PHONY: src
 src: FORCE
-	make -C src
+	$(MAKE) -C src
 
 FORCE:
 
@@ -23,7 +23,7 @@ client:  src
 
 .PHONY: clean
 clean:
-	make -C src clean
+	$(MAKE) -C src clean
 	$(RM) bin/server
 	$(RM) bin/client
 

@@ -23,16 +23,16 @@ event.h server common.o connection.o: util/debug.h
 client.o connection.o: common.h event.h
 
 util/card.o: util/card.cpp util/card.h
-	make -C util
+	$(MAKE) -C util
 
 util/require.o: util/require.h util/require.cpp
-	make -C util
+	$(MAKE) -C util
 
 $(BOTS): 
-	make -C bots
+	$(MAKE) -C bots
 
 bots/%.o: bots/%.cpp bots/%.h
-	make -C bots
+	$(MAKE) -C bots
 
 bots/bot_Thomas.o: bots/bot.h
 
@@ -42,6 +42,6 @@ bots/bot_Eric.o: bots/bot.h
 clean:
 	rm -f *\.o
 	rm -f server
-	make -C util clean
-	make -C bots clean
+	$(MAKE) -C util clean
+	$(MAKE) -C bots clean
 
