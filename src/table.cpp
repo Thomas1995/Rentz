@@ -16,7 +16,7 @@ void Table::Start() {
 
   Card::lowestCard = 15 - players.size() * 2;
 
-  score.resize(4, 0);
+  score.resize(TABLE_SIZE, 0);
 
   // true if a game was already played but a certain connection, false otherwise
   bool gamesPlayed[players.size()][gamesNumber+1];
@@ -58,7 +58,7 @@ void Table::Start() {
       gamesPlayed[i][gameType] = true;
 
       // let the other players know the game type
-      for(auto connection : players)
+      for(auto &connection : players)
         connection.sendGameChoice(static_cast<uint8_t>(gameType));
 
       // start the round
@@ -66,6 +66,9 @@ void Table::Start() {
     }
   }
   debug("Game is over\n");
+
+  for(auto &connection: players)
+    connection.gameEnd();
 }
 
 void Table::PlayerAction(Connection &connection) {

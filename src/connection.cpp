@@ -43,6 +43,8 @@ Card Connection::getCardChoice() {
       exit(1);
   }
 
+  hand.erase(find(hand.begin(), hand.end(), card));
+
   resp.free();
   return card;
 }
@@ -111,6 +113,17 @@ void Connection::sendScores(const std::vector<int>& allScores) {
 
   readAndAssert(resp);
 
+  resp.free();
+}
+
+void Connection::gameEnd() {
+  event req;
+  req.type = event::EType::gameEnd;
+  req.len = 0;
+  req.data = 0;
+  req.send(sfd);
+
+  readAndAssert(resp);
   resp.free();
 }
 
