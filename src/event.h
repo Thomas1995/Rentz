@@ -46,6 +46,10 @@ struct event {
     //the index is a 4 byte unsigned integer
     
     requestName,
+    //request the connection to send his name
+
+    gameEnd,
+    //the game has ended
 
     null
   };

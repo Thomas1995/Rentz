@@ -39,6 +39,8 @@ struct Connection : public Common {
 
     std::string requestName();
 
+    void gameEnd();
+
     Connection() = delete;
     explicit Connection(int sfd);
 

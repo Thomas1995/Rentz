@@ -16,6 +16,7 @@
 #include "event.h"
 #include "bots/bot.h"
 #include "bots/bot_Thomas.h"
+#include "bots/bot_Eric.h"
 #include "common.h"
 
 const char PORT[] = "31337";
@@ -37,7 +38,11 @@ struct Client : public Common {
 
   Client(char **argv) {
 
-    bot = new Bot_Thomas;
+    if(rand() % 2) {
+      bot = new Bot_Thomas;
+    } else {
+      bot = new Bot_Eric;
+    }
 
     addrinfo hints, *rez;
 
@@ -101,13 +106,17 @@ struct Client : public Common {
         case event::EType::sendScores: {
         //the server is sending us the scores so far
            
-            debug("sending scores\n");
+            debug("scores: ");
             
             std::vector<int> scores;
             scores.reserve(e.len / 4);
 
             for(uint32_t i = 0; i < e.len; i += 4) 
               scores.push_back(e.getInt(e.data + i));
+
+            for(auto i: scores)
+              debug(" %d", i);
+            debug("\n");
 
             bot->sendScores(scores);
             resp.send(sfd);
@@ -151,9 +160,19 @@ struct Client : public Common {
             resp.send(sfd);
             break;
         }
+
+        case event::EType::gameEnd: {
+          debug("The game has ended\n");
+          resp.send(sfd);
+          goto end;
+        }
       }
       e.free();
     }
+
+  end:
+
+    return;
   }
 
   void handshake(char* name) {

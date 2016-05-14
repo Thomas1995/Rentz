@@ -9,7 +9,7 @@
 #include <vector>
 
 struct Table {
-    static const int TABLE_SIZE = 1;
+    static const int TABLE_SIZE = 4;
 
     std::vector<Connection> players;
     std::vector<Connection>::iterator firstPlayer;

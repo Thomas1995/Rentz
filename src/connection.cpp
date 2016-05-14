@@ -116,6 +116,17 @@ void Connection::sendScores(const std::vector<int>& allScores) {
   resp.free();
 }
 
+void Connection::gameEnd() {
+  event req;
+  req.type = event::EType::gameEnd;
+  req.len = 0;
+  req.data = 0;
+  req.send(sfd);
+
+  readAndAssert(resp);
+  resp.free();
+}
+
 std::string Connection::getName() {
   return name;
 }

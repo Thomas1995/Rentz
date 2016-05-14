@@ -1,17 +1,17 @@
 CXX?=g++
 CFLAGS?=-std=c++11 -g -Wall
 OBJS=score.o server.o connection.o util/card.o table.o util/require.o common.o
-BOTS=bots/bot_Thomas.o bots/bot.o
+BOTS=bots/bot_Thomas.o bots/bot.o bots/bot_Eric.o
 UTIL=util/card.o util/require.o
 HEADERS=common.h event.h connection.h table.h server.h
 
 all: server client
 
+.PHONY: server
 server: $(OBJS) server.h table.h
-	$(CXX) $(CFLAGS) $(OBJS) -o server
 
+.PHONY: client
 client: client.o common.o $(BOTS)
-	$(CXX) $(CFLAGS) $(BOTS) $(UTIL) common.o client.o -o client
 
 %.o: %.cpp
 	$(CXX) $(CFLAGS) -c $<
@@ -35,6 +35,8 @@ bots/%.o: bots/%.cpp bots/%.h
 	make -C bots
 
 bots/bot_Thomas.o: bots/bot.h
+
+bots/bot_Eric.o: bots/bot.h
 
 .PHONY: clean
 clean:
