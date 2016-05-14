@@ -3,6 +3,8 @@
 #include <random>
 #include <chrono>
 
+unsigned int Table::TABLE_SIZE = 0;
+
 Table::Table() {}
 
 void Table::Start() {
