@@ -5,11 +5,11 @@
 ```
 make
 cd bin
-./server
+./server NumberOfClients
 ./client localhost YourNameHere
 ```
 
-The game starts when 4 clients are connected to the server.
+The game starts when *NumberOfClients* clients are connected to the server.
 
 ### Communication protocol:
 
