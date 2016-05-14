@@ -40,10 +40,11 @@ struct Client : public Common {
 
   Client(char **argv) {
 
-    if(rand() % 2) {
-      bot = new Bot_Thomas;
-    } else {
-      bot = new Bot_Eric;
+    switch (rand() % 4) {
+      case 0: bot = new Bot_Thomas; break;
+      case 1: bot = new Bot_Eric; break;
+      case 2: bot = new Bot_Eugen; break;
+      default: bot = new Bot_Lucian;
     }
 
     addrinfo hints, *rez;
