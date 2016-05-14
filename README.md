@@ -9,7 +9,7 @@ cd bin
 ./client localhost YourNameHere
 ```
 
-The game starts when *NumberOfClients* clients are connected to the server. The numbers should be between 3 and 6, otherwise it generates an error.
+The game starts when *NumberOfClients* clients are connected to the server. The number should be between 3 and 6, otherwise it generates an error.
 
 ### Communication protocol:
 
