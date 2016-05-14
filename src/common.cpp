@@ -29,7 +29,6 @@ std::vector<uint8_t> Common::readFrame() {
 	while((n = read(sfd, buff + at, MAX_BUFF - at)) != 0 && flags.size() < 2) {
     if(n == -1)
       continue;
-    debug("Read %d bytes\n", n);
 
     int cr = at;
     for(int i = 0; i < n; ++i, inc(cr)) {

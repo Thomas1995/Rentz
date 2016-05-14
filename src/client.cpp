@@ -16,6 +16,7 @@
 #include "event.h"
 #include "bots/bot.h"
 #include "bots/bot_Thomas.h"
+#include "bots/bot_Eric.h"
 #include "common.h"
 
 const char PORT[] = "31337";
@@ -37,7 +38,11 @@ struct Client : public Common {
 
   Client(char **argv) {
 
-    bot = new Bot_Thomas;
+    if(rand() % 2) {
+      bot = new Bot_Thomas;
+    } else {
+      bot = new Bot_Eric;
+    }
 
     addrinfo hints, *rez;
 
@@ -72,15 +77,10 @@ struct Client : public Common {
       event resp;
       resp.type = e.type;
 
-      debug("Received an event of type %d\n", e.type);
-
       switch(e.type) {
         case event::EType::sendCards: {
         //the server is sending us what cards were played
         //and are on the table
-        //TODO:
-        //implement parsing these cards
-        //and implement a coresponding method in #Bot
         
           debug("sending cards on table\n");
           std::vector<Card> cards(e.getCards());
@@ -91,8 +91,6 @@ struct Client : public Common {
 
       case event::EType::sendHand: {
       //the server is sending us our hand
-        //TODO:
-        //implement a coresponding method in #Bot
             
             debug("sending hand: ");
             std::vector<Card> hand(e.getCards());
@@ -107,16 +105,18 @@ struct Client : public Common {
 
         case event::EType::sendScores: {
         //the server is sending us the scores so far
-        //TODO:
-        //implement a coresponding method in #Bot
            
-            debug("sending scores\n");
+            debug("scores: ");
             
             std::vector<int> scores;
             scores.reserve(e.len / 4);
 
             for(uint32_t i = 0; i < e.len; i += 4) 
               scores.push_back(e.getInt(e.data + i));
+
+            for(auto i: scores)
+              debug(" %d", i);
+            debug("\n");
 
             bot->sendScores(scores);
             resp.send(sfd);
@@ -134,8 +134,6 @@ struct Client : public Common {
 
         case event::EType::sendGameChoice: {
         //the server is sending us the chosen game type
-        //TODO:
-        //implement a coresponding method in #Bot
             debug("sending game choice\n");
             const uint8_t choice = e.data[0];
             bot->receiveDecidedGameType(choice);
@@ -162,9 +160,19 @@ struct Client : public Common {
             resp.send(sfd);
             break;
         }
+
+        case event::EType::gameEnd: {
+          debug("The game has ended\n");
+          resp.send(sfd);
+          goto end;
+        }
       }
       e.free();
     }
+
+  end:
+
+    return;
   }
 
   void handshake(char* name) {

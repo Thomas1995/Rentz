@@ -46,6 +46,10 @@ struct event {
     //the index is a 4 byte unsigned integer
     
     requestName,
+    //request the connection to send his name
+
+    gameEnd,
+    //the game has ended
 
     null
   };
@@ -93,7 +97,6 @@ struct event {
 
     while(rem > 0) {
       const int n = ::send(fd, at, rem, 0);
-      debug("Sent %d bytes\n", n);
       rem -= n;
       at += n;
     }
