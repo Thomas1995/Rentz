@@ -1,5 +1,16 @@
 ## About the software:
 
+### Setup
+
+```
+make
+cd bin
+./server
+./client localhost YourNameHere
+```
+
+The game starts when 4 clients are connected to the server.
+
 ### Communication protocol:
 
 Server accepts client's connection.
@@ -14,7 +25,6 @@ Client waits for a request event(defined in event.h).
 
 After the client processes an event, a response or acknowledgement is mandatory.
 Furthermore, response event should have the same type as the request.
-
 
 ## About the game:
 
