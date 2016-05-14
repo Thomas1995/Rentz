@@ -3,13 +3,13 @@
 ### Setup
 
 ```
-make
+make -j4
 cd bin
 ./server NumberOfClients
 ./client localhost YourNameHere
 ```
 
-The game starts when *NumberOfClients* clients are connected to the server.
+The game starts when *NumberOfClients* clients are connected to the server. The numbers should be between 3 and 6, otherwise it generates an error.
 
 ### Communication protocol:
 
