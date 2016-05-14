@@ -7,11 +7,21 @@ Bot_Eugen::Bot_Eugen() : gamesOrderNV{Totals, Queens, Diamonds,
   }
 
 Card Bot_Eugen::decideCardToPlay() {
-  int x = rand() % hand.size();
-  std::swap(hand[x], hand.back());
+  /// TO DO BETTER
 
-  auto card = std::move(hand.back());
-  hand.pop_back();
+  auto card = hand.back();
+
+  if(cardsOnTable.empty())
+    goto decided;
+
+  for(const auto &c : hand)
+    if(cardsOnTable[0].isSameSuite(c)) {
+      card = c;
+      goto decided;
+    }
+
+decided:
+  hand.erase(find(hand.begin(), hand.end(), card));
   return card;
 }
 
