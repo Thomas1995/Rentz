@@ -1,7 +1,7 @@
 CXX?=g++
 CFLAGS?=-std=c++11 -g -Wall
 OBJS=score.o server.o connection.o util/card.o table.o util/require.o common.o
-BOTS=bots/bot_Thomas.o bots/bot.o bots/bot_Eric.o
+BOTS=src/bots/bot.o src/bots/bot_Thomas.o src/bots/bot_Eric.o src/bots/bot_Eugen.o src/bots/bot_Lucian.o
 UTIL=util/card.o util/require.o
 HEADERS=common.h event.h connection.h table.h server.h
 
@@ -28,7 +28,7 @@ util/card.o: util/card.cpp util/card.h
 util/require.o: util/require.h util/require.cpp
 	$(MAKE) -C util
 
-$(BOTS): 
+$(BOTS):
 	$(MAKE) -C bots
 
 bots/%.o: bots/%.cpp bots/%.h
@@ -38,10 +38,13 @@ bots/bot_Thomas.o: bots/bot.h
 
 bots/bot_Eric.o: bots/bot.h
 
+bots/bot_Eugen.o: bots/bot.h
+
+bots/bot_Lucian.o: bots/bot.h
+
 .PHONY: clean
 clean:
 	rm -f *\.o
 	rm -f server
 	$(MAKE) -C util clean
 	$(MAKE) -C bots clean
-

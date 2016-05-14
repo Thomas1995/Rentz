@@ -1,39 +1,53 @@
-#include "bot.h"
+#include "bot_Eugen.h"
+#include "../util/debug.h"
 
-class Bot_Eugen : public Bot {
-public:
-    Bot_Eugen() {
-        name = "Eugen";
-    }
+Bot_Eugen::Bot_Eugen() : gamesOrderNV{Totals, Queens, Diamonds,
+  Whist, Acool, KingOfHearts, TenClub} {
+    name = "Lucian";
+  }
 
-    Card PlayCard(const std::vector<Card>& cardsOnTable) {
-        auto hand = GetHand();
-        if(cardsOnTable.empty()) return hand[0];
+Card Bot_Eugen::decideCardToPlay() {
+  int x = rand() % hand.size();
+  std::swap(hand[x], hand.back());
 
-        for(auto c : hand)
-            if(cardsOnTable[0].isSameSuite(c))
-                return c;
+  auto card = std::move(hand.back());
+  hand.pop_back();
+  return card;
+}
 
-        return hand[0];
-    }
+std::vector<Card> Bot_Eugen::getPlayedCardStack() {
+  return cardsOnTable;
+}
 
-    void GetPlayedCardStack(const std::vector<Card>& cardsOnTable) {
+uint8_t Bot_Eugen::decideGameType() {
+  if(NVModeChosen) {
+    // chose a game based on gamesOrderNV
+    for(int i=0;i<7;++i)
+      if(!gamesPlayed[gamesOrderNV[i]]) {
+        gamesPlayed[gamesOrderNV[i]] = true;
+        return gamesOrderNV[i];
+      }
+  }
+  else {
+    auto hand = getHand();
 
-    }
+    /// TO DO BETTER
 
-    int GetGameType() {
+    /// DETELE THIS
+    for(int i=0;i<7;++i)
+      if(!gamesPlayed[gamesOrderNV[i]]) {
+        gamesPlayed[gamesOrderNV[i]] = true;
+        return gamesOrderNV[i];
+      }
+  }
 
-    }
+  return -1;
+}
 
-    void SetGameType(const int gameType) {
+void Bot_Eugen::receiveDecidedGameType(const int gameType) {
+  crtGameType = gameType;
+}
 
-    }
-
-    bool PlayNVMode() {
-
-    }
-    
-    void SetScores(const int yourScore, const std::vector<int>& allScores) {
-
-    }
-};
+bool Bot_Eugen::decidePlayNV() {
+  return false;
+}

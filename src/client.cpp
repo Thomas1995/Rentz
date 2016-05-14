@@ -17,6 +17,8 @@
 #include "bots/bot.h"
 #include "bots/bot_Thomas.h"
 #include "bots/bot_Eric.h"
+#include "bots/bot_Eugen.h"
+#include "bots/bot_Lucian.h"
 #include "common.h"
 
 const char PORT[] = "31337";
@@ -24,7 +26,7 @@ const char PORT[] = "31337";
 /* Client is what connects to the server.
  * It receives certain events from the server and interprets them.
  * Based on the event that it receives,
- * it calls coresponding methods of the 
+ * it calls coresponding methods of the
  * bot member variable
  */
 
@@ -81,7 +83,7 @@ struct Client : public Common {
         case event::EType::sendCards: {
         //the server is sending us what cards were played
         //and are on the table
-        
+
           debug("sending cards on table\n");
           std::vector<Card> cards(e.getCards());
           bot->receiveCardsOnTable(cards);
@@ -91,7 +93,7 @@ struct Client : public Common {
 
       case event::EType::sendHand: {
       //the server is sending us our hand
-            
+
             debug("sending hand: ");
             std::vector<Card> hand(e.getCards());
             for(auto &x: hand)
@@ -105,13 +107,13 @@ struct Client : public Common {
 
         case event::EType::sendScores: {
         //the server is sending us the scores so far
-           
+
             debug("scores: ");
-            
+
             std::vector<int> scores;
             scores.reserve(e.len / 4);
 
-            for(uint32_t i = 0; i < e.len; i += 4) 
+            for(uint32_t i = 0; i < e.len; i += 4)
               scores.push_back(e.getInt(e.data + i));
 
             for(auto i: scores)
