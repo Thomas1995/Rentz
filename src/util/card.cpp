@@ -35,7 +35,7 @@ std::string Card::to_string() const {
 }
 
 bool Card::operator == (const Card& c) const {
-    return value == c.getValue() && suite == c.getSuite();
+  return to_string() == c.to_string();
 }
 
 bool Card::isBeatenBy(const Card& c) const {

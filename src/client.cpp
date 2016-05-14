@@ -72,15 +72,10 @@ struct Client : public Common {
       event resp;
       resp.type = e.type;
 
-      debug("Received an event of type %d\n", e.type);
-
       switch(e.type) {
         case event::EType::sendCards: {
         //the server is sending us what cards were played
         //and are on the table
-        //TODO:
-        //implement parsing these cards
-        //and implement a coresponding method in #Bot
         
           debug("sending cards on table\n");
           std::vector<Card> cards(e.getCards());
@@ -91,8 +86,6 @@ struct Client : public Common {
 
       case event::EType::sendHand: {
       //the server is sending us our hand
-        //TODO:
-        //implement a coresponding method in #Bot
             
             debug("sending hand: ");
             std::vector<Card> hand(e.getCards());
@@ -107,8 +100,6 @@ struct Client : public Common {
 
         case event::EType::sendScores: {
         //the server is sending us the scores so far
-        //TODO:
-        //implement a coresponding method in #Bot
            
             debug("sending scores\n");
             
@@ -134,8 +125,6 @@ struct Client : public Common {
 
         case event::EType::sendGameChoice: {
         //the server is sending us the chosen game type
-        //TODO:
-        //implement a coresponding method in #Bot
             debug("sending game choice\n");
             const uint8_t choice = e.data[0];
             bot->receiveDecidedGameType(choice);

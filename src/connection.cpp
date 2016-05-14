@@ -43,6 +43,8 @@ Card Connection::getCardChoice() {
       exit(1);
   }
 
+  hand.erase(find(hand.begin(), hand.end(), card));
+
   resp.free();
   return card;
 }

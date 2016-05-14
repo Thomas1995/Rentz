@@ -1,4 +1,5 @@
 #include "bot_Thomas.h"
+#include "../util/debug.h"
 
 Bot_Thomas::Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
   Whist, Acool, KingOfHearts, TenClub} {
@@ -8,14 +9,20 @@ Bot_Thomas::Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
 Card Bot_Thomas::decideCardToPlay() {
   /// TO DO BETTER
 
-  auto hand = getHand();
-  if(cardsOnTable.empty()) return hand[0];
+  auto card = hand.back();
 
-  for(auto c : hand)
-    if(cardsOnTable[0].isSameSuite(c))
-      return c;
+  if(cardsOnTable.empty())
+    goto decided;
 
-  return hand[0];
+  for(const auto &c : hand)
+    if(cardsOnTable[0].isSameSuite(c)) {
+      card = c;
+      goto decided;
+    }
+
+decided:
+  hand.erase(find(hand.begin(), hand.end(), card));
+  return card;
 }
 
 std::vector<Card> Bot_Thomas::getPlayedCardStack() {
