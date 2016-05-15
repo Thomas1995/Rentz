@@ -1,37 +1,26 @@
 CXX?=g++
 CXXFLAGS?=-std=c++11 -g -Wall
-OBJS=score.o server.o connection.o util/card.o table.o util/require.o common.o
-BOTS=src/bots/bot.o src/bots/bot_Thomas.o src/bots/bot_Eric.o src/bots/bot_Eugen.o src/bots/bot_Lucian.o
-UTIL=util/card.o util/require.o
+OBJS=score.o server.o connection.o table.o common.o
 HEADERS=common.h event.h connection.h table.h server.h
 
 all: server client
 
 .PHONY: server
-server: $(OBJS) server.h table.h
+server: $(OBJS) server.h table.h UTIL
 
 .PHONY: client
-client: client.o common.o $(BOTS)
-
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $<
-
-%.cpp: %.h
+client: client.o common.o BOTS
 
 event.h server common.o connection.o: util/debug.h
 
 client.o connection.o: common.h event.h
 
-util/card.o: util/card.cpp util/card.h
+.PHONY: UTIL
+UTIL:
 	$(MAKE) -C util
 
-util/require.o: util/require.h util/require.cpp
-	$(MAKE) -C util
-
-$(BOTS):
-	$(MAKE) -C bots
-
-bots/%.o: bots/%.cpp bots/%.h
+.PHONY: BOTS
+BOTS:
 	$(MAKE) -C bots
 
 bots/bot_Thomas.o: bots/bot.h
