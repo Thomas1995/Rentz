@@ -3,6 +3,7 @@
 #include <string>
 #include <fcntl.h>
 #include <assert.h>
+#include <memory>
 #include <sstream>
 #include <iostream>
 #include <sys/socket.h>
@@ -35,7 +36,7 @@ struct Client : public Common {
 
   int index;
 
-  Bot* bot;
+  std::unique_ptr<Bot> bot;
 
   Client() = delete;
 
@@ -44,10 +45,10 @@ struct Client : public Common {
     srand (time(NULL));
 
     switch (rand() % 4) {
-      case 0: bot = new Bot_Thomas; break;
-      case 1: bot = new Bot_Eric; break;
-      case 2: bot = new Bot_Eugen; break;
-      default: bot = new Bot_Lucian;
+      case 0:  bot = std::unique_ptr<Bot>(new Bot_Thomas); break;
+      case 1:  bot = std::unique_ptr<Bot>(new Bot_Eric); break;
+      case 2:  bot = std::unique_ptr<Bot>(new Bot_Eugen); break;
+      default: bot = std::unique_ptr<Bot>(new Bot_Lucian); break;
     }
 
     addrinfo hints, *rez;
@@ -197,7 +198,7 @@ struct Client : public Common {
     assert(e.type == event::EType::sendIndex);
     assert(e.len == 4);
 
-    index = *(reinterpret_cast<uint32_t *>(e.data));
+    index = ntohl(*(reinterpret_cast<uint32_t *>(e.data)));
 
     e.free();
     e.len = 0;
@@ -205,10 +206,6 @@ struct Client : public Common {
     e.send(sfd);
 
     printf("our index is %d\n", index);
-  }
-
-  ~Client() {
-    delete bot;
   }
 };
 
