@@ -1,5 +1,5 @@
 CXX?=g++
-CFLAGS?=-std=c++11 -g -Wall
+CXXFLAGS?=-std=c++11 -g -Wall
 OBJS=score.o server.o connection.o util/card.o table.o util/require.o common.o
 BOTS=src/bots/bot.o src/bots/bot_Thomas.o src/bots/bot_Eric.o src/bots/bot_Eugen.o src/bots/bot_Lucian.o
 UTIL=util/card.o util/require.o
@@ -14,7 +14,7 @@ server: $(OBJS) server.h table.h
 client: client.o common.o $(BOTS)
 
 %.o: %.cpp
-	$(CXX) $(CFLAGS) -c $<
+	$(CXX) $(CXXFLAGS) -c $<
 
 %.cpp: %.h
 
