@@ -21,6 +21,7 @@
 #include "bots/Thomas.bot"
 #include "bots/Eric.bot"
 #include "bots/Bicsi.bot"
+#include "bots/Random.bot"
 
 #include "common.h"
 
@@ -50,6 +51,7 @@ struct Client : public Common {
     if(type == "TH")  bot = std::unique_ptr<Bot>(new Bot_Thomas); 
     if(type == "ER")  bot = std::unique_ptr<Bot>(new Bot_Eric); 
     if(type == "BC")  bot = std::unique_ptr<Bot>(new Bot_Bicsi); 
+    if(type == "RD")  bot = std::unique_ptr<Bot>(new Bot_Random);
 
     assert(bot != nullptr);
     
