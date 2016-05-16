@@ -60,7 +60,6 @@ public:
 
 
 	Card playToWin() {
-		Minigame curGame = getCurrentGame();
 		auto stack = getCardsOnTable();
 		auto options = getPlayOptions();
 
@@ -77,7 +76,6 @@ public:
 	}
 
 	Card playToLose() {
-		Minigame curGame = getCurrentGame();
 		auto stack = getCardsOnTable();
 		auto options = getPlayOptions();
 
