@@ -17,10 +17,8 @@
 #include <vector>
 #include "event.h"
 #include "bots/bot.h"
-#include "bots/bot_Thomas.h"
-#include "bots/bot_Eric.h"
-//#include "bots/bot_Eugen.h"
-//#include "bots/bot_Lucian.h"
+#include "bots/Thomas.bot"
+#include "bots/Eric.bot"
 #include "common.h"
 
 const char PORT[] = "31337";

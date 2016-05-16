@@ -1,5 +1,5 @@
-#ifndef BOT_THOMAS_H
-#define BOT_THOMAS_H
+#ifndef BOT_THOMAS
+#define BOT_THOMAS
 
 #include "bot.h"
 
@@ -59,4 +59,4 @@ public:
 	}
 };
 
-#endif //BOT_THOMAS_H
+#endif //BOT_THOMAS
