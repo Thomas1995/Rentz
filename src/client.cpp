@@ -208,7 +208,8 @@ struct Client : public Common {
   void handshake(char *name) {
 
     event e = readEvent();
-    assert(e.type = event::EType::ASK_NAME);
+    assert(e.type = event::EType::HANDSHAKE);
+    uint8_t playerCount = e.data[0];
     e.free();
 
     e.len = strlen(name);
@@ -230,11 +231,8 @@ struct Client : public Common {
 
     printf("Our index is %d\n", index);
 
-    //TODO: add information for number of players
-    int players = 3; // Remove this
-
     //Initialize bot
-    bot->Init(index, players);
+    bot->Init(index, playerCount);
   }
 };
 
