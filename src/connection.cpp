@@ -29,7 +29,7 @@ Card Connection::getCardChoice() {
 
   Card card(resp.data[0]);
 
-  debug("Received card %s from client\n", card.to_string().c_str());
+  //debug("Received card %s from client\n", card.to_string().c_str());
 
   bool in = 0;
 

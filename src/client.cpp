@@ -93,7 +93,7 @@ struct Client : public Common {
         //the server is sending us what cards were played
         //and are on the table
 
-          debug("Sending cards on table...\n");
+          debug("Receiving on table...\n");
           std::vector<Card> cards(e.getCards());
           bot->ReceiveCardsOnTable(cards);
           resp.send(sfd);
@@ -103,7 +103,7 @@ struct Client : public Common {
       case event::EType::SEND_HAND: {
       //the server is sending us our hand
 
-            debug("Sending hand: ");
+            debug("Receiving hand: ");
             std::vector<Card> hand(e.getCards());
             for(auto &x: hand)
               debug("%s ", x.to_string().c_str());
@@ -136,7 +136,7 @@ struct Client : public Common {
 
         case event::EType::ASK_GAME: {
         //ask the bot to choose the minigame
-            debug("Asking player for minigame...\n");
+            debug("Being asked for minigame...\n");
             uint8_t ans = bot->ChooseMinigame();
             resp.len = 1;
             resp.data = &ans;
@@ -154,7 +154,7 @@ struct Client : public Common {
         }
 
         case event::EType::ASK_CARD: {
-            debug("Asking player for card...\n");
+            debug("Being asked for card...\n");
             Card c = bot->PlayCard();
             debug("Chosen card is %s\n", c.to_string().c_str());
             resp.len = 1;
@@ -165,7 +165,7 @@ struct Client : public Common {
         }
 
         case event::EType::ASK_NV: {
-            debug("Asking player for NV...\n");
+            debug("Being asked for NV...\n");
             bool ans = bot->AskIfNV();
             resp.len = 1;
             resp.data = reinterpret_cast<uint8_t *>(&ans);

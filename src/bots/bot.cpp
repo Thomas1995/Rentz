@@ -4,9 +4,14 @@
 #include <iostream>
 
 void Bot::Init(int index, int players) {
+
 	this->index = index;
 	this->playersCount = players;
 	scores.resize(players, 0);
+	
+	if(games.empty())
+	for(int i = 1; i <= MinigameCount; ++i)
+		games.push_back(static_cast<Minigame>(i));
 }
 
 void Bot::ReceiveHand(std::vector<Card> hand) {
@@ -50,7 +55,11 @@ Minigame Bot::ChooseMinigame() {
 	// Choose a minigame
 
 	Minigame game = onChooseMinigame();
-	games.erase(find(games.begin(), games.end(), game)); //TODO: Check if game in games
+	auto it = find(games.begin(), games.end(), game);
+	
+	assert(it != games.end());
+	
+	games.erase(it); //TODO: Check if game in games
 	return game;
 }
 

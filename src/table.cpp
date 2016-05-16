@@ -9,7 +9,7 @@ Table::Table() {}
 
 void Table::Start() {
 
-  debug("The game has started!\n");
+  debug("\n\nThe game has started!\n\n");
 
   for(size_t i = 0; i < players.size(); ++i)
     players[i].sendIndex(i);
@@ -31,31 +31,44 @@ void Table::Start() {
   firstPlayer = players.begin();
 
   for(int gameChoice = 1; gameChoice <= gamesNumber; ++gameChoice) {
-    debug("gamechoice %d\n", gameChoice);
+    
     for(size_t i=0;i<players.size();++i) {
+      // set the first player
+      firstPlayer = players.begin() + i;
+      
+      debug("Pre-round:\n");
+      debug("First player is %s\n", firstPlayer->getName().c_str());
 
       // check if connection wants to play NV mode and enforce it for the last choice
-      if(gameChoice < gamesNumber)
+      if(gameChoice < gamesNumber) {
         modeNV = players[i].getNVChoice();
-      else
+      } else {
         modeNV = true;
+      }
+
+      if(modeNV) {
+        debug("NV Mode chosen!\n");
+      } else {
+        debug("NV Mode not chosen!\n");
+      }
 
       // if NV mode not chosen, give cards before game choice
-      if(modeNV == false)
+      if(modeNV == false) {
         GiveCards();
-
-      // get the game type
-      gameType = players[i].getGameChoice();
-
-      // if NV mode chosen, give cards after game choice
-      if(modeNV == true)
+        gameType = players[i].getGameChoice();
+      } else {
+        gameType = players[i].getGameChoice();
         GiveCards();
+      }
 
       // check if connection can play that game
       require(gameType >= 1 && gameType <= gamesNumber,
-          players[i].getName() + " has chosen a game index out of bounds");
+          players[i].getName() + " has chosen a game index out of bounds\n");
+      
+      debug("Game chosen was: %s\n", GameName[gameType].c_str());
+
       require(gamesPlayed[i][gameType] == false,
-          players[i].getName() + " had already chosen that game");
+          players[i].getName() + " had already chosen that game\n");
 
       gamesPlayed[i][gameType] = true;
 
@@ -87,7 +100,7 @@ void Table::PlayerAction(Connection &connection) {
       auto cards = connection.getHand();
       for(auto c : cards)
         require(!cardStack.front().isSameSuite(c),
-            connection.getName() + " had chosen a card of a different suite.");
+            connection.getName() + " had chosen a card of a different suite.\n");
     }
   }
 
@@ -123,6 +136,8 @@ void Table::GiveCards() {
 }
 
 void Table::PlayRound() {
+  debug("\n\nStarting new round!\n");
+
   for(int roundstep = 1; roundstep <= 8; ++roundstep) {
     cardStack.clear();
 

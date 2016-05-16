@@ -37,10 +37,7 @@ Minigame Bot_Eric::onChooseMinigame() {
       }
   }
   else {
-    auto hand = getHand();
-
-    /// TODO BETTER
-    return games.back();
+    return games[rand() % games.size()];
   }
 
   assert(false);
