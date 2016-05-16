@@ -1,5 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
+
 #include <vector>
 #include <stdint.h>
 #include "event.h"
@@ -34,4 +35,4 @@ struct Common {
   Common(int sfd);
 };
 
-#endif
+#endif //COMMON_H

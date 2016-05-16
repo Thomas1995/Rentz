@@ -1,24 +1,69 @@
+#ifndef BOT_ERIC_H
+#define BOT_ERIC_H
+
 #include "bot.h"
 
 class Bot_Eric : public Bot {
+private:
+	std::vector<Minigame> gamesOrderNV;
+	int myLadderPosition;
+	bool NVModeChosen;
+
 public:
-    Bot_Eric();
+	Bot_Eric() : gamesOrderNV{Totals, Queens, Diamonds,
+	  Whist, Acool, KingOfHearts, TenClub} {
+	    setName("Eric");
+	  }
 
-    std::vector<Card> getPlayedCardStack();
+	Card onPlayCard() {
+	  /// TO DO BETTER
 
-    bool gamesPlayed[8];
-    bool NVModeChosen;
-    int myLadderPosition = 1;
-    int gamesOrderNV[7];
-    int crtGameType;
+	  auto hand = getHand();
+	  auto card = hand.back();
+	  auto cardsOnTable = getCardsOnTable();
 
-    uint8_t decideGameType();
+	  if(cardsOnTable.empty())
+	    goto decided;
 
-    void receiveDecidedGameType(const int gameType);
+	  for(const auto &c : hand)
+	    if(cardsOnTable[0].isSameSuite(c)) {
+	      card = c;
+	      goto decided;
+	    }
 
-    Card decideCardToPlay();
+	decided:
+	  return card;
+	}
 
-    bool decidePlayNV(); 
+	Minigame onChooseMinigame() {
+	  auto games = getAvailableGames();
 
-    ~Bot_Eric() = default;
+	  if(NVModeChosen) {
+	    // chose a game based on gamesOrderNV
+	    for(auto game : gamesOrderNV)
+	      if(find(games.begin(), games.end(), game) != games.end()) {
+	        return game;
+	      }
+	  }
+	  else {
+	    return games[rand() % games.size()];
+	  }
+
+	  assert(false);
+	  return Minigame::Totals;
+	}
+
+	bool onAskIfNV() {
+	  // play NV mode if not first or second player
+	  if(myLadderPosition > 2) {
+	    NVModeChosen = true;
+	    return true;
+	  }
+
+	  NVModeChosen = false;
+	  return false;
+	}
 };
+
+#endif //BOT_ERIC_H
+

@@ -2,15 +2,7 @@
 #define DEBUG_H
 #include <stdio.h>
 
-#define DEBUG
-
-#ifdef DEBUG
-#define D 1
-#else
-#define D 0
-#endif
-
-#define debug(...) if(D)\
-                    fprintf(stderr, __VA_ARGS__)
+#define DEBUG 1
+#define debug(...) if(DEBUG) {fprintf(stderr, __VA_ARGS__);}
 
 #endif // DEBUG_H

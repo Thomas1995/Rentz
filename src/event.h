@@ -1,5 +1,6 @@
 #ifndef EVENT_H
 #define EVENT_H
+
 #include <limits.h>
 #include <vector>
 #include <stdint.h>
@@ -24,31 +25,31 @@ struct event {
       }
 
   enum EType {
-    sendCards,
-    sendHand,
+    SEND_CARDS,
+    SEND_HAND,
     //both of these events include an array of unsigned bytes
     //of codified cards
 
-    sendScores,
+    ROUND_END,
     //the scores are encoded as 4 byte integers
 
-    getGameChoice,
-    sendGameChoice,
+    ASK_GAME,
+    ROUND_START,
     //game choice is represented as an unsigned byte
 
-    getCardChoice,
+    ASK_CARD,
     //card choice is 1 unsigned byte codified card
 
-    getNVChoice,
+    ASK_NV,
     //NV choice is a 1 byte boolean
 
-    sendIndex,
+    SEND_INIT,
     //the index is a 4 byte unsigned integer
     
-    requestName,
+    ASK_NAME,
     //request the connection to send his name
 
-    gameEnd,
+    GAME_END,
     //the game has ended
 
     null
@@ -130,4 +131,4 @@ struct event {
   }
 };
 
-#endif
+#endif //EVENT_H

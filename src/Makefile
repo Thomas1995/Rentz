@@ -23,14 +23,6 @@ UTIL:
 BOTS:
 	$(MAKE) -C bots
 
-bots/bot_Thomas.o: bots/bot.h
-
-bots/bot_Eric.o: bots/bot.h
-
-bots/bot_Eugen.o: bots/bot.h
-
-bots/bot_Lucian.o: bots/bot.h
-
 .PHONY: clean
 clean:
 	rm -f *\.o
