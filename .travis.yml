@@ -21,4 +21,5 @@ sudo: false
 script:
   - make clean
   - make -j2
+  - make test
 
