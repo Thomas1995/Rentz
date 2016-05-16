@@ -1,0 +1,46 @@
+#ifndef BOT_RAND_H
+#define BOT_RAND_H
+
+#include "bot.h"
+
+class Bot_Random : public Bot {
+
+public:
+	Bot_Random() {
+	    setName("Randominator");
+	}
+
+	std::vector<Card> getPlayOptions() {
+		auto stack = getCardsOnTable();
+		auto hand = getHand();
+
+		if(stack.empty()) return hand;
+		else {
+			std::vector<Card> ret;
+			for(auto c : hand) {
+				if(c.isSameSuite(stack[0]))
+					ret.push_back(c);
+			}
+
+			if(ret.empty()) return hand;
+			return ret;
+		}
+	}
+
+	Card onPlayCard() {
+		auto options = getPlayOptions();
+		return options[rand() % options.size()];
+	}
+
+	Minigame onChooseMinigame() {
+		auto games = getAvailableGames();
+		return games[rand() % games.size()]; 
+	}
+
+	bool onAskIfNV() {
+		return rand() % 2;
+	}
+};
+
+#endif //BOT_RAND_H
+
