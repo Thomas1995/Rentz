@@ -9,7 +9,7 @@ Table::Table() {}
 
 void Table::Start() {
 
-  debug("\n\nThe game has started!\n\n");
+  std::cout << "\n\nA new game has started!\n\n";
 
   for(size_t i = 0; i < players.size(); ++i)
     players[i].sendIndex(i);
@@ -36,8 +36,8 @@ void Table::Start() {
       // set the first player
       firstPlayer = players.begin() + i;
       
-      debug("Pre-round:\n");
-      debug("First player is %s\n", firstPlayer->getName().c_str());
+      std::cout << "Pre-round:\n";
+      std::cout << "First player is " << firstPlayer->getName() << '\n';
 
       // check if connection wants to play NV mode and enforce it for the last choice
       if(gameChoice < gamesNumber) {
@@ -47,9 +47,9 @@ void Table::Start() {
       }
 
       if(modeNV) {
-        debug("NV Mode chosen!\n");
+        std::cout << "NV Mode chosen!\n";
       } else {
-        debug("NV Mode not chosen!\n");
+        std::cout << "NV Mode not chosen!\n";
       }
 
       // if NV mode not chosen, give cards before game choice
@@ -65,7 +65,7 @@ void Table::Start() {
       require(gameType >= 1 && gameType <= gamesNumber,
           players[i].getName() + " has chosen a game index out of bounds\n");
       
-      debug("%s chosen: %s\n", players[i].getName().c_str(), GameName[gameType].c_str());
+      std::cout << players[i].getName() << " chose to play: " << GameName[gameType] << '\n';
 
       require(gamesPlayed[i][gameType] == false,
           players[i].getName() + " had already chosen that game\n");
@@ -80,7 +80,8 @@ void Table::Start() {
       PlayRound();
     }
   }
-  debug("Game is over\n");
+  std::cout << "Game is over!\n";
+  printScores();
 
   for(auto &connection: players)
     connection.gameEnd();
@@ -113,6 +114,7 @@ void Table::IterateThroughPlayers(std::vector<Connection>::iterator iterator) {
     PlayerAction(*it);
   for(auto it = players.begin(); it != iterator; ++it)
     PlayerAction(*it);
+  std::cout << std::endl;
 }
 
 void Table::GiveCards() {
@@ -135,8 +137,16 @@ void Table::GiveCards() {
   }
 }
 
+void Table::printScores() {
+  std::cout << "Scores:\n";
+  for(size_t i=0;i<players.size();++i) {
+    players[i].sendScores(score);
+    std::cout << players[i].getName() + ": " << score[i] << "\n";
+  }
+}
+
 void Table::PlayRound() {
-  debug("\n\nStarting new round!\n");
+  std::cout << "\nStarting new round!\n\n";
 
   for(int roundstep = 1; roundstep <= 8; ++roundstep) {
     cardStack.clear();
@@ -168,17 +178,13 @@ void Table::PlayRound() {
 
     // change score
     ChangeScore();
-
-    std::cout << std::endl;
   }
+
+  std::cout << "Round over!\n\n";
 
   // let players know the scores
-  std::cout << "Scores:\n";
-  for(size_t i=0;i<players.size();++i) {
-    players[i].sendScores(score);
-    std::cout << players[i].getName() + ": " << score[i] << "\n";
-  }
-  std::cout << "\n----------\n";
+  printScores();
+  std::cout << "\n--------------------------\n";
 
   std::cout << std::endl;
 }
