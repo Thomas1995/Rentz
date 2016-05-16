@@ -7,10 +7,11 @@
 class Bot_Bicsi : public Bot {
 private:
 	std::vector<Minigame> gamesOrderNV = {Totals, Queens, Diamonds, Whist, Acool, KingOfHearts, TenClub};
+	
 	std::vector<Minigame> minusGames = {Totals, Queens, Diamonds, Acool, KingOfHearts};
 	std::vector<Minigame> plusGames = {Whist, TenClub};
-
-	int myLadderPosition;
+	
+	bool flagTenClub, flagKingHearts, flagDiamonds, flagQueens;
 	bool NVModeChosen;
 
 	static bool compare(const Card &a, const Card &b) {
@@ -22,7 +23,15 @@ public:
 	  	setName("BicsiBot9000 v0.1");
 	}
 
-	
+	void onRoundStart() {
+		Minigame game = getCurrentGame();
+
+		flagQueens = (game == Minigame::Queens || game == Minigame::Totals);
+		flagKingHearts = (game == Minigame::KingOfHearts || game == Minigame::Totals);
+		flagTenClub = (game == Minigame::TenClub);
+		flagDiamonds = (game == Minigame::Diamonds || game == Minigame::Totals);
+
+	}
 
 	Card onPlayCard() {
 		Minigame curGame = getCurrentGame();
@@ -51,7 +60,6 @@ public:
 
 
 	Card playToWin() {
-		Minigame curGame = getCurrentGame();
 		auto stack = getCardsOnTable();
 		auto options = getPlayOptions();
 
@@ -68,7 +76,6 @@ public:
 	}
 
 	Card playToLose() {
-		Minigame curGame = getCurrentGame();
 		auto stack = getCardsOnTable();
 		auto options = getPlayOptions();
 
@@ -77,10 +84,49 @@ public:
 
 		if(!stack.empty() && options[0].isSameSuite(stack[0])) {
 			//Try to lose
+
+			int max_val = 0;
+			for(auto c : stack) {
+				if(c.isSameSuite(stack[0]))
+					max_val = std::max(max_val, c.getValue());
+			}
+
+			for(auto it = options.rbegin(); it != options.rend(); ++it) {
+				if(it->getValue() < max_val)
+					return *it; 
+			}
 			return options[0];
+
 		} else {
-			//Throw the largest one
-			return options.back();
+			if(!stack.empty()) {
+				//If playing king
+				if(flagKingHearts) {
+					auto it = find(options.begin(), options.end(), Card(13, 'H'));
+					if(it != options.end())
+						return *it;
+				}
+
+				//If playing queens
+				if(flagQueens) {
+					for(auto x : options) {
+						if(x.getValue() == 12)
+							return x;
+					}
+				}
+
+				//If playing diamonds
+				if(flagDiamonds) {
+					for(auto it = options.rbegin(); it != options.rend(); ++it)
+						if(it->getSuite() == 'D')
+							return *it;
+				}
+
+
+				//Throw the largest one
+				return options.back();
+			}
+
+			return options[0];
 		}
 	}
 
