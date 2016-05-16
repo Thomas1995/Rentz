@@ -20,7 +20,7 @@
 #include "bots/bot_Thomas.h"
 #include "bots/bot_Eric.h"
 //#include "bots/bot_Eugen.h"
-//#include "bots/bot_Lucian.h"
+#include "bots/bot_Bicsi.h"
 #include "common.h"
 
 const char PORT[] = "31337";
