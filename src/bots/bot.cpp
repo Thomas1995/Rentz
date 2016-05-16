@@ -4,6 +4,7 @@
 #include <iostream>
 
 void Bot::Init(int index, int players) {
+	debug("Getting initialized\n");
 
 	this->index = index;
 	this->playersCount = players;
@@ -22,44 +23,43 @@ void Bot::ReceiveHand(std::vector<Card> hand) {
 }
 
 void Bot::dumpInfo() {
-    std::cerr << "Info for bot #" << index << " (" << name << "):" << std::endl;
+    debug("\n\n------------------\n");
+    debug("Info for bot #%d(%s):\n", index, name.c_str());
 
-    std::cerr << "Current scores: ";
-    for(auto x : scores) std::cerr << x << " ";
-    std::cerr << std::endl;
+    debug("Current scores: ");
+    for(auto x : scores) debug("%d ", x);
+    debug("\n");
 
-    std::cerr << "Avaliable minigames: ";
-    for(auto x : games) std::cerr << x << " ";
-    std::cerr << std::endl;
+    debug("Available minigames: ");
+    for(auto x : games) debug("%d ", x);
+    debug("\n");
 
-    std::cerr << "Current hand: ";
-    for(auto x : hand) std::cerr << x << " ";
-    std::cerr << std::endl;
+    debug("Current hand: ");
+    for(auto x : hand) debug("%s ", x.to_string().c_str());
+    debug("\n");
 
-    std::cerr << "Cards on table: ";
-    for(auto x : cardsOnTable) std::cerr << x << " ";
-    std::cerr << std::endl;
+    debug("Cards on table: ");
+    for(auto x : cardsOnTable) debug("%s ", x.to_string().c_str());
+    debug("\n------------------\n\n");
 }
 
 void Bot::ReceiveCardsOnTable(std::vector<Card> cardsOnTable) {
 	// Server gives you the cards on the table
-	std::vector<Minigame> games;
-	for(int i = 1; i <= MinigameCount; ++i)
-        games.push_back((Minigame) i);
-
-    this->games = games;
 	this->cardsOnTable = cardsOnTable;
 }
 
 Minigame Bot::ChooseMinigame() {
 	// Choose a minigame
 
+	debug("I have %d games available\n", games.size());
 	Minigame game = onChooseMinigame();
 	auto it = find(games.begin(), games.end(), game);
 	
 	assert(it != games.end());
 	
 	games.erase(it); //TODO: Check if game in games
+	debug("I now have %d games available\n", games.size());
+
 	return game;
 }
 
@@ -70,6 +70,10 @@ bool Bot::AskIfNV() {
 void Bot::RoundStart(int gameIndex) {
 	// Update current game and call virtual method
 	currentGame = gameIndex;
+	
+	//TODO: Remove this line
+	dumpInfo();
+
 	onRoundStart();
 }
 
@@ -78,12 +82,17 @@ void Bot::RoundEnd(std::vector<int> scores) {
 	// Round ended; empty your hand, update scores
 
 	hand.clear();
+	cardsOnTable.clear();
 	this->scores = scores;
+	
 	onRoundEnd();
 }
 
 Card Bot::PlayCard() {
 	// Play a card and erase it from your hand
+
+	//TODO: Remove this line
+	dumpInfo();
 
     Card use = onPlayCard();
     hand.erase(find(hand.begin(), hand.end(), use)); //TODO: Check if card in hand
