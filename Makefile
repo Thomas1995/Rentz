@@ -21,6 +21,10 @@ server: src
 client:  src
 	$(CXX) $(CFLAGS) $(BOTS) $(UTIL) $(CLIENT_OBJS) -o bin/client
 
+.PHONY:
+test: FORCE
+	@make -s -C test test
+
 .PHONY: clean
 clean:
 	$(MAKE) -C src clean
