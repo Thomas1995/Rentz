@@ -2,6 +2,7 @@
 #include "../util/gamelist.h"
 #include "../util/card.h"
 #include <iostream>
+#include "../util/debug.h"
 
 void Bot::Init(int index, int players) {
 	debug("Getting initialized\n");

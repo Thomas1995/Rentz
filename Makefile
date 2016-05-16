@@ -2,7 +2,7 @@ CXX?=g++
 CFLAGS?=-std=c++11 -g -Wall
 OBJS=src/score.o src/server.o src/connection.o src/util/card.o src/table.o src/util/require.o src/common.o
 CLIENT_OBJS=src/common.o src/client.o
-BOTS=src/bots/bot.o src/bots/bot_Eric.o
+BOTS=src/bots/bot.o
 UTIL=src/util/card.o src/util/require.o
 
 all: bin

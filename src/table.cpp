@@ -65,7 +65,7 @@ void Table::Start() {
       require(gameType >= 1 && gameType <= gamesNumber,
           players[i].getName() + " has chosen a game index out of bounds\n");
       
-      debug("Game chosen was: %s\n", GameName[gameType].c_str());
+      debug("%s chosen: %s\n", players[i].getName().c_str(), GameName[gameType].c_str());
 
       require(gamesPlayed[i][gameType] == false,
           players[i].getName() + " had already chosen that game\n");

@@ -17,7 +17,7 @@
 #include <vector>
 #include "event.h"
 #include "bots/bot.h"
-//#include "bots/bot_Thomas.h"
+#include "bots/bot_Thomas.h"
 #include "bots/bot_Eric.h"
 //#include "bots/bot_Eugen.h"
 //#include "bots/bot_Lucian.h"
@@ -44,16 +44,11 @@ struct Client : public Common {
 
     srand (time(NULL));
 
-/*
-    switch (rand() % 4) {
+
+    switch (rand() % 2) {
       case 0:  bot = std::unique_ptr<Bot>(new Bot_Thomas); break;
       case 1:  bot = std::unique_ptr<Bot>(new Bot_Eric); break;
-      case 2:  bot = std::unique_ptr<Bot>(new Bot_Eugen); break;
-      default: bot = std::unique_ptr<Bot>(new Bot_Lucian); break;
     }
-*/
-    //TODO: WATCH OUT FOR THIS
-    bot = std::unique_ptr<Bot>(new Bot_Eric);
 
     addrinfo hints, *rez;
 
@@ -93,7 +88,7 @@ struct Client : public Common {
         //the server is sending us what cards were played
         //and are on the table
 
-          debug("Receiving on table...\n");
+          debug("Receiving cards on table...\n");
           std::vector<Card> cards(e.getCards());
           bot->ReceiveCardsOnTable(cards);
           resp.send(sfd);
