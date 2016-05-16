@@ -18,7 +18,7 @@ Connection::Connection(int sfd):
 
 Card Connection::getCardChoice() {
   event req;
-  req.type = event::getCardChoice;
+  req.type = event::ASK_CARD;
   req.len = 0;
   req.data = NULL;
   req.send(sfd);
@@ -60,7 +60,7 @@ std::vector<uint8_t> encodeCards(const std::vector<Card>& cards) {
 
 std::string Connection::requestName() {
   event req;
-  req.type = event::EType::requestName;
+  req.type = event::EType::ASK_NAME;
   req.len = 0;
   req.data = NULL;
   req.send(sfd);
@@ -82,7 +82,7 @@ void Connection::sendCards(const std::vector<Card>& cardsOnTable) {
   auto cards = encodeCards(cardsOnTable);
 
   event req;
-  req.type = event::EType::sendCards;
+  req.type = event::EType::SEND_CARDS;
   req.len = cards.size();
   req.data = cards.data();
   req.send(sfd);
@@ -106,7 +106,7 @@ void Connection::sendScores(const std::vector<int>& allScores) {
   }
 
   event req;
-  req.type = event::EType::sendScores;
+  req.type = event::EType::ROUND_END;
   req.len = data.size();
   req.data = data.data();
   req.send(sfd);
@@ -118,7 +118,7 @@ void Connection::sendScores(const std::vector<int>& allScores) {
 
 void Connection::gameEnd() {
   event req;
-  req.type = event::EType::gameEnd;
+  req.type = event::EType::GAME_END;
   req.len = 0;
   req.data = 0;
   req.send(sfd);
@@ -137,7 +137,7 @@ std::vector<Card> Connection::getHand() {
 
 uint8_t Connection::getGameChoice() {
   event req;
-  req.type = event::EType::getGameChoice;
+  req.type = event::EType::ASK_GAME;
   req.len = 0;
   req.data = NULL;
   req.send(sfd);
@@ -152,7 +152,7 @@ uint8_t Connection::getGameChoice() {
 
 void Connection::sendGameChoice(uint8_t type) {
   event req;
-  req.type = event::EType::sendGameChoice;
+  req.type = event::EType::ROUND_START;
   req.len = 1;
   req.data = &type;
   req.send(sfd);
@@ -164,7 +164,7 @@ void Connection::sendGameChoice(uint8_t type) {
 
 bool Connection::getNVChoice() {
   event req;
-  req.type = event::EType::getNVChoice;
+  req.type = event::EType::ASK_NV;
   req.len = 0;
   req.data = NULL;
   req.send(sfd);
@@ -180,7 +180,7 @@ bool Connection::getNVChoice() {
 void Connection::sendHand(const std::vector<Card>& hand) {
   auto cards = encodeCards(hand);
   event req;
-  req.type = event::EType::sendHand;
+  req.type = event::EType::SEND_HAND;
   req.len = cards.size();
   req.data = cards.data();
   req.send(sfd);
@@ -197,7 +197,7 @@ void Connection::sendIndex(size_t index) {
   index = htonl(index);
 
   event req;
-  req.type = event::EType::sendIndex;
+  req.type = event::EType::SEND_INIT;
   req.len = 4;
   req.data = reinterpret_cast<uint8_t *>(&index);
   req.send(sfd);

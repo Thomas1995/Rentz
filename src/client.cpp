@@ -17,10 +17,10 @@
 #include <vector>
 #include "event.h"
 #include "bots/bot.h"
-#include "bots/bot_Thomas.h"
+//#include "bots/bot_Thomas.h"
 #include "bots/bot_Eric.h"
-#include "bots/bot_Eugen.h"
-#include "bots/bot_Lucian.h"
+//#include "bots/bot_Eugen.h"
+//#include "bots/bot_Lucian.h"
 #include "common.h"
 
 const char PORT[] = "31337";
@@ -44,12 +44,16 @@ struct Client : public Common {
 
     srand (time(NULL));
 
+/*
     switch (rand() % 4) {
       case 0:  bot = std::unique_ptr<Bot>(new Bot_Thomas); break;
       case 1:  bot = std::unique_ptr<Bot>(new Bot_Eric); break;
       case 2:  bot = std::unique_ptr<Bot>(new Bot_Eugen); break;
       default: bot = std::unique_ptr<Bot>(new Bot_Lucian); break;
     }
+*/
+    //TODO: WATCH OUT FOR THIS
+    bot = std::unique_ptr<Bot>(new Bot_Eric);
 
     addrinfo hints, *rez;
 
@@ -85,35 +89,35 @@ struct Client : public Common {
       resp.type = e.type;
 
       switch(e.type) {
-        case event::EType::sendCards: {
+        case event::EType::SEND_CARDS: {
         //the server is sending us what cards were played
         //and are on the table
 
-          debug("sending cards on table\n");
+          debug("Sending cards on table...\n");
           std::vector<Card> cards(e.getCards());
-          bot->receiveCardsOnTable(cards);
+          bot->ReceiveCardsOnTable(cards);
           resp.send(sfd);
           break;
       }
 
-      case event::EType::sendHand: {
+      case event::EType::SEND_HAND: {
       //the server is sending us our hand
 
-            debug("sending hand: ");
+            debug("Sending hand: ");
             std::vector<Card> hand(e.getCards());
             for(auto &x: hand)
               debug("%s ", x.to_string().c_str());
             debug("\n");
 
-            bot->receiveHand(hand);
+            bot->ReceiveHand(hand);
             resp.send(sfd);
             break;
         }
 
-        case event::EType::sendScores: {
+        case event::EType::ROUND_END: {
         //the server is sending us the scores so far
 
-            debug("scores: ");
+            debug("Round ended. Scores: ");
 
             std::vector<int> scores;
             scores.reserve(e.len / 4);
@@ -125,32 +129,33 @@ struct Client : public Common {
               debug(" %d", i);
             debug("\n");
 
-            bot->sendScores(scores);
+            bot->RoundEnd(scores);
             resp.send(sfd);
             break;
         }
 
-        case event::EType::getGameChoice: {
-            debug("deciding game type\n");
-            uint8_t ans = bot->decideGameType();
+        case event::EType::ASK_GAME: {
+        //ask the bot to choose the minigame
+            debug("Asking player for minigame...\n");
+            uint8_t ans = bot->ChooseMinigame();
             resp.len = 1;
             resp.data = &ans;
             resp.send(sfd);
             break;
         }
 
-        case event::EType::sendGameChoice: {
+        case event::EType::ROUND_START: {
         //the server is sending us the chosen game type
-            debug("sending game choice\n");
+            debug("Sending game choice to players and starting game...\n");
             const uint8_t choice = e.data[0];
-            bot->receiveDecidedGameType(choice);
+            bot->RoundStart(choice);
             resp.send(sfd);
             break;
         }
 
-        case event::EType::getCardChoice: {
-            debug("getting card choice\n");
-            Card c = bot->decideCardToPlay();
+        case event::EType::ASK_CARD: {
+            debug("Asking player for card...\n");
+            Card c = bot->PlayCard();
             debug("Chosen card is %s\n", c.to_string().c_str());
             resp.len = 1;
             uint8_t code = c.encode();
@@ -159,17 +164,17 @@ struct Client : public Common {
             break;
         }
 
-        case event::EType::getNVChoice: {
-            debug("getting NV choice\n");
-            bool ans = bot->decidePlayNV();
+        case event::EType::ASK_NV: {
+            debug("Asking player for NV...\n");
+            bool ans = bot->AskIfNV();
             resp.len = 1;
             resp.data = reinterpret_cast<uint8_t *>(&ans);
             resp.send(sfd);
             break;
         }
 
-        case event::EType::gameEnd: {
-          debug("The game has ended\n");
+        case event::EType::GAME_END: {
+          debug("The game has ended.\n");
           resp.send(sfd);
           goto end;
         }
@@ -185,7 +190,7 @@ struct Client : public Common {
   void handshake(char* name) {
 
     event e = readEvent();
-    assert(e.type = event::EType::requestName);
+    assert(e.type = event::EType::ASK_NAME);
     e.free();
 
     e.len = strlen(name);
@@ -195,7 +200,7 @@ struct Client : public Common {
 
 
     e = readEvent();
-    assert(e.type == event::EType::sendIndex);
+    assert(e.type == event::EType::SEND_INIT);
     assert(e.len == 4);
 
     index = ntohl(*(reinterpret_cast<uint32_t *>(e.data)));
@@ -205,7 +210,13 @@ struct Client : public Common {
     e.data = NULL;
     e.send(sfd);
 
-    printf("our index is %d\n", index);
+    printf("Our index is %d\n", index);
+
+    //TODO: add information for number of players
+    int players = 3; // Remove this
+
+    //Initialize bot
+    bot->Init(index, players);
   }
 };
 

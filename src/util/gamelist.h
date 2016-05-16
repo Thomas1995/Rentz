@@ -1,7 +1,7 @@
 #ifndef GAMELIST
 #define GAMELIST
 
-enum gameList {
+enum Minigame {
   KingOfHearts = 1,
   Queens = 2,
   Diamonds = 3,
@@ -10,5 +10,6 @@ enum gameList {
   TenClub = 6,
   Totals = 7
 };
+const int MinigameCount = 7;
 
 #endif // GAMELIST

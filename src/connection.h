@@ -1,5 +1,6 @@
 #ifndef connection_H
 #define connection_H
+
 #include "util/card.h"
 #include "util/require.h"
 #include "util/gamelist.h"
@@ -51,4 +52,4 @@ struct Connection : public Common {
 
 };
 
-#endif
+#endif //connection_H

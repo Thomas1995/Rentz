@@ -4,21 +4,13 @@ class Bot_Eric : public Bot {
 public:
     Bot_Eric();
 
-    std::vector<Card> getPlayedCardStack();
-
-    bool gamesPlayed[8];
     bool NVModeChosen;
     int myLadderPosition = 1;
-    int gamesOrderNV[7];
-    int crtGameType;
+    std::vector<Minigame> gamesOrderNV;
 
-    uint8_t decideGameType();
+    Minigame onChooseMinigame();
 
-    void receiveDecidedGameType(const int gameType);
+    Card onPlayCard();
 
-    Card decideCardToPlay();
-
-    bool decidePlayNV(); 
-
-    ~Bot_Eric() = default;
+    bool onAskIfNV();
 };

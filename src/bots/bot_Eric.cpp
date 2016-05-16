@@ -3,13 +3,15 @@
 
 Bot_Eric::Bot_Eric() : gamesOrderNV{Totals, Queens, Diamonds,
   Whist, Acool, KingOfHearts, TenClub} {
-    name = "Eric";
+    setName("Eric");
   }
 
-Card Bot_Eric::decideCardToPlay() {
+Card Bot_Eric::onPlayCard() {
   /// TO DO BETTER
 
+  auto hand = getHand();
   auto card = hand.back();
+  auto cardsOnTable = getCardsOnTable();
 
   if(cardsOnTable.empty())
     goto decided;
@@ -21,44 +23,31 @@ Card Bot_Eric::decideCardToPlay() {
     }
 
 decided:
-  hand.erase(find(hand.begin(), hand.end(), card));
   return card;
 }
 
-std::vector<Card> Bot_Eric::getPlayedCardStack() {
-  return cardsOnTable;
-}
+Minigame Bot_Eric::onChooseMinigame() {
+  auto games = getAvailableGames();
 
-uint8_t Bot_Eric::decideGameType() {
   if(NVModeChosen) {
     // chose a game based on gamesOrderNV
-    for(int i=0;i<7;++i)
-      if(!gamesPlayed[gamesOrderNV[i]]) {
-        gamesPlayed[gamesOrderNV[i]] = true;
-        return gamesOrderNV[i];
+    for(auto game : gamesOrderNV)
+      if(find(games.begin(), games.end(), game) != games.end()) {
+        return game;
       }
   }
   else {
     auto hand = getHand();
 
-    /// TO DO BETTER
-
-    /// DETELE THIS
-    for(int i=0;i<7;++i)
-      if(!gamesPlayed[gamesOrderNV[i]]) {
-        gamesPlayed[gamesOrderNV[i]] = true;
-        return gamesOrderNV[i];
-      }
+    /// TODO BETTER
+    return games.back();
   }
 
-  return -1;
+  assert(false);
+  return Minigame::Totals;
 }
 
-void Bot_Eric::receiveDecidedGameType(const int gameType) {
-  crtGameType = gameType;
-}
-
-bool Bot_Eric::decidePlayNV() {
+bool Bot_Eric::onAskIfNV() {
   // play NV mode if not first or second player
   if(myLadderPosition > 2) {
     NVModeChosen = true;
