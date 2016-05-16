@@ -51,15 +51,12 @@ void Bot::ReceiveCardsOnTable(std::vector<Card> cardsOnTable) {
 
 Minigame Bot::ChooseMinigame() {
 	// Choose a minigame
-
-	debug("I have %d games available\n", games.size());
 	Minigame game = onChooseMinigame();
 	auto it = find(games.begin(), games.end(), game);
 
 	assert(it != games.end());
 
 	games.erase(it); //TODO: Check if game in games
-	debug("I now have %d games available\n", games.size());
 
 	return game;
 }
