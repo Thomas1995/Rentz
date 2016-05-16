@@ -13,9 +13,9 @@ private:
     int playersCount; // How many players are at the table
     int index; // Your player index in the game (0-based)
     std::string name = "Default"; // Your player name in the game
-    int currentGame; // The current game played
+    Minigame currentGame; // The current game played
 
-    std::vector<int> scores; // All player's scores
+    std::vector<int> scores; // All players' scores
 
     std::vector<Card> hand; // Your hand at the moment of game
     std::vector<Minigame> games; // Your available games
@@ -62,7 +62,7 @@ protected:
     std::string getName();
     int getIndex();
     int getPlayersCount();
-    int getCurrentGame();
+    Minigame getCurrentGame();
     std::vector<int> getScores();
     std::vector<Card> getHand();
     std::vector<Card> getCardsOnTable();

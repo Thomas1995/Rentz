@@ -1,5 +1,5 @@
-#ifndef BOT_THOMAS_H
-#define BOT_THOMAS_H
+#ifndef BOT_THOMAS
+#define BOT_THOMAS
 
 #include "bot.h"
 
@@ -55,15 +55,8 @@ public:
 
 	bool onAskIfNV() {
 	  // play NV mode if not first or second player
-	  if(myLadderPosition > 2) {
-	    NVModeChosen = true;
-	    return true;
-	  }
-
-	  NVModeChosen = false;
-	  return false;
+		return NVModeChosen = myLadderPosition > 2;
 	}
 };
 
-#endif //BOT_THOMAS_H
-
+#endif //BOT_THOMAS

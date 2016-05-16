@@ -1,5 +1,5 @@
-#ifndef BOT_ERIC_H
-#define BOT_ERIC_H
+#ifndef BOT_ERIC
+#define BOT_ERIC
 
 #include "bot.h"
 
@@ -65,5 +65,4 @@ public:
 	}
 };
 
-#endif //BOT_ERIC_H
-
+#endif //BOT_ERIC

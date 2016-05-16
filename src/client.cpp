@@ -17,10 +17,11 @@
 #include <vector>
 #include "event.h"
 #include "bots/bot.h"
-#include "bots/bot_Thomas.h"
-#include "bots/bot_Eric.h"
-//#include "bots/bot_Eugen.h"
-#include "bots/bot_Bicsi.h"
+
+#include "bots/Thomas.bot"
+#include "bots/Eric.bot"
+#include "bots/Bicsi.bot"
+
 #include "common.h"
 
 const char PORT[] = "31337";
@@ -44,11 +45,14 @@ struct Client : public Common {
 
     srand (time(NULL));
 
+    std::string type = argv[3];
 
-    switch (rand() % 2) {
-      case 0:  bot = std::unique_ptr<Bot>(new Bot_Thomas); break;
-      case 1:  bot = std::unique_ptr<Bot>(new Bot_Eric); break;
-    }
+    if(type == "TH")  bot = std::unique_ptr<Bot>(new Bot_Thomas); 
+    if(type == "ER")  bot = std::unique_ptr<Bot>(new Bot_Eric); 
+    if(type == "BC")  bot = std::unique_ptr<Bot>(new Bot_Bicsi); 
+
+    assert(bot != nullptr);
+    
 
     addrinfo hints, *rez;
 
@@ -217,8 +221,8 @@ struct Client : public Common {
 
 int main(int argc, char ** argv) {
 
-  if(argc != 3) {
-    printf("Usage: %s server-address bot-name\n", argv[0]);
+  if(argc != 4) {
+    printf("Usage: %s server-address bot-name bot-type\n", argv[0]);
     exit(1);
   }
 
