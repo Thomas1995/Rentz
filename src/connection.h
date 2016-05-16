@@ -38,12 +38,12 @@ struct Connection : public Common {
 
     void sendHand(const std::vector<Card>& cards);
 
-    std::string requestName();
+    std::string handshake(uint8_t playerCount);
 
     void gameEnd();
 
     Connection() = delete;
-    explicit Connection(int sfd);
+    explicit Connection(int sfd, uint8_t table_size);
 
     void sendIndex(size_t index);
 

@@ -10,9 +10,9 @@
 #define readAndAssert(resp) event resp = readEvent();\
                       assert(resp.type == req.type);
 
-Connection::Connection(int sfd):
+Connection::Connection(int sfd, uint8_t table_size):
   Common(sfd) {
-    name = requestName();
+    name = handshake(table_size);
     debug("Connection on sfd = %d is named %s\n", sfd, name.c_str());
   }
 
@@ -58,11 +58,11 @@ std::vector<uint8_t> encodeCards(const std::vector<Card>& cards) {
   return ret;
 }
 
-std::string Connection::requestName() {
+std::string Connection::handshake(uint8_t playerCount) {
   event req;
-  req.type = event::EType::ASK_NAME;
-  req.len = 0;
-  req.data = NULL;
+  req.type = event::EType::HANDSHAKE;
+  req.len = 1;
+  req.data = &playerCount;
   req.send(sfd);
 
   readAndAssert(resp);

@@ -194,7 +194,7 @@ Table::~Table() {
 }
 
 void Table::addPlayer(int fd) {
-  players.emplace_back(Connection(fd));
+  players.emplace_back(fd, TABLE_SIZE);
   if(players.size() == TABLE_SIZE)
     Start();
 }

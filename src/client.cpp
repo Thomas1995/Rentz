@@ -1,4 +1,5 @@
 #include <netdb.h>
+#include <unordered_map>
 #include "util/card.h"
 #include <string>
 #include <fcntl.h>
@@ -34,6 +35,11 @@ const char PORT[] = "31337";
  * bot member variable
  */
 
+template<typename T, typename O>
+bool in(const T& t, const O& o) {
+  return std::find(o.begin(), o.end(), t) != o.end();
+}
+
 struct Client : public Common {
 
   int index;
@@ -42,16 +48,23 @@ struct Client : public Common {
 
   Client() = delete;
 
-  Client(char **argv) {
+  static const std::vector<std::string> names;
+
+  std::string random_name() const {
+    size_t i = rand() % names.size();
+    return names[i];
+  }
+
+  Client(const std::unordered_map<std::string, std::string> &opts) {
 
     srand (time(NULL));
 
-    std::string type = argv[3];
+    const std::string name = opts.count("name") ? opts.at("name") : random_name();
 
-    if(type == "TH")  bot = std::unique_ptr<Bot>(new Bot_Thomas); 
-    if(type == "ER")  bot = std::unique_ptr<Bot>(new Bot_Eric); 
-    if(type == "BC")  bot = std::unique_ptr<Bot>(new Bot_Bicsi); 
-    if(type == "RD")  bot = std::unique_ptr<Bot>(new Bot_Random);
+    if(name == "TH")  bot = std::unique_ptr<Bot>(new Bot_Thomas); 
+    if(name == "ER")  bot = std::unique_ptr<Bot>(new Bot_Eric); 
+    if(name == "BC")  bot = std::unique_ptr<Bot>(new Bot_Bicsi); 
+    if(name == "RD")  bot = std::unique_ptr<Bot>(new Bot_Random);
 
     assert(bot != nullptr);
     
@@ -62,7 +75,9 @@ struct Client : public Common {
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
-    getaddrinfo(argv[1], PORT, &hints, &rez);
+    const std::string address = opts.count("address") ? opts.at("address") : "127.0.0.1";
+
+    getaddrinfo(address.c_str(), PORT, &hints, &rez);
 
     for(addrinfo *p = rez; p != NULL; p = p->ai_next) {
       sfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
@@ -71,7 +86,7 @@ struct Client : public Common {
         continue;
 
       if(connect(sfd, p->ai_addr, p->ai_addrlen) != -1) {
-        printf("Connected to %s.\n\n", argv[1]);
+        printf("Connected to %s\n", address.c_str());
         break;
       }
 
@@ -82,12 +97,14 @@ struct Client : public Common {
 
     freeaddrinfo(rez);
 
-    handshake(argv[2]);
+    handshake(const_cast<char *>(name.c_str()));
 
     while(1) {
       event e = readEvent();
       event resp;
       resp.type = e.type;
+      resp.len = 0;
+      resp.data = NULL;
 
       switch(e.type) {
         case event::EType::SEND_CARDS: {
@@ -193,10 +210,11 @@ struct Client : public Common {
     return;
   }
 
-  void handshake(char* name) {
+  void handshake(char *name) {
 
     event e = readEvent();
-    assert(e.type = event::EType::ASK_NAME);
+    assert(e.type = event::EType::HANDSHAKE);
+    uint8_t playerCount = e.data[0];
     e.free();
 
     e.len = strlen(name);
@@ -218,23 +236,74 @@ struct Client : public Common {
 
     printf("Our index is %d\n", index);
 
-    //TODO: add information for number of players
-    int players = 3; // Remove this
-
     //Initialize bot
-    bot->Init(index, players);
+    bot->Init(index, playerCount);
   }
 };
 
-int main(int argc, char ** argv) {
+const std::vector<std::string> Client::names = {"TH", "ER", "BC", "RD"};
 
-  if(argc != 4) {
-    printf("Usage: %s server-address bot-name bot-type\n", argv[0]);
-    exit(1);
+bool 
+addOptions(std::vector<std::string> &args,
+    std::unordered_map<std::string, std::string> &opts,
+    const std::string &opt_name,
+    const std::vector<std::string> &aliases) {
+
+  std::string s = args.back();
+
+  if(!in(s, aliases))
+    return false;
+
+  args.pop_back();
+
+  if(args.empty())
+    return false;
+
+  opts[opt_name] = args.back();
+
+  args.pop_back();
+  return true;
+}
+
+std::unordered_map<std::string, std::string>
+parseArgs(int argc, char ** argv) {
+  
+  std::vector<std::string> args(argv + 1, argv + argc);
+
+  std::reverse(args.begin(), args.end());
+
+  std::unordered_map<std::string, std::string> options;
+
+  while(!args.empty()) {
+
+    if(addOptions(args, options, "address", {"--address", "-a"}))
+      continue;
+
+    if(addOptions(args, options, "name", {"--name", "-n"}))
+      continue;
+
+    if(addOptions(args, options, "help", {"--help", "-h"}))
+      goto args_error;
+
+    goto args_error;
   }
 
-  Client client(argv);
+  return options;
 
+args_error:
+  printf("Usage: %s [OPTIONS]\n", argv[0]);
+  printf("Optional arguments:\n");
+  printf("%-20s ADDRESS\n", "-a, --address");
+  printf("%-20s NAME\n", "-n, --name");
+  printf("%-20s display this help message\n", "-h, --help");
+  exit(1);
 
+}
+
+int main(int argc, char ** argv) {
+
+  const auto &args = parseArgs(argc, argv);
+
+  Client client(args);
   return 0;
 }

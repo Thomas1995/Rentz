@@ -46,7 +46,7 @@ struct event {
     SEND_INIT,
     //the index is a 4 byte unsigned integer
     
-    ASK_NAME,
+    HANDSHAKE,
     //request the connection to send his name
 
     GAME_END,

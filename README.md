@@ -6,7 +6,7 @@
 make -j4
 cd bin
 ./server NumberOfClients
-./client localhost YourNameHere
+./client 
 ```
 
 The game starts when *NumberOfClients* clients are connected to the server. The number should be between 3 and 6, otherwise it generates an error.
