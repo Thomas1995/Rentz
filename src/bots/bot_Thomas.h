@@ -55,15 +55,8 @@ public:
 
 	bool onAskIfNV() {
 	  // play NV mode if not first or second player
-	  if(myLadderPosition > 2) {
-	    NVModeChosen = true;
-	    return true;
-	  }
-
-	  NVModeChosen = false;
-	  return false;
+		return NVModeChosen = myLadderPosition > 2;
 	}
 };
 
 #endif //BOT_THOMAS_H
-
