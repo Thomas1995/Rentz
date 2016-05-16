@@ -10,20 +10,20 @@ struct Card {
 
   int value;
   /*
-     2-10
-J: 11
-Q: 12
-K: 13
-A: 14
-*/
+  2-10
+  J: 11
+  Q: 12
+  K: 13
+  A: 14
+  */
 
   char suite;
   /*
-Hearts: 'H'
-Clubs: 'C'
-Diamonds: 'D'
-Spades: 'S'
-*/
+  Hearts: 'H'
+  Clubs: 'C'
+  Diamonds: 'D'
+  Spades: 'S'
+  */
 
   static const char suites[];
 
