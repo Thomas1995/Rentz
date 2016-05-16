@@ -1,0 +1,98 @@
+#ifndef BOT_BICSI_H
+#define BOT_BICSI_H
+
+#include "bot.h"
+#include <algorithm>
+
+class Bot_Bicsi : public Bot {
+private:
+	std::vector<Minigame> gamesOrderNV = {Totals, Queens, Diamonds, Whist, Acool, KingOfHearts, TenClub};
+	std::vector<Minigame> minusGames = {Totals, Queens, Diamonds, Acool, KingOfHearts};
+	std::vector<Minigame> plusGames = {Whist, TenClub};
+
+	int myLadderPosition;
+	bool NVModeChosen;
+
+	static bool compare(const Card &a, const Card &b) {
+		return a.getValue() < b.getValue();
+	}
+
+public:
+	Bot_Bicsi() {
+	  	setName("BicsiBot9000 v0.1");
+	}
+
+	
+
+	Card onPlayCard() {
+		Minigame curGame = getCurrentGame();
+		if(find(minusGames.begin(), minusGames.end(), curGame) != minusGames.end())
+			return playToLose();
+		else
+			return playToWin();
+	}
+
+	std::vector<Card> getPlayOptions() {
+		auto stack = getCardsOnTable();
+		auto hand = getHand();
+
+		if(stack.empty()) return hand;
+		else {
+			std::vector<Card> ret;
+			for(auto c : hand) {
+				if(c.isSameSuite(stack[0]))
+					ret.push_back(c);
+			}
+
+			if(ret.empty()) return hand;
+			return ret;
+		}
+	}
+
+
+	Card playToWin() {
+		Minigame curGame = getCurrentGame();
+		auto stack = getCardsOnTable();
+		auto options = getPlayOptions();
+
+		std::sort(options.begin(), options.end(), compare);
+		assert(!options.empty());
+
+		if(!stack.empty() && options[0].isSameSuite(stack[0])) {
+			//Try to win
+			return options.back();
+		} else {
+			//Throw the smallest one
+			return options[0];
+		}
+	}
+
+	Card playToLose() {
+		Minigame curGame = getCurrentGame();
+		auto stack = getCardsOnTable();
+		auto options = getPlayOptions();
+
+		sort(options.begin(), options.end(), compare);
+		assert(!options.empty());
+
+		if(!stack.empty() && options[0].isSameSuite(stack[0])) {
+			//Try to lose
+			return options[0];
+		} else {
+			//Throw the largest one
+			return options.back();
+		}
+	}
+
+	Minigame onChooseMinigame() {
+		auto games = getAvailableGames();
+		return games[rand() % games.size()];
+	}
+
+	bool onAskIfNV() {
+		return true;
+	}
+};
+
+#endif //BOT_BICSI_H
+

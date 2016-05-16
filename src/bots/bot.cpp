@@ -67,8 +67,8 @@ bool Bot::AskIfNV() {
 
 void Bot::RoundStart(int gameIndex) {
 	// Update current game and call virtual method
-	currentGame = gameIndex;
-
+	currentGame = static_cast<Minigame>(gameIndex);
+	
 	//TODO: Remove this line
 	dumpInfo();
 
@@ -122,7 +122,7 @@ std::vector<Card> Bot::getCardsOnTable() {
 std::vector<Minigame> Bot::getAvailableGames() {
   return games;
 }
-int Bot::getCurrentGame() {
+Minigame Bot::getCurrentGame() {
 	return currentGame;
 }
 
