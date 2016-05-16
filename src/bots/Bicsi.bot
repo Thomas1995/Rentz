@@ -3,6 +3,7 @@
 
 #include "bot.h"
 #include <algorithm>
+#include <map>
 
 class Bot_Bicsi : public Bot {
 private:
@@ -30,7 +31,6 @@ public:
 		flagKingHearts = (game == Minigame::KingOfHearts || game == Minigame::Totals);
 		flagTenClub = (game == Minigame::TenClub);
 		flagDiamonds = (game == Minigame::Diamonds || game == Minigame::Totals);
-
 	}
 
 	Card onPlayCard() {
@@ -58,6 +58,15 @@ public:
 		}
 	}
 
+	int getWinningValueNow() {
+		auto stack = getCardsOnTable();
+		int max_val = 0;
+		for(auto c : stack) {
+			if(c.isSameSuite(stack[0]))
+				max_val = std::max(max_val, c.getValue());
+		}
+		return max_val;
+	}
 
 	Card playToWin() {
 		auto stack = getCardsOnTable();
@@ -66,8 +75,11 @@ public:
 		std::sort(options.begin(), options.end(), compare);
 		assert(!options.empty());
 
+
 		if(!stack.empty() && options[0].isSameSuite(stack[0])) {
-			//Try to win
+			int max_val = getWinningValueNow();
+			if(options.back().getValue() > max_val)
+				return options[0];
 			return options.back();
 		} else {
 			//Throw the smallest one
@@ -85,11 +97,7 @@ public:
 		if(!stack.empty() && options[0].isSameSuite(stack[0])) {
 			//Try to lose
 
-			int max_val = 0;
-			for(auto c : stack) {
-				if(c.isSameSuite(stack[0]))
-					max_val = std::max(max_val, c.getValue());
-			}
+			int max_val = getWinningValueNow();
 
 			for(auto it = options.rbegin(); it != options.rend(); ++it) {
 				if(it->getValue() < max_val)
@@ -120,6 +128,20 @@ public:
 						if(it->getSuite() == 'D')
 							return *it;
 				}
+
+				//Try emptying a colour
+				std::map<char, int> countSuits;
+				for(auto c : options)
+					countSuits[c.getSuite()] += 1;
+
+				for(auto p : countSuits)
+					if(p.second == 1) {
+						//Emptying one suite -> PROFIT
+						char suite = p.first;
+						for(auto c : options)
+							if(c.getSuite() == suite)
+								return c;
+					}
 
 
 				//Throw the largest one

@@ -25,6 +25,7 @@ struct Table {
     void GiveCards();
     void PlayRound();
     void ChangeScore();
+    void printScores();
 
     void ScoreKingOfHearts(int& scoreToAdd);
     void ScoreQueens(int& scoreToAdd);

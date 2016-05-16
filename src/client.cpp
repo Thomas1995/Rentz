@@ -71,7 +71,7 @@ struct Client : public Common {
         continue;
 
       if(connect(sfd, p->ai_addr, p->ai_addrlen) != -1) {
-        printf("Connected to %s\n", argv[1]);
+        printf("Connected to %s.\n\n", argv[1]);
         break;
       }
 
@@ -94,7 +94,7 @@ struct Client : public Common {
         //the server is sending us what cards were played
         //and are on the table
 
-          debug("Receiving cards on table...\n");
+        //debug("Receiving cards on table...\n");
           std::vector<Card> cards(e.getCards());
           bot->ReceiveCardsOnTable(cards);
           resp.send(sfd);
@@ -118,7 +118,7 @@ struct Client : public Common {
         case event::EType::ROUND_END: {
         //the server is sending us the scores so far
 
-            debug("Round ended. Scores: ");
+            debug("Round ended.\n Scores: ");
 
             std::vector<int> scores;
             scores.reserve(e.len / 4);
@@ -128,7 +128,7 @@ struct Client : public Common {
 
             for(auto i: scores)
               debug(" %d", i);
-            debug("\n");
+            debug("\n\n");
 
             bot->RoundEnd(scores);
             resp.send(sfd);
@@ -139,6 +139,7 @@ struct Client : public Common {
         //ask the bot to choose the minigame
             debug("Being asked for minigame...\n");
             uint8_t ans = bot->ChooseMinigame();
+            debug("I chose: %s\n", GameName[ans].c_str());
             resp.len = 1;
             resp.data = &ans;
             resp.send(sfd);
@@ -147,7 +148,7 @@ struct Client : public Common {
 
         case event::EType::ROUND_START: {
         //the server is sending us the chosen game type
-            debug("Sending game choice to players and starting game...\n");
+            debug("Round is starting...\n");
             const uint8_t choice = e.data[0];
             bot->RoundStart(choice);
             resp.send(sfd);
@@ -157,7 +158,7 @@ struct Client : public Common {
         case event::EType::ASK_CARD: {
             debug("Being asked for card...\n");
             Card c = bot->PlayCard();
-            debug("Chosen card is %s\n", c.to_string().c_str());
+            debug("I chose: %s\n", c.to_string().c_str());
             resp.len = 1;
             uint8_t code = c.encode();
             resp.data = &code;
@@ -168,6 +169,10 @@ struct Client : public Common {
         case event::EType::ASK_NV: {
             debug("Being asked for NV...\n");
             bool ans = bot->AskIfNV();
+
+            if(ans) debug("Chose NV\n");
+            else debug("Did not choose NV\n");
+            
             resp.len = 1;
             resp.data = reinterpret_cast<uint8_t *>(&ans);
             resp.send(sfd);
@@ -175,7 +180,7 @@ struct Client : public Common {
         }
 
         case event::EType::GAME_END: {
-          debug("The game has ended.\n");
+          debug("The game has ended.\n\n");
           resp.send(sfd);
           goto end;
         }
