@@ -246,11 +246,12 @@ addOptions(std::vector<std::string> &args,
     const std::string &opt_name,
     const std::vector<std::string> &aliases) {
 
-  std::string s = std::move(args.back());
-  args.pop_back();
+  std::string s = args.back();
 
   if(!in(s, aliases))
     return false;
+
+  args.pop_back();
 
   if(args.empty())
     return false;
@@ -278,6 +279,9 @@ parseArgs(int argc, char ** argv) {
     if(addOptions(args, options, "name", {"--name", "-n"}))
       continue;
 
+    if(addOptions(args, options, "help", {"--help", "-h"}))
+      goto args_error;
+
     goto args_error;
   }
 
@@ -288,6 +292,7 @@ args_error:
   printf("Optional arguments:\n");
   printf("%-20s ADDRESS\n", "-a, --address");
   printf("%-20s NAME\n", "-n, --name");
+  printf("%-20s display this help message\n", "-h, --help");
   exit(1);
 
 }
