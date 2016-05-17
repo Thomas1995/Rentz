@@ -61,13 +61,12 @@ struct Client : public Common {
 
     const std::string name = opts.count("name") ? opts.at("name") : random_name();
 
-    if(name == "TH")  bot = std::unique_ptr<Bot>(new Bot_Thomas); 
-    if(name == "ER")  bot = std::unique_ptr<Bot>(new Bot_Eric); 
-    if(name == "BC")  bot = std::unique_ptr<Bot>(new Bot_Bicsi); 
+    if(name == "TH")  bot = std::unique_ptr<Bot>(new Bot_Thomas);
+    if(name == "ER")  bot = std::unique_ptr<Bot>(new Bot_Eric);
+    if(name == "BC")  bot = std::unique_ptr<Bot>(new Bot_Bicsi);
     if(name == "RD")  bot = std::unique_ptr<Bot>(new Bot_Random);
 
-    assert(bot != nullptr);
-    
+    require(bot != nullptr, "Name not available. Choose from: TH | ER | BC | RD\n");
 
     addrinfo hints, *rez;
 
@@ -189,7 +188,7 @@ struct Client : public Common {
 
             if(ans) debug("Chose NV\n");
             else debug("Did not choose NV\n");
-            
+
             resp.len = 1;
             resp.data = reinterpret_cast<uint8_t *>(&ans);
             resp.send(sfd);
@@ -243,7 +242,7 @@ struct Client : public Common {
 
 const std::vector<std::string> Client::names = {"TH", "ER", "BC", "RD"};
 
-bool 
+bool
 addOptions(std::vector<std::string> &args,
     std::unordered_map<std::string, std::string> &opts,
     const std::string &opt_name,
@@ -267,7 +266,7 @@ addOptions(std::vector<std::string> &args,
 
 std::unordered_map<std::string, std::string>
 parseArgs(int argc, char ** argv) {
-  
+
   std::vector<std::string> args(argv + 1, argv + argc);
 
   std::reverse(args.begin(), args.end());
