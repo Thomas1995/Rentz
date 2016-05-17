@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/Thomas1995/Rentz.svg?branch=master)](https://travis-ci.org/Thomas1995/Rentz)
+| **Status** |
+|---|
+| [![Build Status](https://travis-ci.org/Thomas1995/Rentz.svg?branch=master)](https://travis-ci.org/Thomas1995/Rentz) |
 
 ## About the software:
 
@@ -12,6 +14,8 @@ cd bin
 ```
 
 The game starts when *NumberOfClients* clients are connected to the server. The number should be between 3 and 6, otherwise it generates an error.
+
+To learn more about optional arguments in client, try ` ./client --help `
 
 ### Communication protocol:
 
