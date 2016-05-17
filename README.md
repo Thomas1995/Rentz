@@ -1,3 +1,5 @@
+#Rentz
+
 | **Status** |
 |---|
 | [![Build Status](https://travis-ci.org/Thomas1995/Rentz.svg?branch=master)](https://travis-ci.org/Thomas1995/Rentz) |
