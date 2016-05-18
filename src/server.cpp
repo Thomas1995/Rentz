@@ -27,6 +27,12 @@ int main(int argc, char ** argv) {
       const int client = server.acceptConnection();
       table.addPlayer(client);
     }
+
+    if(table.GAME_END) {
+        Table newTable;
+        table = newTable;
+    }
   }
+
   return 0;
 }

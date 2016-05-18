@@ -5,7 +5,9 @@
 
 unsigned int Table::TABLE_SIZE = 0;
 
-Table::Table() {}
+Table::Table() {
+    GAME_END = false;
+}
 
 void Table::Start() {
 
@@ -31,11 +33,11 @@ void Table::Start() {
   firstPlayer = players.begin();
 
   for(int gameChoice = 1; gameChoice <= gamesNumber; ++gameChoice) {
-    
+
     for(size_t i=0;i<players.size();++i) {
       // set the first player
       firstPlayer = players.begin() + i;
-      
+
       std::cout << "Pre-round:\n";
       std::cout << "First player is " << firstPlayer->getName() << '\n';
 
@@ -64,7 +66,7 @@ void Table::Start() {
       // check if connection can play that game
       require(gameType >= 1 && gameType <= gamesNumber,
           players[i].getName() + " has chosen a game index out of bounds\n");
-      
+
       std::cout << players[i].getName() << " chose to play: " << GameName[gameType] << '\n';
 
       require(gamesPlayed[i][gameType] == false,
@@ -85,6 +87,8 @@ void Table::Start() {
 
   for(auto &connection: players)
     connection.gameEnd();
+
+  GAME_END = true;
 }
 
 void Table::PlayerAction(Connection &connection) {

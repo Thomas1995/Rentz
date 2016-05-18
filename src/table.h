@@ -10,6 +10,7 @@
 
 struct Table {
     static unsigned int TABLE_SIZE;
+    bool GAME_END;
 
     std::vector<Connection> players;
     std::vector<Connection>::iterator firstPlayer;
