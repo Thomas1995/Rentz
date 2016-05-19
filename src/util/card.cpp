@@ -3,10 +3,11 @@
 #include "../table.h"
 
 #include <cstring>
+#include <string>
 
 Card::Card(int value, char suite) : value(value), suite(toupper(suite)) {
-    require(value >= 2 && value <= 14, "Wrong format!");
-    require(strchr(Card::suites, suite), "Wrong format!");
+    require(value >= 2 && value <= 14, "Wrong format: " + std::to_string(value));
+    require(strchr(Card::suites, suite), "Wrong format: " + std::to_string(suite));
 }
 
 Card::Card(uint8_t code):

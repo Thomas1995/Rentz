@@ -8,6 +8,75 @@ private:
 	std::vector<Minigame> gamesOrderNV;
 	int myLadderPosition;
 	bool NVModeChosen;
+	std::vector<Card> hand;
+	std::vector<Card> cardsOnTable;
+
+	bool CardWasPlayed(Card c) {
+		for(auto it : cardsOnTable)
+			if(it == c)
+				return true;
+		return false;
+	}
+
+	bool CardInHand(Card c) {
+		for(auto it : hand)
+			if(it == c)
+				return true;
+		return false;
+	}
+
+	int CountCardsOfSuite(char suite) {
+		int count = 0;
+		for(int i=2;i<=14;++i)
+			if(CardInHand(Card(i, suite)))
+				++count;
+		return count;
+	}
+
+	Card GetCardFromHandOf(char suite) {
+		for(auto it : hand)
+			if(it.getSuite() == suite)
+				return it;
+		return hand.back();
+	}
+
+	Card PlayLowCard() {
+		Card c = hand.back();
+		int minVal = 15;
+		for(auto it : hand)
+			if(it.getValue() < minVal) {
+				minVal = it.getValue();
+				c = it;
+			}
+		return c;
+	}
+
+	Card PlayHighCard() {
+		Card c = hand.back();
+		int maxVal = 0;
+		for(auto it : hand)
+			if(it.getValue() > maxVal) {
+				maxVal = it.getValue();
+				c = it;
+			}
+		return c;
+	}
+
+	Card PlayOneOfAKindOrHigh() {
+		for(int i=0;i<4;++i)
+			if(CountCardsOfSuite(Card::suites[i]) == 1)
+				return GetCardFromHandOf(Card::suites[i]);
+
+		return PlayHighCard();
+	}
+
+	Card PlayOneOfAKindOrLow() {
+		for(int i=0;i<4;++i)
+			if(CountCardsOfSuite(Card::suites[i]) == 1)
+				return GetCardFromHandOf(Card::suites[i]);
+
+		return PlayLowCard();
+	}
 
 public:
 	Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
@@ -18,9 +87,14 @@ public:
 	Card onPlayCard() {
 	  /// TO DO BETTER
 
-	  auto hand = getHand();
+		hand = getHand();
+		cardsOnTable = getCardsOnTable();
+
+		Minigame crtGame = getCurrentGame();
+		if(crtGame == KingOfHearts)
+			return onPlayCardKingOfHearts();
+
 	  auto card = hand.back();
-	  auto cardsOnTable = getCardsOnTable();
 
 	  if(cardsOnTable.empty())
 	    goto decided;
@@ -33,6 +107,57 @@ public:
 
 	decided:
 	  return card;
+	}
+
+	Card onPlayCardKingOfHearts() {
+			bool AHWasPlayed = CardWasPlayed(Card(14, 'H'));
+			bool KHInHand = CardInHand(Card(13, 'H'));
+			bool AHInHand = CardInHand(Card(14, 'H'));
+
+			if(!cardsOnTable.empty()) {
+
+				if(cardsOnTable[0].getSuite() == 'H' && AHWasPlayed && KHInHand) {
+					return Card(13, 'H');
+				}
+				else {
+					int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
+
+					if(countCrtSuite == 0) {
+						if(KHInHand)
+							return Card(13, 'H');
+						if(AHInHand)
+							return Card(14, 'H');
+
+						Card c = PlayHighCard();
+						if(c.getValue() >= 12)
+							return c;
+						else
+							return PlayOneOfAKindOrHigh();
+					}
+					else {
+						return GetCardFromHandOf(cardsOnTable[0].getSuite());
+					}
+				}
+			}
+			else {
+				int countHearts = CountCardsOfSuite('H');
+
+				if(countHearts == 0) {
+					if(hand.size() >= 5) {
+						return PlayOneOfAKindOrLow();
+					}
+					else {
+						return PlayLowCard();
+					}
+				}
+
+				if(KHInHand || AHInHand) {
+					return PlayLowCard();
+				}
+				else {
+					return GetCardFromHandOf('H');
+				}
+			}
 	}
 
 	Minigame onChooseMinigame() {
