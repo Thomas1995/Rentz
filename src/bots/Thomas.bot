@@ -109,44 +109,55 @@ public:
 	  }
 
 	Card onPlayCard() {
-	  /// TO DO BETTER
-
 		hand = getHand();
 		cardsOnTable = getCardsOnTable();
 
 		Minigame crtGame = getCurrentGame();
 
-		if(crtGame == KingOfHearts)
-			return onPlayCardKingOfHearts();
+		Card card = hand.back();
 
-		if(crtGame == Totals)
-			return onPlayTotals();
+		switch (crtGame) {
+			case KingOfHearts: card = onPlayCardKingOfHearts(); break;
+			case Queens: card = onPlayCardQueens(); break;
+			case Diamonds: card = onPlayCardDiamonds(); break;
+			case Acool: card = onPlayCardAcool(); break;
+			case Whist: card = onPlayCardWhist(); break;
+			case TenClub: card = onPlayCardTenClub(); break;
+			case Totals: card = onPlayCardTotals(); break;
+		}
 
-		if(crtGame == Queens)
-			return onPlayQueens();
-
-		if(crtGame == Acool)
-			return onPlayAcool();
-
-		if(crtGame == Whist)
-			return onPlayWhist();
-
-	  auto card = hand.back();
-
-	  if(cardsOnTable.empty())
-	    goto decided;
-
-	  for(const auto &c : hand)
-	    if(cardsOnTable[0].isSameSuite(c)) {
-	      card = c;
-	      goto decided;
-	    }
-
-	decided:
 	  return card;
 	}
 
-	Card onPlayWhist() {
+	Card onPlayCardDiamonds() {
+			if(cardsOnTable.empty()) {
+				return PlayLowCard();
+			}
+			else {
+				int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
+				if (countCrtSuite == 0) {
+					for(int i=14;i>=2;--i)
+						if(CardInHand(Card(i, 'D')))
+							return Card(i, 'D');
+
+					return PlayOneOfAKindOrHigh();
+				}
+				else {
+					return PlaySmartCard();
+				}
+			}
+	}
+
+	Card onPlayCardTenClub() {
+			if(cardsOnTable.empty()) {
+				return PlayHighCard();
+			}
+			else {
+				return GetCardFromHandOf(cardsOnTable[0].getSuite());
+			}
+	}
+
+	Card onPlayCardWhist() {
 			if(cardsOnTable.empty()) {
 			 	Card c = PlayHighCard();
 				if(c.getValue() == 14)
@@ -159,7 +170,7 @@ public:
 			}
 	}
 
-	Card onPlayAcool() {
+	Card onPlayCardAcool() {
 			if(cardsOnTable.empty()) {
 				return PlayLowCard();
 			}
@@ -168,7 +179,7 @@ public:
 			}
 	}
 
-	Card onPlayQueens() {
+	Card onPlayCardQueens() {
 			if(cardsOnTable.empty()) {
 				Card c = PlayOneOfAKindOrLow();
 				if(c.getValue() >= 12)
@@ -193,7 +204,7 @@ public:
 			}
 	}
 
-	Card onPlayTotals() {
+	Card onPlayCardTotals() {
 			if(cardsOnTable.empty()) {
 				Card c = PlayOneOfAKindOrLow();
 				if(c.getValue() >= 12)
