@@ -21,7 +21,7 @@ struct Table {
     int gameType;
     bool modeNV;
 
-    void IterateThroughPlayers(std::vector<Connection>::iterator iterator);
+    void PlayTurn(std::vector<Connection>::iterator iterator);
     void PlayerAction(Connection &player);
     void GiveCards();
     void PlayRound();
