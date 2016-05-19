@@ -116,7 +116,7 @@ void Table::PlayerAction(Connection &connection) {
   cardStack.push_back(playedCard);
 }
 
-void Table::IterateThroughPlayers(std::vector<Connection>::iterator iterator) {
+void Table::PlayTurn(std::vector<Connection>::iterator iterator) {
   for(auto it = iterator; it != players.end(); ++it)
     PlayerAction(*it);
   for(auto it = players.begin(); it != iterator; ++it)
@@ -155,15 +155,18 @@ void Table::printScores() {
 void Table::PlayRound() {
   std::cout << "\nStarting new round!\n\n";
 
+  // For each of the 8 turns
   for(int roundstep = 1; roundstep <= 8; ++roundstep) {
     cardStack.clear();
 
-    // get players to play cards
-    IterateThroughPlayers(firstPlayer);
+    // Play the turn
+    PlayTurn(firstPlayer);
 
-    // announce all players about the cards that were played
-    for(size_t i=0;i<players.size();++i)
+    // Trigger EndTurn to all players
+    for(size_t i=0;i<players.size();++i) {
       players[i].sendCards(cardStack);
+      players[i].turnEnd();
+    }
 
     // check for winner
     int winnerIndex = 0;

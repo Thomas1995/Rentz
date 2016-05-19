@@ -42,6 +42,8 @@ struct Connection : public Common {
 
     void gameEnd();
 
+    void turnEnd();
+
     Connection() = delete;
     explicit Connection(int sfd, uint8_t table_size);
 
