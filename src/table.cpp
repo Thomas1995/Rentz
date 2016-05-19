@@ -7,7 +7,6 @@ unsigned int Table::TABLE_SIZE = 0;
 
 Table::Table() {
     GAME_END = false;
-    GAME_STARTED = false;
 }
 
 void Table::Start() {
