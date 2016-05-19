@@ -96,6 +96,7 @@ void Connection::turnEnd() {
   event req;
   req.type = event::EType::TURN_END;
   req.len = 0;
+  req.data = NULL;
   req.send(sfd);
 
   readAndAssert(resp);
@@ -129,7 +130,7 @@ void Connection::gameEnd() {
   event req;
   req.type = event::EType::GAME_END;
   req.len = 0;
-  req.data = 0;
+  req.data = NULL;
   req.send(sfd);
 
   readAndAssert(resp);

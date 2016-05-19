@@ -22,12 +22,24 @@ struct Table {
     bool modeNV;
 
     void PlayTurn(std::vector<Connection>::iterator iterator);
-    void PlayerAction(Connection &player);
-    void GiveCards();
-    void PlayRound();
-    void ChangeScore();
-    void printScores();
+    //Simulates current turn
 
+    void PlayerAction(Connection &player);
+    //Requests a player to play a card
+
+    void GiveHands();
+    //Gives hands to players
+
+    void PlayRound();
+    //Simulates a round
+
+    void ChangeScore();
+    //Updates scores
+
+    void printScores();
+    //Prints scores to console
+
+    //Score update functions
     void ScoreKingOfHearts(int& scoreToAdd);
     void ScoreQueens(int& scoreToAdd);
     void ScoreDiamonds(int& scoreToAdd);
@@ -36,13 +48,13 @@ struct Table {
     void ScoreTenClub(int& scoreToAdd);
     void ScoreTotals(int& scoreToAdd);
 
-    void addPlayer(int fd);
 
+    void addPlayer(int fd);
+    //Adds a player (as a socket) to the table
+    
     Table();
 
     void Start();
-
-    ~Table();
 };
 
 #endif // GAME_H

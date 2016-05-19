@@ -164,7 +164,8 @@ struct Client : public Common {
         }
 
         case event::EType::ASK_GAME: {
-        //ask the bot to choose the minigame
+        //the server is asking us for a minigame to choose
+
             debug("Being asked for minigame...\n");
             uint8_t ans = bot->ChooseMinigame();
             debug("I chose: %s\n", GameName[ans].c_str());
@@ -176,6 +177,7 @@ struct Client : public Common {
 
         case event::EType::ROUND_START: {
         //the server is sending us the chosen game type
+
             debug("Round is starting...\n");
             const uint8_t choice = e.data[0];
             bot->RoundStart(choice);
@@ -184,6 +186,8 @@ struct Client : public Common {
         }
 
         case event::EType::ASK_CARD: {
+        //the server is asking us for a card to play
+
             debug("Being asked for card...\n");
             Card c = bot->PlayCard();
             debug("I chose: %s\n", c.to_string().c_str());
@@ -195,6 +199,8 @@ struct Client : public Common {
         }
 
         case event::EType::ASK_NV: {
+        //the server is asking us if we want NV
+          
             debug("Being asked for NV...\n");
             bool ans = bot->AskIfNV();
 
@@ -208,6 +214,8 @@ struct Client : public Common {
         }
 
         case event::EType::GAME_END: {
+        //the server is telling us that game has ended
+
           debug("The game has ended.\n\n");
           resp.send(sfd);
           goto end;
