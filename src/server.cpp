@@ -2,6 +2,8 @@
 #include "table.h"
 #include "server.h"
 #include "util/require.h"
+#include <chrono>
+#include <thread> 
 
 int main(int argc, char ** argv) {
 
@@ -25,15 +27,16 @@ int main(int argc, char ** argv) {
     //there are n new incoming connections
     for(int i = 0; i < n; ++i) {
       const int client = server.acceptConnection();
+      
+      if(table.GAME_END) {
+          Table newTable;
+          table = newTable;
+      }
+
       table.addPlayer(client);
     }
 
-    if(table.GAME_END) {
-        Table newTable;
-        table = newTable;
-    }
-
-    while(table.GAME_STARTED);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
   return 0;
