@@ -11,97 +11,6 @@ private:
 	std::vector<Card> hand;
 	std::vector<Card> cardsOnTable;
 
-	bool CardWasPlayed(Card c) {
-		for(auto it : cardsOnTable)
-			if(it == c)
-				return true;
-		return false;
-	}
-
-	bool CardInHand(Card c) {
-		for(auto it : hand)
-			if(it == c)
-				return true;
-		return false;
-	}
-
-	int CountCardsOfSuite(char suite) {
-		int count = 0;
-		for(int i=2;i<=14;++i)
-			if(CardInHand(Card(i, suite)))
-				++count;
-		return count;
-	}
-
-	Card GetCardFromHandOf(char suite) {
-		for(auto it : hand)
-			if(it.getSuite() == suite)
-				return it;
-		return hand.back();
-	}
-
-	Card PlayLowCard() {
-		Card c = hand.back();
-		int minVal = 15;
-		for(auto it : hand)
-			if(it.getValue() < minVal) {
-				minVal = it.getValue();
-				c = it;
-			}
-		return c;
-	}
-
-	Card PlayHighCard() {
-		Card c = hand.back();
-		int maxVal = 0;
-		for(auto it : hand)
-			if(it.getValue() > maxVal) {
-				maxVal = it.getValue();
-				c = it;
-			}
-		return c;
-	}
-
-	Card PlayOneOfAKindOrHigh() {
-		for(int i=0;i<4;++i)
-			if(CountCardsOfSuite(Card::suites[i]) == 1)
-				return GetCardFromHandOf(Card::suites[i]);
-
-		return PlayHighCard();
-	}
-
-	Card PlayOneOfAKindOrLow() {
-		for(int i=0;i<4;++i)
-			if(CountCardsOfSuite(Card::suites[i]) == 1)
-				return GetCardFromHandOf(Card::suites[i]);
-
-		return PlayLowCard();
-	}
-
-	Card PlaySmartCard() {
-		Card c = hand.back();
-		int close = 0;
-
-		Card high = cardsOnTable[0];
-		for(auto it : cardsOnTable) {
-			if(high.isBeatenBy(it))
-				high = it;
-		}
-
-		for(auto it : hand) {
-			if(it.getSuite() == high.getSuite() && it.getValue() < high.getValue())
-				if(close < it.getValue()) {
-					close = it.getValue();
-					c = it;
-				}
-		}
-
-		if(close == 0)
-			return GetCardFromHandOf(high.getSuite());
-
-		return c;
-	}
-
 public:
 	Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
 	  Whist, Acool, KingOfHearts, TenClub} {
@@ -129,6 +38,30 @@ public:
 	  return card;
 	}
 
+	Minigame onChooseMinigame() {
+	  auto games = getAvailableGames();
+
+	  if(NVModeChosen) {
+	    // chose a game based on gamesOrderNV
+	    for(auto game : gamesOrderNV)
+	      if(find(games.begin(), games.end(), game) != games.end()) {
+	        return game;
+	      }
+	  }
+	  else {
+	    return games[rand() % games.size()];
+	  }
+
+	  assert(false);
+	  return Minigame::Totals;
+	}
+
+	bool onAskIfNV() {
+	  // play NV mode if not first or second player
+		return NVModeChosen = myLadderPosition > 2;
+	}
+
+private:
 	Card onPlayCardDiamonds() {
 			if(cardsOnTable.empty()) {
 				return PlayLowCard();
@@ -159,7 +92,7 @@ public:
 
 	Card onPlayCardWhist() {
 			if(cardsOnTable.empty()) {
-			 	Card c = PlayHighCard();
+				Card c = PlayHighCard();
 				if(c.getValue() == 14)
 					return c;
 				else
@@ -285,27 +218,95 @@ public:
 			}
 	}
 
-	Minigame onChooseMinigame() {
-	  auto games = getAvailableGames();
-
-	  if(NVModeChosen) {
-	    // chose a game based on gamesOrderNV
-	    for(auto game : gamesOrderNV)
-	      if(find(games.begin(), games.end(), game) != games.end()) {
-	        return game;
-	      }
-	  }
-	  else {
-	    return games[rand() % games.size()];
-	  }
-
-	  assert(false);
-	  return Minigame::Totals;
+	bool CardWasPlayed(Card c) {
+		for(auto it : cardsOnTable)
+			if(it == c)
+				return true;
+		return false;
 	}
 
-	bool onAskIfNV() {
-	  // play NV mode if not first or second player
-		return NVModeChosen = myLadderPosition > 2;
+	bool CardInHand(Card c) {
+		for(auto it : hand)
+			if(it == c)
+				return true;
+		return false;
+	}
+
+	int CountCardsOfSuite(char suite) {
+		int count = 0;
+		for(int i=2;i<=14;++i)
+			if(CardInHand(Card(i, suite)))
+				++count;
+		return count;
+	}
+
+	Card GetCardFromHandOf(char suite) {
+		for(auto it : hand)
+			if(it.getSuite() == suite)
+				return it;
+		return hand.back();
+	}
+
+	Card PlayLowCard() {
+		Card c = hand.back();
+		int minVal = 15;
+		for(auto it : hand)
+			if(it.getValue() < minVal) {
+				minVal = it.getValue();
+				c = it;
+			}
+		return c;
+	}
+
+	Card PlayHighCard() {
+		Card c = hand.back();
+		int maxVal = 0;
+		for(auto it : hand)
+			if(it.getValue() > maxVal) {
+				maxVal = it.getValue();
+				c = it;
+			}
+		return c;
+	}
+
+	Card PlayOneOfAKindOrHigh() {
+		for(int i=0;i<4;++i)
+			if(CountCardsOfSuite(Card::suites[i]) == 1)
+				return GetCardFromHandOf(Card::suites[i]);
+
+		return PlayHighCard();
+	}
+
+	Card PlayOneOfAKindOrLow() {
+		for(int i=0;i<4;++i)
+			if(CountCardsOfSuite(Card::suites[i]) == 1)
+				return GetCardFromHandOf(Card::suites[i]);
+
+		return PlayLowCard();
+	}
+
+	Card PlaySmartCard() {
+		Card c = hand.back();
+		int close = 0;
+
+		Card high = cardsOnTable[0];
+		for(auto it : cardsOnTable) {
+			if(high.isBeatenBy(it))
+				high = it;
+		}
+
+		for(auto it : hand) {
+			if(it.getSuite() == high.getSuite() && it.getValue() < high.getValue())
+				if(close < it.getValue()) {
+					close = it.getValue();
+					c = it;
+				}
+		}
+
+		if(close == 0)
+			return GetCardFromHandOf(high.getSuite());
+
+		return c;
 	}
 };
 
