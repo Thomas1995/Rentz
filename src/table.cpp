@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <vector>
 
 unsigned int Table::TABLE_SIZE = 0;
 
@@ -26,7 +27,7 @@ void Table::Start() {
   score.resize(TABLE_SIZE, 0);
 
   // true if a game was already played but a certain connection, false otherwise
-  bool gamesPlayed[players.size()][gamesNumber+1];
+  std::vector<std::vector<bool>> gamesPlayed(players.size(), std::vector<bool>(gamesNumber + 1, false));
 
   for(size_t i=0;i<players.size();++i)
     for(int j=0;j<gamesNumber+1;++j)
@@ -51,6 +52,7 @@ void Table::Start() {
         modeNV = true;
       }
 
+      // check if modeNV was chosed
       if(modeNV) {
         std::cout << "NV Mode chosen!\n";
       } else {
@@ -59,11 +61,11 @@ void Table::Start() {
 
       // if NV mode not chosen, give cards before game choice
       if(modeNV == false) {
-        GiveCards();
+        GiveHands();
         gameType = players[i].getGameChoice();
       } else {
         gameType = players[i].getGameChoice();
-        GiveCards();
+        GiveHands();
       }
 
       // check if connection can play that game
@@ -124,7 +126,7 @@ void Table::PlayTurn(std::vector<Connection>::iterator iterator) {
   std::cout << std::endl;
 }
 
-void Table::GiveCards() {
+void Table::GiveHands() {
   // get all cards in play
   std::vector<Card> allCards = Card::getAllCards();
 
@@ -192,15 +194,11 @@ void Table::PlayRound() {
 
   std::cout << "Round over!\n\n";
 
-  // let players know the scores
+  // print the final scores
   printScores();
   std::cout << "\n--------------------------\n";
 
   std::cout << std::endl;
-}
-
-Table::~Table() {
-  players.clear();
 }
 
 void Table::addPlayer(int fd) {
