@@ -78,6 +78,30 @@ private:
 		return PlayLowCard();
 	}
 
+	Card PlaySmartCard() {
+		Card c = hand.back();
+		int close = 0;
+
+		Card high = cardsOnTable[0];
+		for(auto it : cardsOnTable) {
+			if(high.isBeatenBy(it))
+				high = it;
+		}
+
+		for(auto it : hand) {
+			if(it.getSuite() == high.getSuite() && it.getValue() < high.getValue())
+				if(close < it.getValue()) {
+					close = it.getValue();
+					c = it;
+				}
+		}
+
+		if(close == 0)
+			return GetCardFromHandOf(high.getSuite());
+
+		return c;
+	}
+
 public:
 	Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
 	  Whist, Acool, KingOfHearts, TenClub} {
@@ -91,8 +115,12 @@ public:
 		cardsOnTable = getCardsOnTable();
 
 		Minigame crtGame = getCurrentGame();
+		
 		if(crtGame == KingOfHearts)
 			return onPlayCardKingOfHearts();
+
+		if(crtGame == Totals)
+			return onPlayTotals();
 
 	  auto card = hand.back();
 
@@ -107,6 +135,36 @@ public:
 
 	decided:
 	  return card;
+	}
+
+	Card onPlayTotals() {
+			if(cardsOnTable.empty()) {
+				Card c = PlayOneOfAKindOrLow();
+				if(c.getValue() >= 12)
+					return PlayLowCard();
+				else
+					return c;
+			}
+			else {
+				int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
+				if (countCrtSuite == 0) {
+					Card dangerousCards[] { Card(13, 'H'), Card(14, 'H'), Card(12, 'D'),
+						Card(12, 'H'), Card(12, 'C'), Card(12, 'S')};
+
+					for(int i=0;i<6;++i)
+						if(CardInHand(dangerousCards[i]))
+							return dangerousCards[i];
+
+					for(int i=14;i>=2;--i)
+						if(CardInHand(Card(i, 'D')))
+							return Card(i, 'D');
+
+					return PlayHighCard();
+				}
+				else {
+					return PlaySmartCard();
+				}
+			}
 	}
 
 	Card onPlayCardKingOfHearts() {
@@ -135,7 +193,7 @@ public:
 							return PlayOneOfAKindOrHigh();
 					}
 					else {
-						return GetCardFromHandOf(cardsOnTable[0].getSuite());
+						return PlaySmartCard();
 					}
 				}
 			}
