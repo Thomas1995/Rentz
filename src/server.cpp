@@ -32,6 +32,8 @@ int main(int argc, char ** argv) {
         Table newTable;
         table = newTable;
     }
+
+    while(table.GAME_STARTED);
   }
 
   return 0;
