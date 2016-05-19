@@ -115,11 +115,14 @@ public:
 		cardsOnTable = getCardsOnTable();
 
 		Minigame crtGame = getCurrentGame();
-		
+
 		if(crtGame == KingOfHearts)
 			return onPlayCardKingOfHearts();
 
 		if(crtGame == Totals)
+			return onPlayTotals();
+
+		if(crtGame == Queens)
 			return onPlayTotals();
 
 	  auto card = hand.back();
@@ -135,6 +138,31 @@ public:
 
 	decided:
 	  return card;
+	}
+
+	Card onPlayQueens() {
+		if(cardsOnTable.empty()) {
+			Card c = PlayOneOfAKindOrLow();
+			if(c.getValue() >= 12)
+				return PlayLowCard();
+			else
+				return c;
+		}
+		else {
+			int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
+			if (countCrtSuite == 0) {
+				int values[] {12, 14, 13};
+				for(int j=0;j<2;++j)
+					for(int i=0;i<4;++i)
+						if(CardInHand(Card(values[j], Card::suites[i])))
+							return Card(values[j], Card::suites[i]);
+
+				return PlayOneOfAKindOrHigh();
+			}
+			else {
+				return PlaySmartCard();
+			}
+		}
 	}
 
 	Card onPlayTotals() {
