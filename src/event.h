@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <assert.h>
+#include <chrono>
+#include <thread>
 #include "util/debug.h"
 #include "util/card.h"
 

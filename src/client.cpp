@@ -16,6 +16,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <vector>
+#include <chrono>
+#include <thread>
 #include "event.h"
 #include "bots/bot.h"
 
@@ -98,7 +100,7 @@ struct Client : public Common {
 
     handshake(const_cast<char *>(name.c_str()));
 
-    while(1) {
+    while(true) {
       event e = readEvent();
       event resp;
       resp.type = e.type;
@@ -202,7 +204,9 @@ struct Client : public Common {
         }
       }
       e.free();
-    }
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    } // end while
 
   end:
 
