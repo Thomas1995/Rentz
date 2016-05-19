@@ -13,8 +13,6 @@ void Table::Start() {
 
   std::cout << "\n\nA new game has started!\n\n";
 
-  GAME_STARTED = true;
-
   for(size_t i = 0; i < players.size(); ++i)
     players[i].sendIndex(i);
 
