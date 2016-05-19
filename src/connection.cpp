@@ -92,6 +92,15 @@ void Connection::sendCards(const std::vector<Card>& cardsOnTable) {
   resp.free();
 }
 
+void Connection::turnEnd() {
+  event req;
+  req.type = event::EType::TURN_END;
+  req.len = 0;
+  req.send(sfd);
+
+  readAndAssert(resp);
+}
+
 void Connection::sendScores(const std::vector<int>& allScores) {
 
   std::vector<uint8_t> data;

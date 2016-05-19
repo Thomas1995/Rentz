@@ -133,6 +133,16 @@ struct Client : public Common {
             break;
         }
 
+        case event::EType::TURN_END: {
+        //the server is telling us that turn has ended
+
+          debug("Turn has ended.\n");
+          bot->TurnEnd();
+          resp.send(sfd);
+
+          break;
+        }
+
         case event::EType::ROUND_END: {
         //the server is sending us the scores so far
 

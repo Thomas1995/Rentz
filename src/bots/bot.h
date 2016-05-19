@@ -50,6 +50,9 @@ public:
     Card PlayCard();
     // Play a card and erase it from your hand
 
+    void TurnEnd();
+    // Turn ends; calls onTurnEnd
+
     void dumpInfo();
     // Returns all information and returns a string for debug
 

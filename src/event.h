@@ -39,6 +39,9 @@ struct event {
     ROUND_START,
     //game choice is represented as an unsigned byte
 
+    TURN_END,
+    //turn has ended
+
     ASK_CARD,
     //card choice is 1 unsigned byte codified card
 

@@ -76,6 +76,12 @@ void Bot::RoundStart(int gameIndex) {
 }
 
 
+void Bot::TurnEnd() {
+	// Turn ends; call onTurnEnd()
+	
+	onTurnEnd();
+}
+
 void Bot::RoundEnd(std::vector<int> scores) {
 	// Round ended; empty your hand, update scores
 
