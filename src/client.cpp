@@ -24,6 +24,7 @@
 #include "bots/Thomas.bot"
 #include "bots/Eric.bot"
 #include "bots/Bicsi.bot"
+#include "bots/Eugen.bot"
 #include "bots/Random.bot"
 
 #include "common.h"
@@ -66,9 +67,10 @@ struct Client : public Common {
     if(name == "TH")  bot = std::unique_ptr<Bot>(new Bot_Thomas);
     if(name == "ER")  bot = std::unique_ptr<Bot>(new Bot_Eric);
     if(name == "BC")  bot = std::unique_ptr<Bot>(new Bot_Bicsi);
+    if(name == "EU")  bot = std::unique_ptr<Bot>(new Bot_Eugen);
     if(name == "RD")  bot = std::unique_ptr<Bot>(new Bot_Random);
 
-    require(bot != nullptr, "Name not available. Choose from: TH | ER | BC | RD\n");
+    require(bot != nullptr, "Name not available. Choose from: TH | ER | BC | EU | RD\n");
 
     addrinfo hints, *rez;
 
