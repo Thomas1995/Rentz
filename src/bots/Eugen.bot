@@ -1,4 +1,4 @@
-// Card(13, 'H')
+
 #ifndef BOT_EUGEN
 #define BOT_EUGEN
 
@@ -7,11 +7,10 @@
 class Bot_Eugen : public Bot
 {
 private:
-    std::vector<Minigame> Ordine;
     std::vector<Card> Mana;
     std::vector<Card> CartiJucate;
 
-    Card onPlayCardDiamonds()
+    Card Romburi()
     {
         if(CartiJucate.empty())
         {
@@ -410,9 +409,7 @@ private:
     }
 
 public:
-    Bot_Eugen() : Ordine {Totals, Queens, Diamonds,
-                  Whist, Acool, KingOfHearts, TenClub
-    }
+    Bot_Eugen()
     {
         setName("Eugen");
     }
@@ -435,7 +432,7 @@ public:
             card = Dame();
             break;
         case Diamonds:
-            card = onPlayCardDiamonds();
+            card = Romburi();
             break;
         case Acool:
             card = onPlayCardAcool();
