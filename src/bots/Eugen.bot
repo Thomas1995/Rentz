@@ -61,7 +61,7 @@ private:
         }
     }
 
-    Card onPlayCardTenClub()
+    Card trefla_10()
     {
         if(CartiJucate.empty())
         {
@@ -73,7 +73,7 @@ private:
         }
     }
 
-    Card onPlayCardWhist()
+    Card Whist()
     {
         if(CartiJucate.empty())
         {
@@ -89,7 +89,7 @@ private:
         }
     }
 
-    Card onPlayCardAcool()
+    Card Levate()
     {
         if(CartiJucate.empty())
         {
@@ -187,7 +187,7 @@ private:
         }
     }
 
-    Card onPlayCardTotals()
+    Card Totale()
     {
         if(CartiJucate.empty())
         {
@@ -435,16 +435,16 @@ public:
             card = Romburi();
             break;
         case Acool:
-            card = onPlayCardAcool();
+            card = Levate();
             break;
         case Whist:
-            card = onPlayCardWhist();
+            card = Whist();
             break;
         case TenClub:
-            card = onPlayCardTenClub();
+            card = trefla_10();
             break;
         case Totals:
-            card = onPlayCardTotals();
+            card = Totale();
             break;
         }
 
