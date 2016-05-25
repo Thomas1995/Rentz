@@ -1,313 +1,473 @@
+// Card(13, 'H')
 #ifndef BOT_EUGEN
 #define BOT_EUGEN
 
 #include "bot.h"
 
-class Bot_Eugen : public Bot {
+class Bot_Eugen : public Bot
+{
 private:
-	std::vector<Minigame> gamesOrderNV;
-	int myLadderPosition;
-	bool NVModeChosen;
-	std::vector<Card> hand;
-	std::vector<Card> cardsOnTable;
+    std::vector<Minigame> Ordine;
+    std::vector<Card> Mana;
+    std::vector<Card> CartiJucate;
+
+    Card onPlayCardDiamonds()
+    {
+        if(CartiJucate.empty())
+        {
+            return CarteMica();
+        }
+        else
+        {
+            int nrCul = Nr_Carti_de_Culoare(CartiJucate[0].getSuite());
+            if (nrCul == 0)
+            {
+                for(int i=14; i>=2; --i)
+                    if(CardInHand(Card(i, 'D')))
+                        return Card(i, 'D');
+
+                for(int i=0; i<4; ++i)
+                    if(Nr_Carti_de_Culoare(Card::suites[i]) == 1)
+                        return JoacaCartede(Card::suites[i]);
+
+                return CarteMare();
+            }
+            else
+            {
+                Card c = Mana.back();
+                int close = 0;
+
+                Card mare = CartiJucate[0];
+                for(auto carte : CartiJucate)
+                {
+                    if(mare.isBeatenBy(carte))
+                        mare = carte;
+                }
+
+                for(auto carte : Mana)
+                {
+                    if(it.getSuite() == mare.getSuite() && it.getValue() < mare.getValue())
+                        if(close < it.getValue())
+                        {
+                            close = it.getValue();
+                            c = carte;
+                        }
+                }
+
+                if(close == 0)
+                    return JoacaCartede(mare.getSuite());
+
+                return c;
+            }
+        }
+    }
+
+    Card onPlayCardTenClub()
+    {
+        if(CartiJucate.empty())
+        {
+            return CarteMare();
+        }
+        else
+        {
+            return JoacaCartede(CartiJucate[0].getSuite());
+        }
+    }
+
+    Card onPlayCardWhist()
+    {
+        if(CartiJucate.empty())
+        {
+            Card c = CarteMare();
+            if(c.getValue() == 14)
+                return c;
+            else
+                return CarteMica();
+        }
+        else
+        {
+            return JoacaCartede(CartiJucate[0].getSuite());
+        }
+    }
+
+    Card onPlayCardAcool()
+    {
+        if(CartiJucate.empty())
+        {
+            return CarteMica();
+        }
+        else
+        {
+            Card c = Mana.back();
+            int close = 0;
+
+            Card mare = CartiJucate[0];
+            for(auto carte : CartiJucate)
+            {
+                if(mare.isBeatenBy(carte))
+                    mare = carte;
+            }
+
+            for(auto carte : Mana)
+            {
+                if(it.getSuite() == mare.getSuite() && it.getValue() < mare.getValue())
+                    if(close < it.getValue())
+                    {
+                        close = it.getValue();
+                        c = carte;
+                    }
+            }
+
+            if(close == 0)
+                return JoacaCartede(mare.getSuite());
+
+            return c;
+        }
+    }
+
+    Card onPlayCardQueens()
+    {
+        if(CartiJucate.empty())
+        {
+            Card c=Card(13, 'H');
+            for(int i=0; i<4; ++i)
+                if(Nr_Carti_de_Culoare(Card::suites[i]) == 1)
+                {
+                    c=JoacaCartede(Card::suites[i]);
+                    break;
+                }
+            c=CarteMica();
+            if(c.getValue() >= 12)
+                return CarteMica();
+            else
+                return c;
+        }
+        else
+        {
+            int nrCul = Nr_Carti_de_Culoare(CartiJucate[0].getSuite());
+            if (nrCul == 0)
+            {
+                int values[] {12, 14, 13};
+                for(int j=0; j<2; ++j)
+                    for(int i=0; i<4; ++i)
+                        if(CardInHand(Card(values[j], Card::suites[i])))
+                            return Card(values[j], Card::suites[i]);
+                for(int i=0; i<4; ++i)
+                    if(Nr_Carti_de_Culoare(Card::suites[i]) == 1)
+                        return JoacaCartede(Card::suites[i]);
+
+                return CarteMare();
+            }
+            else
+            {
+                Card c = Mana.back();
+                int close = 0;
+
+                Card mare = CartiJucate[0];
+                for(auto carte : CartiJucate)
+                {
+                    if(mare.isBeatenBy(carte))
+                        mare = carte;
+                }
+
+                for(auto carte : Mana)
+                {
+                    if(it.getSuite() == mare.getSuite() && it.getValue() < mare.getValue())
+                        if(close < it.getValue())
+                        {
+                            close = it.getValue();
+                            c = carte;
+                        }
+                }
+
+                if(close == 0)
+                    return JoacaCartede(mare.getSuite());
+
+                return c;
+            }
+        }
+    }
+
+    Card onPlayCardTotals()
+    {
+        if(CartiJucate.empty())
+        {
+            Card c=Card(13, 'H');
+            for(int i=0; i<4; ++i)
+                if(Nr_Carti_de_Culoare(Card::suites[i]) == 1)
+                {
+                    c=JoacaCartede(Card::suites[i]);
+                    break;
+                }
+            c=CarteMica();
+            if(c.getValue() >= 12)
+                return CarteMica();
+            else
+                return c;
+        }
+        else
+        {
+            int nrCul = Nr_Carti_de_Culoare(CartiJucate[0].getSuite());
+            if (nrCul == 0)
+            {
+                Card dangerousCards[] { Card(13, 'H'), Card(14, 'H'), Card(12, 'D'),
+                                        Card(12, 'H'), Card(12, 'C'), Card(12, 'S')
+                                      };
+
+                for(int i=0; i<6; ++i)
+                    if(CardInHand(dangerousCards[i]))
+                        return dangerousCards[i];
+
+                for(int i=14; i>=2; --i)
+                    if(CardInHand(Card(i, 'D')))
+                        return Card(i, 'D');
+
+                return CarteMare();
+            }
+            else
+            {
+                Card c = Mana.back();
+                int close = 0;
+
+                Card mare = CartiJucate[0];
+                for(auto carte : CartiJucate)
+                {
+                    if(mare.isBeatenBy(carte))
+                        mare = carte;
+                }
+
+                for(auto carte : Mana)
+                {
+                    if(it.getSuite() == mare.getSuite() && it.getValue() < mare.getValue())
+                        if(close < it.getValue())
+                        {
+                            close = it.getValue();
+                            c = carte;
+                        }
+                }
+
+                if(close == 0)
+                    return JoacaCartede(mare.getSuite());
+
+                return c;
+            }
+        }
+    }
+
+    Card onPlayCardKingOfHearts()
+    {
+        bool AsJucat = CardWasPlayed(Card(14, 'H'));
+        bool PopaRosuinMana = CardInHand(Card(13, 'H'));
+        bool AsinMana = CardInHand(Card(14, 'H'));
+
+        if(!CartiJucate.empty())
+        {
+
+            if(CartiJucate[0].getSuite() == 'H' && AsJucat && PopaRosuinMana)
+            {
+                return Card(13, 'H');
+            }
+            else
+            {
+                int nrCul = Nr_Carti_de_Culoare(CartiJucate[0].getSuite());
+
+                if(nrCul == 0)
+                {
+                    if(PopaRosuinMana)
+                        return Card(13, 'H');
+                    if(AsinMana)
+                        return Card(14, 'H');
+
+                    Card c = CarteMare();
+                    if(c.getValue() >= 12)
+                        return c;
+                    else
+                    {
+                        for(int i=0; i<4; ++i)
+                            if(Nr_Carti_de_Culoare(Card::suites[i]) == 1)
+                                return JoacaCartede(Card::suites[i]);
+
+                        return CarteMare();
+                    }
+                }
+                else
+                {
+                    Card c = Mana.back();
+                    int close = 0;
+
+                    Card mare = CartiJucate[0];
+                    for(auto carte : CartiJucate)
+                    {
+                        if(mare.isBeatenBy(carte))
+                            mare = carte;
+                    }
+
+                    for(auto carte : Mana)
+                    {
+                        if(it.getSuite() == mare.getSuite() && it.getValue() < mare.getValue())
+                            if(close < it.getValue())
+                            {
+                                close = it.getValue();
+                                c = carte;
+                            }
+                    }
+
+                    if(close == 0)
+                        return JoacaCartede(mare.getSuite());
+
+                    return c;
+                }
+            }
+        }
+        else
+        {
+            int countHearts = Nr_Carti_de_Culoare('H');
+
+            if(countHearts == 0)
+            {
+                if(Mana.size() >= 5)
+                {
+                    for(int i=0; i<4; ++i)
+                        if(Nr_Carti_de_Culoare(Card::suites[i]) == 1)
+                            return JoacaCartede(Card::suites[i]);
+
+                    return CarteMica();
+                }
+                else
+                {
+                    return CarteMica();
+                }
+            }
+
+            if(PopaRosuinMana || AsinMana)
+            {
+                return CarteMica();
+            }
+            else
+            {
+                return JoacaCartede('H');
+            }
+        }
+    }
+
+    bool CardWasPlayed(Card c)
+    {
+        for(auto carte : CartiJucate)
+            if(it == c)
+                return true;
+        return false;
+    }
+
+    bool CardInHand(Card c)
+    {
+        for(auto carte : Mana)
+            if(it == c)
+                return true;
+        return false;
+    }
+
+    int Nr_Carti_de_Culoare(char suite)
+    {
+        int count = 0;
+        for(int i=2; i<=14; ++i)
+            if(CardInHand(Card(i, suite)))
+                ++count;
+        return count;
+    }
+
+    Card JoacaCartede(char suite)
+    {
+        for(auto carte : Mana)
+            if(it.getSuite() == suite)
+                return it;
+        return Mana.back();
+    }
+
+    Card CarteMica()
+    {
+        Card c = Mana.back();
+        int minim = 15;
+        for(auto carte : Mana)
+            if(it.getValue() < minim)
+            {
+                minim = it.getValue();
+                c = carte;
+            }
+        return c;
+    }
+
+    Card CarteMare()
+    {
+        Card c = Mana.back();
+        int maxim = 0;
+        for(auto carte : Mana)
+            if(it.getValue() > maxim)
+            {
+                maxim = it.getValue();
+                c = carte;
+            }
+        return c;
+    }
 
 public:
-	Bot_Eugen() : gamesOrderNV{Totals, Queens, Diamonds,
-	  Whist, Acool, KingOfHearts, TenClub} {
-	    setName("Eugen");
-	  }
+    Bot_Eugen() : Ordine {Totals, Queens, Diamonds,
+                  Whist, Acool, KingOfHearts, TenClub
+    }
+    {
+        setName("Eugen");
+    }
 
-	Card onPlayCard() {
-		hand = getHand();
-		cardsOnTable = getCardsOnTable();
+    Card onPlayCard()
+    {
+        Mana = getHand();
+        CartiJucate = getCardsOnTable();
 
-		Minigame crtGame = getCurrentGame();
+        Minigame crtGame = getCurrentGame();
 
-		Card card = hand.back();
+        Card card = Mana.back();
 
-		switch (crtGame) {
-			case KingOfHearts: card = onPlayCardKingOfHearts(); break;
-			case Queens: card = onPlayCardQueens(); break;
-			case Diamonds: card = onPlayCardDiamonds(); break;
-			case Acool: card = onPlayCardAcool(); break;
-			case Whist: card = onPlayCardWhist(); break;
-			case TenClub: card = onPlayCardTenClub(); break;
-			case Totals: card = onPlayCardTotals(); break;
-		}
+        switch (crtGame)
+        {
+        case KingOfHearts:
+            card = onPlayCardKingOfHearts();
+            break;
+        case Queens:
+            card = onPlayCardQueens();
+            break;
+        case Diamonds:
+            card = onPlayCardDiamonds();
+            break;
+        case Acool:
+            card = onPlayCardAcool();
+            break;
+        case Whist:
+            card = onPlayCardWhist();
+            break;
+        case TenClub:
+            card = onPlayCardTenClub();
+            break;
+        case Totals:
+            card = onPlayCardTotals();
+            break;
+        }
 
-	  return card;
-	}
+        return card;
+    }
 
-	Minigame onChooseMinigame() {
-	  auto games = getAvailableGames();
+    Minigame onChooseMinigame()
+    {
+        auto games = getAvailableGames();
 
-	  if(NVModeChosen) {
-	    // chose a game based on gamesOrderNV
-	    for(auto game : gamesOrderNV)
-	      if(find(games.begin(), games.end(), game) != games.end()) {
-	        return game;
-	      }
-	  }
-	  else {
-	    return games[rand() % games.size()];
-	  }
+        return games[rand() % games.size()];
 
-	  assert(false);
-	  return Minigame::Totals;
-	}
+        assert(false);
+        return Minigame::Totals;
+    }
 
-	bool onAskIfNV() {
-	  // play NV mode if not first or second player
-		return NVModeChosen = myLadderPosition > 2;
-	}
-
-private:
-	Card onPlayCardDiamonds() {
-			if(cardsOnTable.empty()) {
-				return PlayLowCard();
-			}
-			else {
-				int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
-				if (countCrtSuite == 0) {
-					for(int i=14;i>=2;--i)
-						if(CardInHand(Card(i, 'D')))
-							return Card(i, 'D');
-
-					return PlayOneOfAKindOrHigh();
-				}
-				else {
-					return PlaySmartCard();
-				}
-			}
-	}
-
-	Card onPlayCardTenClub() {
-			if(cardsOnTable.empty()) {
-				return PlayHighCard();
-			}
-			else {
-				return GetCardFromHandOf(cardsOnTable[0].getSuite());
-			}
-	}
-
-	Card onPlayCardWhist() {
-			if(cardsOnTable.empty()) {
-				Card c = PlayHighCard();
-				if(c.getValue() == 14)
-					return c;
-				else
-					return PlayLowCard();
-			}
-			else {
-				return GetCardFromHandOf(cardsOnTable[0].getSuite());
-			}
-	}
-
-	Card onPlayCardAcool() {
-			if(cardsOnTable.empty()) {
-				return PlayLowCard();
-			}
-			else {
-				return PlaySmartCard();
-			}
-	}
-
-	Card onPlayCardQueens() {
-			if(cardsOnTable.empty()) {
-				Card c = PlayOneOfAKindOrLow();
-				if(c.getValue() >= 12)
-					return PlayLowCard();
-				else
-					return c;
-			}
-			else {
-				int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
-				if (countCrtSuite == 0) {
-					int values[] {12, 14, 13};
-					for(int j=0;j<2;++j)
-						for(int i=0;i<4;++i)
-							if(CardInHand(Card(values[j], Card::suites[i])))
-								return Card(values[j], Card::suites[i]);
-
-					return PlayOneOfAKindOrHigh();
-				}
-				else {
-					return PlaySmartCard();
-				}
-			}
-	}
-
-	Card onPlayCardTotals() {
-			if(cardsOnTable.empty()) {
-				Card c = PlayOneOfAKindOrLow();
-				if(c.getValue() >= 12)
-					return PlayLowCard();
-				else
-					return c;
-			}
-			else {
-				int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
-				if (countCrtSuite == 0) {
-					Card dangerousCards[] { Card(13, 'H'), Card(14, 'H'), Card(12, 'D'),
-						Card(12, 'H'), Card(12, 'C'), Card(12, 'S')};
-
-					for(int i=0;i<6;++i)
-						if(CardInHand(dangerousCards[i]))
-							return dangerousCards[i];
-
-					for(int i=14;i>=2;--i)
-						if(CardInHand(Card(i, 'D')))
-							return Card(i, 'D');
-
-					return PlayHighCard();
-				}
-				else {
-					return PlaySmartCard();
-				}
-			}
-	}
-
-	Card onPlayCardKingOfHearts() {
-			bool AHWasPlayed = CardWasPlayed(Card(14, 'H'));
-			bool KHInHand = CardInHand(Card(13, 'H'));
-			bool AHInHand = CardInHand(Card(14, 'H'));
-
-			if(!cardsOnTable.empty()) {
-
-				if(cardsOnTable[0].getSuite() == 'H' && AHWasPlayed && KHInHand) {
-					return Card(13, 'H');
-				}
-				else {
-					int countCrtSuite = CountCardsOfSuite(cardsOnTable[0].getSuite());
-
-					if(countCrtSuite == 0) {
-						if(KHInHand)
-							return Card(13, 'H');
-						if(AHInHand)
-							return Card(14, 'H');
-
-						Card c = PlayHighCard();
-						if(c.getValue() >= 12)
-							return c;
-						else
-							return PlayOneOfAKindOrHigh();
-					}
-					else {
-						return PlaySmartCard();
-					}
-				}
-			}
-			else {
-				int countHearts = CountCardsOfSuite('H');
-
-				if(countHearts == 0) {
-					if(hand.size() >= 5) {
-						return PlayOneOfAKindOrLow();
-					}
-					else {
-						return PlayLowCard();
-					}
-				}
-
-				if(KHInHand || AHInHand) {
-					return PlayLowCard();
-				}
-				else {
-					return GetCardFromHandOf('H');
-				}
-			}
-	}
-
-	bool CardWasPlayed(Card c) {
-		for(auto it : cardsOnTable)
-			if(it == c)
-				return true;
-		return false;
-	}
-
-	bool CardInHand(Card c) {
-		for(auto it : hand)
-			if(it == c)
-				return true;
-		return false;
-	}
-
-	int CountCardsOfSuite(char suite) {
-		int count = 0;
-		for(int i=2;i<=14;++i)
-			if(CardInHand(Card(i, suite)))
-				++count;
-		return count;
-	}
-
-	Card GetCardFromHandOf(char suite) {
-		for(auto it : hand)
-			if(it.getSuite() == suite)
-				return it;
-		return hand.back();
-	}
-
-	Card PlayLowCard() {
-		Card c = hand.back();
-		int minVal = 15;
-		for(auto it : hand)
-			if(it.getValue() < minVal) {
-				minVal = it.getValue();
-				c = it;
-			}
-		return c;
-	}
-
-	Card PlayHighCard() {
-		Card c = hand.back();
-		int maxVal = 0;
-		for(auto it : hand)
-			if(it.getValue() > maxVal) {
-				maxVal = it.getValue();
-				c = it;
-			}
-		return c;
-	}
-
-	Card PlayOneOfAKindOrHigh() {
-		for(int i=0;i<4;++i)
-			if(CountCardsOfSuite(Card::suites[i]) == 1)
-				return GetCardFromHandOf(Card::suites[i]);
-
-		return PlayHighCard();
-	}
-
-	Card PlayOneOfAKindOrLow() {
-		for(int i=0;i<4;++i)
-			if(CountCardsOfSuite(Card::suites[i]) == 1)
-				return GetCardFromHandOf(Card::suites[i]);
-
-		return PlayLowCard();
-	}
-
-	Card PlaySmartCard() {
-		Card c = hand.back();
-		int close = 0;
-
-		Card high = cardsOnTable[0];
-		for(auto it : cardsOnTable) {
-			if(high.isBeatenBy(it))
-				high = it;
-		}
-
-		for(auto it : hand) {
-			if(it.getSuite() == high.getSuite() && it.getValue() < high.getValue())
-				if(close < it.getValue()) {
-					close = it.getValue();
-					c = it;
-				}
-		}
-
-		if(close == 0)
-			return GetCardFromHandOf(high.getSuite());
-
-		return c;
-	}
+    bool onAskIfNV()
+    {
+        return true;
+    }
 };
 
-#endif //BOT_EUGEN
+#endif
