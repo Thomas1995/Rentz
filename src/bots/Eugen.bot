@@ -7,7 +7,6 @@ class Bot_Eugen : public Bot {
 private:
 	std::vector<Minigame> gamesOrderNV;
 	int myLadderPosition;
-	bool NVModeChosen;
 	std::vector<Card> hand;
 	std::vector<Card> cardsOnTable;
 
@@ -41,24 +40,14 @@ public:
 	Minigame onChooseMinigame() {
 	  auto games = getAvailableGames();
 
-	  if(NVModeChosen) {
-	    // chose a game based on gamesOrderNV
-	    for(auto game : gamesOrderNV)
-	      if(find(games.begin(), games.end(), game) != games.end()) {
-	        return game;
-	      }
-	  }
-	  else {
-	    return games[rand() % games.size()];
-	  }
+    return games[rand() % games.size()];
 
 	  assert(false);
 	  return Minigame::Totals;
 	}
 
 	bool onAskIfNV() {
-	  // play NV mode if not first or second player
-		return NVModeChosen = myLadderPosition > 2;
+		return true;
 	}
 
 private:
@@ -310,4 +299,4 @@ private:
 	}
 };
 
-#endif //BOT_EUGEN
+#endif
