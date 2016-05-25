@@ -3,7 +3,7 @@
 
 #include "bot.h"
 
-class Bot_Eugen : public Bot {
+class Bot_Thomas : public Bot {
 private:
 	std::vector<Minigame> gamesOrderNV;
 	int myLadderPosition;
@@ -12,7 +12,7 @@ private:
 	std::vector<Card> cardsOnTable;
 
 public:
-	Bot_Eugen() : gamesOrderNV{Totals, Queens, Diamonds,
+	Bot_Thomas() : gamesOrderNV{Totals, Queens, Diamonds,
 	  Whist, Acool, KingOfHearts, TenClub} {
 	    setName("Eugen");
 	  }
@@ -310,4 +310,4 @@ private:
 	}
 };
 
-#endif //BOT_EUGEN
+#endif 
